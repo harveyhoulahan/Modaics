@@ -26,7 +26,21 @@ class FashionViewModel: ObservableObject {
     @Published var searchQuery: String = ""
     @Published var selectedCategory: Category?
     @Published var selectedFilters = FilterOptions()
-    @Published var likedIDs: [UUID] = []
+    @Published private(set) var likedIDs: [UUID] = []
+
+        // 🔧 KEEP *only* this implementation
+        // MARK: - Likes
+        func toggleLike(for item: FashionItem) {
+            if let idx = likedIDs.firstIndex(of: item.id) {
+                likedIDs.remove(at: idx)
+            } else {
+                likedIDs.append(item.id)
+            }
+        }
+
+        func isLiked(_ item: FashionItem) -> Bool {
+            likedIDs.contains(item.id)
+        }
     
     // Private properties
     private var cancellables = Set<AnyCancellable>()
@@ -200,25 +214,6 @@ class FashionViewModel: ObservableObject {
         }
     }
     
-    // MARK: - User Actions
-    func toggleLike(for item: FashionItem) {
-        guard let user = currentUser,
-              let index = allItems.firstIndex(where: { $0.id == item.id }) else {
-            return
-        }
-        
-        let itemId = item.id.uuidString
-        
-        if user.likedItems.contains(itemId) {
-            // Unlike
-            currentUser?.likedItems.removeAll { $0 == itemId }
-            allItems[index].likeCount -= 1
-        } else {
-            // Like
-            currentUser?.likedItems.append(itemId)
-            allItems[index].likeCount += 1
-        }
-    }
     
     func addToWardrobe(_ item: FashionItem) {
         guard var user = currentUser else { return }
