@@ -10,9 +10,33 @@
 		E40267512DF16BC0002D4CE4 /* ModaicsAppTemp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModaicsAppTemp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E40267A12DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "ModaicsAppTemp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"IOS/Shared/UIImage+PixelBuffer.swift",
+			);
+			target = E40267502DF16BC0002D4CE4 /* ModaicsAppTemp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		E40267A22DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "Copy Bundle Resources" phase from "ModaicsAppTemp" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = E402674F2DF16BC0002D4CE4 /* Resources */;
+			membershipExceptions = (
+				"IOS/Shared/UIImage+PixelBuffer.swift",
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E40267532DF16BC0002D4CE4 /* ModaicsAppTemp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E40267A12DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "ModaicsAppTemp" target */,
+				E40267A22DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "Copy Bundle Resources" phase from "ModaicsAppTemp" target */,
+			);
 			path = ModaicsAppTemp;
 			sourceTree = "<group>";
 		};

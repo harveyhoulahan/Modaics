@@ -26,6 +26,7 @@ class FashionViewModel: ObservableObject {
     @Published var searchQuery: String = ""
     @Published var selectedCategory: Category?
     @Published var selectedFilters = FilterOptions()
+    @Published var likedIDs: [UUID] = []
     
     // Private properties
     private var cancellables = Set<AnyCancellable>()
@@ -161,9 +162,8 @@ class FashionViewModel: ObservableObject {
         let similarFilenames = recommendationManager.topKSimilarItems(query: embedding, k: 6)
         
         // Map filenames to items (skip the item itself)
-        recommendedItems = similarFilenames.compactMap { filename in
-            allItems.first { $0.imageURLs.contains(filename) && $0.id != item.id }
-        }
+        recommendedItems = RecommendationManager.shared
+            .recommendations(for: item, from: allItems, k: 6)
     }
     
     private func generateEmbeddingAndRecommend(for item: FashionItem) {
@@ -191,9 +191,9 @@ class FashionViewModel: ObservableObject {
                 }
                 
                 // Load recommendations
-                self?.recommendedItems = similarFilenames.compactMap { filename in
-                    self?.allItems.first { $0.imageURLs.contains(filename) && $0.id != item.id }
-                }
+                self?.recommendedItems = RecommendationManager.shared
+                    .recommendations(for: item, from: self?.allItems ?? [], k: 6)
+                    .filter { $0.id != item.id }
                 
                 self?.isLoading = false
             }
@@ -267,6 +267,11 @@ class FashionViewModel: ObservableObject {
         let totalScore = wardrobeItems.reduce(0) { $0 + $1.sustainabilityScore.totalScore }
         return totalScore / wardrobeItems.count
     }
+}
+
+extension FashionViewModel {
+    /// Legacy support for TabViews.swift
+    var items: [FashionItem] { allItems }   // or whatever your master array is
 }
 
 // MARK: - Filter Options

@@ -691,7 +691,7 @@ struct ItemDetailView: View {
             // if your model stores multiple image names, replace 0..<item.images.count
             ForEach(0..<3) { idx in
                 ZStack {
-                    if let ui = UIImage(named: item.imageName) {
+                    if let ui = UIImage(named: item.name) {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFill()
@@ -859,25 +859,26 @@ fileprivate struct DetailRow: View {
     }
 }
 
-#Preview {
-    // Replace with a real FashionItem in your preview data
-    let sample = FashionItem(id: UUID(),
-                             name: "Vintage Denim Jacket",
-                             brand: "Levi's",
-                             description: "A timeless, sustainably-made denim jacket.",
-                             listingPrice: 120,
-                             originalPrice: 180,
-                             size: "M",
-                             condition: .excellent,
-                             category: .jackets,
-                             location: "Melbourne",
-                             imageName: "sampleDenim",
-                             priceReduction: 33,
-                             sustainabilityScore: .demo)   // add a static .demo if needed
-    ItemDetailView(item: sample)
-        .environmentObject(FashionViewModel())
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    // Replace with a real FashionItem in your preview data
+//    let sample = FashionItem(id: UUID(),
+//                             name: "Vintage Denim Jacket",
+//                             brand: "Levi's",
+//                             description: "A timeless, sustainably-made denim jacket.",
+//                             listingPrice: 120,
+//                             originalPrice: 180,
+//                             size: "M",
+//                             condition: .excellent,
+//                            category: .jackets,
+//                             location: "Melbourne",
+//                             imageName: "sampleDenim",
+//                             priceReduction: 33,
+//                             sustainabilityScore: 15)   // add a static .demo if needed
+//    ItemDetailView(item: sample)
+//        .environmentObject(FashionViewModel())
+//        .preferredColorScheme(.dark)
+//}
+
 
 struct CommunityPostCard: View {
     var body: some View {

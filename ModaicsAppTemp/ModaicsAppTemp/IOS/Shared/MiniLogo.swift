@@ -5,6 +5,7 @@
 //  Created by Harvey Houlahan on 5/6/2025.
 //
 
+import SwiftUI
 // MARK: - Mini Logo Component
 struct MiniLogo: View {
     var body: some View {

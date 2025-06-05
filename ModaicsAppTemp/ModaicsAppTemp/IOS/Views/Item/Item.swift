@@ -22,7 +22,7 @@ struct FashionItem: Identifiable, Codable {
     var imageURLs: [String]
     var sustainabilityScore: SustainabilityScore
     var materialComposition: [Material]
-    var colorTags: [String]
+    var colourTags: [String]
     var styleTags: [String]
     var location: String
     var ownerId: String
@@ -32,6 +32,9 @@ struct FashionItem: Identifiable, Codable {
     var likeCount: Int
     var isAvailable: Bool
     var embeddingVector: [Float]? // For ML recommendations
+    var tags: [String] {
+        colourTags + styleTags
+    }
     
     // Computed properties
     var priceReduction: Double {
@@ -79,7 +82,7 @@ struct FashionItem: Identifiable, Codable {
         self.imageURLs = imageURLs
         self.sustainabilityScore = sustainabilityScore
         self.materialComposition = materialComposition
-        self.colorTags = colorTags
+        self.colourTags = colorTags
         self.styleTags = styleTags
         self.location = location
         self.ownerId = ownerId
@@ -90,6 +93,14 @@ struct FashionItem: Identifiable, Codable {
         self.isAvailable = isAvailable
         self.embeddingVector = embeddingVector
     }
+}
+
+extension FashionItem: Equatable, Hashable {
+    /// Two items are equal when their UUIDs match.
+    static func == (lhs: FashionItem, rhs: FashionItem) -> Bool { lhs.id == rhs.id }
+
+    /// Hash only the UUID so other non-Hashable fields don’t matter.
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
 
 // MARK: - Supporting Types
@@ -103,6 +114,7 @@ enum Category: String, CaseIterable, Codable {
     case bags = "Bags"
     case jewelry = "Jewelry"
     case other = "Other"
+    case jackets = "Jackets"
     
     var icon: String {
         switch self {
@@ -115,6 +127,7 @@ enum Category: String, CaseIterable, Codable {
         case .bags: return "bag"
         case .jewelry: return "sparkles"
         case .other: return "questionmark.circle"
+        case .jackets: return "jumper"
         }
     }
 }
