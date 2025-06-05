@@ -1,0 +1,50 @@
+# Xcode / Swift
+DerivedData/
+build/
+*.xcworkspace
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+
+# SwiftPM
+.build/
+.swiftpm/
+
+# CocoaPods / Carthage (if ever used)
+Pods/
+Carthage/
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Python
+__pycache__/
+*.py[cod]
+.venv*/        # .venv_ml etc.
+env/
+pip-log.txt
+.pytest_cache/
+.mypy_cache/
+
+# ML & data artefacts
+data/
+processed_data/
+models/
+*.pth
+*.pkl
+*.h5
+*.mlmodel
+Embeddings.json
+Filenames.json
+
+# IDEs / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*~
+
+# Firebase secrets
+GoogleService-Info.plist
+firebase-debug.log

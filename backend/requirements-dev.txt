@@ -1,0 +1,8 @@
+# backend/requirements-dev.txt
+pytest>=7.4.0
+pytest-cov>=4.1.0
+black>=23.3.0
+flake8>=6.1.0
+mypy>=1.4.0
+jupyter>=1.0.0
+tensorboard>=2.15.0

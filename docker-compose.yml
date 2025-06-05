@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  ml-training:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+  backend-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+    environment:
+      - MODEL_PATH=/app/models/best_fashion_model.pth
