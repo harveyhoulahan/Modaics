@@ -627,179 +627,256 @@ struct ItemCard: View {
     }
 }
 
+
 struct ItemDetailView: View {
     let item: FashionItem
+
     @EnvironmentObject var viewModel: FashionViewModel
     @Environment(\.dismiss) var dismiss
-    @State private var selectedImageIndex = 0
-    
+
+    // UI state
+    @State private var selectedImg = 0
+    @State private var localSimilar: [FashionItem] = []
+
+    // MARK: – body
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // Image carousel
-                    TabView(selection: $selectedImageIndex) {
-                        ForEach(0..<3) { index in
-                            RoundedRectangle(cornerRadius: 0)
-                                .fill(Color.gray.opacity(0.2))
-                                .aspectRatio(3/4, contentMode: .fit)
-                                .overlay(
-                                    Image(systemName: "photo")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.gray.opacity(0.5))
-                                )
-                                .tag(index)
-                        }
-                    }
-                    .tabViewStyle(PageTabViewStyle())
-                    .frame(height: 400)
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        // Basic info
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(item.brand)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            
-                            Text(item.name)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                            
-                            HStack {
-                                Text("$\(Int(item.listingPrice))")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                
-                                if item.originalPrice > item.listingPrice {
-                                    Text("$\(Int(item.originalPrice))")
-                                        .font(.body)
-                                        .strikethrough()
-                                        .foregroundColor(.secondary)
-                                    
-                                    Text("\(Int(item.priceReduction))% off")
-                                        .font(.caption)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(Color.red.opacity(0.1))
-                                        .foregroundColor(.red)
-                                        .clipShape(Capsule())
-                                }
-                            }
-                        }
-                        
-                        // Action buttons
-                        HStack(spacing: 12) {
-                            Button(action: {}) {
-                                Label("Buy Now", systemImage: "bag.fill")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            
-                            Button(action: { viewModel.toggleLike(for: item) }) {
-                                Image(systemName: "heart")
-                            }
-                            .buttonStyle(.bordered)
-                        }
-                        
-                        // Details
-                        VStack(alignment: .leading, spacing: 12) {
-                            DetailRow(label: "Size", value: item.size)
-                            DetailRow(label: "Condition", value: item.condition.rawValue)
-                            DetailRow(label: "Category", value: item.category.rawValue)
-                            DetailRow(label: "Location", value: item.location)
-                        }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        
-                        // Sustainability
-                        VStack(alignment: .leading, spacing: 12) {
-                            Label("Sustainability Score", systemImage: "leaf.fill")
-                                .font(.headline)
-                            
-                            HStack {
-                                ProgressView(value: Double(item.sustainabilityScore.totalScore), total: 100)
-                                    .tint(item.sustainabilityScore.sustainabilityColor)
-                                
-                                Text("\(item.sustainabilityScore.totalScore)/100")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                            }
-                            
-                            if !item.sustainabilityScore.certifications.isEmpty {
-                                HStack {
-                                    ForEach(item.sustainabilityScore.certifications, id: \.self) { cert in
-                                        Text(cert)
-                                            .font(.caption)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(Color.green.opacity(0.1))
-                                            .foregroundColor(.green)
-                                            .clipShape(Capsule())
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                        .background(Color.green.opacity(0.05))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        
-                        // Description
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Description")
-                                .font(.headline)
-                            
-                            Text(item.description)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        // Recommendations
-                        if !viewModel.recommendedItems.isEmpty {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text("Similar Items")
-                                    .font(.headline)
-                                
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 16) {
-                                        ForEach(viewModel.recommendedItems) { recommendedItem in
-                                            RecommendedItemCard(item: recommendedItem)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .padding()
+                VStack(alignment: .leading, spacing: 24) {
+
+                    imageCarousel
+
+                    priceBlock
+
+                    actionButtons
+
+                    detailsCard
+
+                    sustainabilityCard
+
+                    descriptionBlock
+
+                    recommendations
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 40)
+            }
+            .background(background)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Close") { dismiss() }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button { share() } label: { Image(systemName: "square.and.arrow.up") }
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading: Button("Close") { dismiss() },
-                trailing: Button(action: {}) {
-                    Image(systemName: "square.and.arrow.up")
-                }
-            )
         }
         .onAppear {
+            // ask ViewModel for ML-based recs; if empty, fall back to tag-based
             viewModel.loadRecommendations(for: item)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                if viewModel.recommendedItems.isEmpty {
+                    localSimilar = SimpleRecommender.similarItems(to: item,
+                                                                  in: viewModel.items,
+                                                                  maxResults: 5)
+                }
+            }
+        }
+    }
+
+    // ───────── sub-views
+    private var imageCarousel: some View {
+        TabView(selection: $selectedImg) {
+            // if your model stores multiple image names, replace 0..<item.images.count
+            ForEach(0..<3) { idx in
+                ZStack {
+                    if let ui = UIImage(named: item.imageName) {
+                        Image(uiImage: ui)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        RoundedRectangle(cornerRadius: 0)
+                            .fill(Color.gray.opacity(0.2))
+                            .overlay(Image(systemName: "photo")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.gray.opacity(0.5)))
+                    }
+                }
+                .tag(idx)
+                .clipped()
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .automatic))
+        .frame(height: 420)
+        .background(Color.black.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var priceBlock: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(item.brand).font(.subheadline).foregroundColor(.modaicsCottonLight)
+
+            Text(item.name).font(.title2.weight(.bold)).foregroundColor(.modaicsCotton)
+
+            HStack(spacing: 8) {
+                Text("$\(Int(item.listingPrice))")
+                    .font(.title.weight(.bold))
+                    .foregroundColor(.modaicsChrome1)
+
+                if item.originalPrice > item.listingPrice {
+                    Text("$\(Int(item.originalPrice))")
+                        .strikethrough()
+                        .foregroundColor(.modaicsCottonLight)
+
+                    Text("\(Int(item.priceReduction))% off")
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(Color.red.opacity(0.15))
+                        .foregroundColor(.red)
+                        .clipShape(Capsule())
+                }
+            }
+        }
+    }
+
+    private var actionButtons: some View {
+        HStack(spacing: 12) {
+            Button { /* checkout flow */ } label: {
+                Label("Buy Now", systemImage: "bag.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+
+            Button { viewModel.toggleLike(for: item) } label: {
+                Image(systemName: viewModel.isLiked(item) ? "heart.fill" : "heart")
+            }
+            .buttonStyle(.bordered)
+        }
+    }
+
+    private var detailsCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            DetailRow(label: "Size",       value: item.size)
+            DetailRow(label: "Condition",  value: item.condition.rawValue)
+            DetailRow(label: "Category",   value: item.category.rawValue)
+            DetailRow(label: "Location",   value: item.location)
+        }
+        .padding()
+        .background(Color.modaicsDarkBlue.opacity(0.6))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var sustainabilityCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Sustainability Score", systemImage: "leaf.fill")
+                .font(.headline)
+                .foregroundColor(.modaicsCotton)
+
+            HStack {
+                ProgressView(value: Double(item.sustainabilityScore.totalScore), total: 100)
+                    .tint(item.sustainabilityScore.sustainabilityColor)
+                Text("\(item.sustainabilityScore.totalScore)/100")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(.modaicsCotton)
+            }
+
+            if !item.sustainabilityScore.certifications.isEmpty {
+                HStack {
+                    ForEach(item.sustainabilityScore.certifications, id: \.self) { cert in
+                        Text(cert)
+                            .font(.caption2)
+                            .padding(.horizontal, 8).padding(.vertical, 4)
+                            .background(Color.green.opacity(0.15))
+                            .foregroundColor(.green)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color.green.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var descriptionBlock: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Description").font(.headline).foregroundColor(.modaicsCotton)
+            Text(item.description)
+                .font(.body).foregroundColor(.modaicsCottonLight)
+        }
+    }
+
+    private var recommendations: some View {
+        let recs = viewModel.recommendedItems.isEmpty ? localSimilar : viewModel.recommendedItems
+        return Group {
+            if !recs.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Similar Items")
+                        .font(.headline)
+                        .foregroundColor(.modaicsCotton)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(recs) { rec in
+                                RecommendedItemCard(item: rec)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: – helpers
+    private var background: some View {
+        LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
+                       startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+    }
+
+    private func share() {
+        #if canImport(UIKit)
+        let activity = UIActivityViewController(
+            activityItems: ["Check out \(item.name) on Modaics!"],
+            applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?
+            .present(activity, animated: true)
+        #endif
+    }
+}
+
+// MARK: – DetailRow helper
+fileprivate struct DetailRow: View {
+    let label, value: String
+    var body: some View {
+        HStack {
+            Text(label).font(.subheadline.weight(.medium))
+            Spacer()
+            Text(value).font(.subheadline).foregroundColor(.modaicsCottonLight)
         }
     }
 }
 
-struct DetailRow: View {
-    let label: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(value)
-                .fontWeight(.medium)
-        }
-    }
+#Preview {
+    // Replace with a real FashionItem in your preview data
+    let sample = FashionItem(id: UUID(),
+                             name: "Vintage Denim Jacket",
+                             brand: "Levi's",
+                             description: "A timeless, sustainably-made denim jacket.",
+                             listingPrice: 120,
+                             originalPrice: 180,
+                             size: "M",
+                             condition: .excellent,
+                             category: .jackets,
+                             location: "Melbourne",
+                             imageName: "sampleDenim",
+                             priceReduction: 33,
+                             sustainabilityScore: .demo)   // add a static .demo if needed
+    ItemDetailView(item: sample)
+        .environmentObject(FashionViewModel())
+        .preferredColorScheme(.dark)
 }
 
 struct CommunityPostCard: View {
