@@ -905,7 +905,7 @@ struct EnhancedFilterView: View {
     private var sustainabilitySection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                SustainabilityIcon(size: 20)
+                SustainabilityIcon(size: 16)
                 Text("Sustainability")
                     .font(.modaicsHeadline(18))
                     .foregroundColor(.modaicsCotton)
@@ -1371,7 +1371,9 @@ struct StyleOptionCard: View {
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(isSelected ? Color.modaicsChrome1 : .ultraThinMaterial)
+                        .fill(isSelected
+                              ? AnyShapeStyle(Color.modaicsChrome1)      // selected
+                              : AnyShapeStyle(.ultraThinMaterial))
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
                                 .stroke(

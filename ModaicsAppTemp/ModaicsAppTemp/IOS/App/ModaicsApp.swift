@@ -78,6 +78,7 @@ extension Animation {
 // MARK: - Enhanced Main App View
 struct MainAppView: View {
     let userType: ContentView.UserType
+    @EnvironmentObject var viewModel: FashionViewModel
     @State private var selectedTab = 0
     @State private var contentOpacity: Double = 0
     @State private var tabBarOffset: CGFloat = 100
@@ -114,7 +115,8 @@ struct MainAppView: View {
                 }
                 .tag(0)
             
-            DiscoverView()
+            EnhancedDiscoverView()
+                .environmentObject(viewModel)
                 .tabItem {
                     Label("Discover", systemImage: "magnifyingglass")
                 }

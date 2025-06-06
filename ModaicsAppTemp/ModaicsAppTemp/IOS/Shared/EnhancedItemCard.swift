@@ -12,6 +12,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 // MARK: - Enhanced Item Card
 struct EnhancedItemCard: View {
@@ -483,23 +484,6 @@ enum FeedItem {
     }
 }
 
-// MARK: - Supporting Models
-struct CommunityPost {
-    let id = UUID()
-    let user: String
-    let content: String
-    let imageURL: String?
-    let likes: Int
-    let timestamp: Date
-    
-    static let sample = CommunityPost(
-        user: "sustainable_sarah",
-        content: "Just found this amazing vintage blazer at a local swap! The quality is incredible and it has such a unique story. Love how Modaics connects me with conscious fashion lovers in my area! 🌱✨",
-        imageURL: nil,
-        likes: 24,
-        timestamp: Date().addingTimeInterval(-3600)
-    )
-}
 
 struct Event {
     let id = UUID()
@@ -772,7 +756,7 @@ struct SustainabilityTipCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 HStack(spacing: 8) {
-                    SustainabilityIcon(size: 16)
+                    SustainabilityIcon(size: 14)
                     
                     Text("Sustainability Tip")
                         .font(.modaicsCaption(12))

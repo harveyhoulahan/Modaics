@@ -27,6 +27,7 @@ class FashionViewModel: ObservableObject {
     @Published var selectedCategory: Category?
     @Published var selectedFilters = FilterOptions()
     @Published private(set) var likedIDs: [UUID] = []
+    @Published var communityPosts: [CommunityPost] = CommunityPost.demoFeed
 
         // 🔧 KEEP *only* this implementation
         // MARK: - Likes

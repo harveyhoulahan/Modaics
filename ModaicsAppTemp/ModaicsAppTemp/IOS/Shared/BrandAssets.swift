@@ -198,7 +198,8 @@ struct ModaicsWordmark: View {
 
 // MARK: - Enhanced Feature Icons
 struct SustainabilityIcon: View {
-    let size: CGFloat = 24
+    var size: CGFloat
+    //let size: CGFloat = 24
     @State private var leafRotation: Double = 0
     
     var body: some View {

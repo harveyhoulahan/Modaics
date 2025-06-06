@@ -125,7 +125,8 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(viewModel.recommendedItems) { item in
-                        RecommendedItemCard(item: item)
+                        EnhancedItemCard(item: item)
+                            .environmentObject(viewModel)
                     }
                 }
                 .padding(.horizontal, 20)

@@ -329,6 +329,7 @@ struct SellView: View {
 // MARK: - Community View
 struct CommunityView: View {
     @EnvironmentObject var viewModel: FashionViewModel
+    //@EnvironmentObject var CommunityPost
     @State private var selectedTab = 0
     
     var body: some View {
@@ -366,8 +367,8 @@ struct CommunityView: View {
     private var feedView: some View {
         ScrollView {
             VStack(spacing: 20) {
-                ForEach(0..<5) { _ in
-                    CommunityPostCard()
+                ForEach(viewModel.communityPosts) { post in
+                    CommunityPostCard(post: post)
                 }
             }
             .padding()
@@ -819,7 +820,8 @@ struct ItemDetailView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
                             ForEach(recs) { rec in
-                                RecommendedItemCard(item: rec)
+                                EnhancedItemCard(item: item)
+                                    .environmentObject(viewModel)
                             }
                         }
                         .padding(.vertical, 4)
@@ -879,59 +881,6 @@ fileprivate struct DetailRow: View {
 //        .preferredColorScheme(.dark)
 //}
 
-
-struct CommunityPostCard: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Circle()
-                    .fill(Color.blue.opacity(0.3))
-                    .frame(width: 40, height: 40)
-                
-                VStack(alignment: .leading) {
-                    Text("@sustainable_style")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    Text("2 hours ago")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                Spacer()
-            }
-            
-            Text("Just swapped my old denim jacket for this amazing vintage piece! Love the Modaics community 💚")
-                .font(.body)
-            
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.2))
-                .frame(height: 200)
-            
-            HStack(spacing: 20) {
-                Button(action: {}) {
-                    Label("24", systemImage: "heart")
-                        .font(.subheadline)
-                }
-                
-                Button(action: {}) {
-                    Label("5", systemImage: "bubble.left")
-                        .font(.subheadline)
-                }
-                
-                Spacer()
-                
-                Button(action: {}) {
-                    Image(systemName: "bookmark")
-                }
-            }
-            .foregroundColor(.gray)
-        }
-        .padding()
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 2)
-    }
-}
 
 struct EventCard: View {
     var body: some View {
