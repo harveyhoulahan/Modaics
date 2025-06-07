@@ -86,7 +86,7 @@ struct SplashView: View {
                 // Premium typography with effects
                 VStack(spacing: 12) {
                     HStack(spacing: 0) {
-                        Text("m")
+                        Text("m") // m disappears on load in - need to fix it.
                             .font(.system(size: 64, weight: .ultraLight, design: .serif))
                             .foregroundStyle(
                                 LinearGradient(
