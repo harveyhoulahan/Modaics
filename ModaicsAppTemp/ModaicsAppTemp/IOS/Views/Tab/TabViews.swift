@@ -130,8 +130,8 @@ struct DiscoverView: View {
     }
 }
 
-// MARK: - Sell/List View
-struct SellView: View {
+// MARK: - Create (List items, events, etc.) View
+struct CreateView: View {
     let userType: ContentView.UserType
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var showImagePicker = false

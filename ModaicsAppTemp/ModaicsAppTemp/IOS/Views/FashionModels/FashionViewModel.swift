@@ -29,7 +29,7 @@ class FashionViewModel: ObservableObject {
     @Published private(set) var likedIDs: [UUID] = []
     @Published var communityPosts: [CommunityPost] = CommunityPost.demoFeed
 
-        // 🔧 KEEP *only* this implementation
+        // KEEP this implementation fuck sake
         // MARK: - Likes
         func toggleLike(for item: FashionItem) {
             if let idx = likedIDs.firstIndex(of: item.id) {

@@ -1,272 +1,318 @@
 //
-//  SplashView.swift  (enhanced)
-//  Modaics – Auth module
+//  EnhancedSplashView.swift
+//  ModaicsAppTemp
+//
+//  Created by Harvey Houlahan on 8/6/2025.
+//
+
+
+//
+//  SplashView.swift
+//  Modaics - A mesmerizing mosaic-themed splash screen
 //
 
 import SwiftUI
-#if canImport(UIKit)
-import UIKit
-#endif
 
-// MARK: - Enhanced Splash Screen
 struct SplashView: View {
     let onAnimationComplete: () -> Void
-    @State private var leftDoorRotation: Double = 0
-    @State private var rightDoorRotation: Double = 0
-    @State private var contentOpacity: Double = 0
+    
+    // Animation states
+    @State private var logoScale: CGFloat = 0.3
+    @State private var logoOpacity: Double = 0
+    @State private var logoRotation: Double = -180
+    @State private var mosaicTilesVisible = false
     @State private var textOpacity: Double = 0
-    @State private var textOffset: CGFloat = 30
-    @State private var shimmerPhase: CGFloat = -1
-    @State private var cottonItemOffsets: [CGFloat] = Array(repeating: 0, count: 5)
-    @State private var reflectionOpacity: Double = 0
-    @State private var logoScale: CGFloat = 0.8
+    @State private var textOffset: CGFloat = 50
+    @State private var shimmerOffset: CGFloat = -300
+    @State private var backgroundTiles: [TileData] = []
+    @State private var taglineOpacity: Double = 0
+    
+    // Mosaic tile data for background animation
+    struct TileData: Identifiable {
+        let id = UUID()
+        let position: CGPoint
+        let size: CGFloat
+        let color: Color
+        let delay: Double
+        let rotation: Double
+        var opacity: Double = 0
+        var scale: CGFloat = 0
+    }
     
     var body: some View {
         ZStack {
+            // Dynamic mosaic background
+            backgroundMosaic
+            
+            // Main content
             VStack(spacing: 40) {
-                // Sophisticated Logo Animation
+                Spacer()
+                
+                // Main mosaic logo with effects
                 ZStack {
-                    // Ambient glow effect
+                    // Secondary glow layer
                     Circle()
                         .fill(
                             RadialGradient(
                                 colors: [
-                                    Color.modaicsChrome1.opacity(0.2),
+                                    Color.modaicsChrome1.opacity(0.3),
+                                    Color.modaicsDenim1.opacity(0.2),
                                     Color.clear
                                 ],
                                 center: .center,
                                 startRadius: 0,
-                                endRadius: 120
+                                endRadius: 150
                             )
                         )
-                        .frame(width: 240, height: 240)
-                        .blur(radius: 20)
-                        .opacity(contentOpacity)
+                        .frame(width: 300, height: 300)
+                        .blur(radius: 30)
+                        .scaleEffect(logoScale * 1.5)
+                        .opacity(logoOpacity)
                     
-                    // Chrome wardrobe doors with advanced effects
-                    ZStack {
-                        // Left door - premium chrome finish
-                        ChromeDoor(isLeft: true)
-                            .rotationEffect(.degrees(leftDoorRotation), anchor: .leading)
-                            .offset(x: -50, y: 0)
-                        
-                        // Middle section - premium denim with cotton items
-                        MiddleSection(
-                            contentOpacity: contentOpacity,
-                            cottonItemOffsets: cottonItemOffsets
-                        )
-                        
-                        // Right door - premium chrome finish
-                        ChromeDoor(isLeft: false)
-                            .rotationEffect(.degrees(rightDoorRotation), anchor: .trailing)
-                            .offset(x: 50, y: 0)
-                    }
-                    .scaleEffect(logoScale)
-                    
-                    // Premium reflection effect
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.8),
-                                    Color.white.opacity(0.4),
-                                    Color.clear
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .frame(width: 140, height: 4)
-                        .offset(y: -60)
-                        .opacity(reflectionOpacity)
-                        .blur(radius: 1)
+                    // Main logo
+                    ModaicsMosaicLogo(size: 140)
+                        .scaleEffect(logoScale)
+                        .opacity(logoOpacity)
+                        .rotationEffect(.degrees(logoRotation))
                 }
-                .frame(height: 140)
                 
-                // Premium typography with effects
-                VStack(spacing: 12) {
-                    HStack(spacing: 0) {
-                        Text("m") // m disappears on load in - need to fix it.
-                            .font(.system(size: 64, weight: .ultraLight, design: .serif))
+                // Brand typography with shimmer
+                VStack(spacing: 16) {
+                    ZStack {
+                        Text("modaics")
+                            .font(.system(size: 56, weight: .ultraLight, design: .serif))
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [.modaicsChrome1, .modaicsChrome2],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                        Text("odaics")
-                            .font(.system(size: 64, weight: .ultraLight, design: .serif))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.modaicsChrome1, .modaicsChrome2],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                    }
-                    .modifier(ShimmerEffect())
-                    
-                    Text("A digital wardrobe for sustainable fashion")
-                        .font(.system(size: 18, weight: .light))
-                        .foregroundColor(.modaicsCotton.opacity(0.9))
-                        .multilineTextAlignment(.center)
-                    
-                    Text("Born from Australian Cotton Farms")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsChrome1.opacity(0.8))
-                        .opacity(textOpacity * 0.8)
-                }
-                .opacity(textOpacity)
-                .offset(y: textOffset)
-            }
-        }
-        .onAppear {
-            startAnimation()
-        }
-    }
-    
-    private func startAnimation() {
-        // Staggered premium animation sequence
-        withAnimation(.modaicsElastic.delay(0.3)) {
-            logoScale = 1.0
-        }
-        
-        withAnimation(.modaicsElastic.delay(0.5)) {
-            leftDoorRotation = -45
-            rightDoorRotation = 45
-        }
-        
-        withAnimation(.modaicsSpring.delay(0.8)) {
-            contentOpacity = 1
-            
-            // Animate cotton items with stagger
-            for i in 0..<5 {
-                withAnimation(.modaicsSpring.delay(0.8 + Double(i) * 0.1)) {
-                    cottonItemOffsets[i] = CGFloat.random(in: -3...3)
-                }
-            }
-        }
-        
-        withAnimation(.modaicsSmoothSpring.delay(1.0)) {
-            textOpacity = 1
-            textOffset = 0
-        }
-        
-        withAnimation(.easeInOut(duration: 1.5).delay(1.2)) {
-            reflectionOpacity = 0.8
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            onAnimationComplete()
-        }
-    }
-}
-
-// MARK: - Chrome Door Component
-struct ChromeDoor: View {
-    let isLeft: Bool
-    @State private var handleGlow: Bool = false
-    
-    var body: some View {
-        ZStack {
-            // Main door body with premium gradient
-            RoundedRectangle(cornerRadius: 10)
-                .fill(
-                    LinearGradient(
-                        colors: isLeft ?
-                            [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3] :
-                            [.modaicsChrome3, .modaicsChrome2, .modaicsChrome1],
-                        startPoint: isLeft ? .topLeading : .topTrailing,
-                        endPoint: isLeft ? .bottomTrailing : .bottomLeading
-                    )
-                )
-                .frame(width: 45, height: 130)
-                .overlay(
-                    // Metallic sheen effect
-                    LinearGradient(
-                        colors: [
-                            Color.white.opacity(0.3),
-                            Color.clear,
-                            Color.white.opacity(0.1)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .blendMode(.overlay)
-                )
-            
-            // Cotton texture overlay
-            VStack(spacing: 6) {
-                ForEach(0..<3, id: \.self) { _ in
-                    Capsule()
-                        .fill(Color.white.opacity(0.2))
-                        .frame(width: 28, height: 2)
-                        .blur(radius: 0.5)
-                }
-            }
-            
-            // Premium chrome handle
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [.white, .modaicsChrome1],
-                        center: .topLeading,
-                        startRadius: 1,
-                        endRadius: 8
-                    )
-                )
-                .frame(width: 10, height: 10)
-                .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white.opacity(0.8), lineWidth: 0.5)
-                )
-                .scaleEffect(handleGlow ? 1.2 : 1.0)
-                .offset(x: isLeft ? 15 : -15, y: 0)
-                .onAppear {
-                    withAnimation(.easeInOut(duration: 2).repeatForever()) {
-                        handleGlow = true
-                    }
-                }
-        }
-    }
-}
-
-// MARK: - Middle Section Component
-struct MiddleSection: View {
-    let contentOpacity: Double
-    let cottonItemOffsets: [CGFloat]
-    
-    var body: some View {
-        RoundedRectangle(cornerRadius: 8)
-            .fill(
-                LinearGradient(
-                    colors: [.modaicsDenim1, .modaicsDenim2],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .frame(width: 45, height: 130)
-            .overlay(
-                // Cotton items with animation
-                VStack(spacing: 8) {
-                    ForEach(0..<5, id: \.self) { i in
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(
-                                LinearGradient(
-                                    colors: [.modaicsCotton, .modaicsCottonLight],
+                                    colors: [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
                             )
-                            .frame(width: 32, height: 5)
-                            .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
-                            .offset(x: cottonItemOffsets[i])
+                        
+                        // Shimmer overlay
+                        LinearGradient(
+                            colors: [
+                                Color.clear,
+                                Color.white.opacity(0.4),
+                                Color.clear
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .frame(width: 80)
+                        .offset(x: shimmerOffset)
+                        .mask(
+                            Text("modaics")
+                                .font(.system(size: 56, weight: .ultraLight, design: .serif))
+                        )
                     }
+                    
+                    Text("A digital mosaic of sustainable fashion")
+                        .font(.system(size: 18, weight: .light))
+                        .foregroundColor(.modaicsCotton.opacity(0.9))
+                        .multilineTextAlignment(.center)
+                        .opacity(taglineOpacity)
+                    
+                    HStack(spacing: 20) {
+                        FeatureTag(icon: "leaf.fill", text: "Sustainable")
+                        FeatureTag(icon: "person.2.fill", text: "Community")
+                        FeatureTag(icon: "sparkles", text: "AI-Powered")
+                    }
+                    .opacity(taglineOpacity * 0.8)
                 }
-                .opacity(contentOpacity)
+                .opacity(textOpacity)
+                .offset(y: textOffset)
+                
+                Spacer()
+                
+                // Loading indicator
+                MosaicLoadingIndicator()
+                    .opacity(textOpacity)
+                    .padding(.bottom, 60)
+            }
+        }
+        .onAppear {
+            generateBackgroundTiles()
+            startAnimationSequence()
+        }
+        .onDisappear{
+            backgroundTiles.removeAll()
+        }
+    }
+    
+    // MARK: - Background Mosaic
+    private var backgroundMosaic: some View {
+        ZStack {
+            // Base gradient
+            LinearGradient(
+                colors: [
+                    Color.modaicsDarkBlue,
+                    Color.modaicsMidBlue,
+                    Color.modaicsLightBlue.opacity(0.3)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
+            .ignoresSafeArea()
+            
+            // Animated mosaic tiles
+            ForEach(backgroundTiles) { tile in
+                MosaicBackgroundTile(
+                    color: tile.color,
+                    size: tile.size,
+                    rotation: tile.rotation
+                )
+                .position(tile.position)
+                .opacity(tile.opacity)
+                .scaleEffect(tile.scale)
+            }
+        }
+    }
+    
+    // MARK: - Animation Sequence
+    private func startAnimationSequence() {
+        // Logo entrance
+        withAnimation(.spring(response: 1.2, dampingFraction: 0.7, blendDuration: 0)) {
+            logoScale = 1.0
+            logoOpacity = 1.0
+            logoRotation = 0
+        }
+        
+        // Background tiles cascade
+        for (index, _) in backgroundTiles.enumerated() {
+            withAnimation(
+                .spring(response: 0.8, dampingFraction: 0.6)
+                .delay(Double(index) * 0.02 + 0.3)
+            ) {
+                backgroundTiles[index].opacity = 0.15
+                backgroundTiles[index].scale = 1.0
+            }
+        }
+        
+        // Text appearance
+        withAnimation(.easeOut(duration: 0.8).delay(0.8)) {
+            textOpacity = 1.0
+            textOffset = 0
+        }
+        
+        // Shimmer effect
+        withAnimation(.linear(duration: 2).delay(1.2).repeatForever(autoreverses: false)) {
+            shimmerOffset = 300
+        }
+        
+        // Tagline fade in
+        withAnimation(.easeIn(duration: 0.6).delay(1.0)) {
+            taglineOpacity = 1.0
+        }
+        
+        // Trigger completion
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            onAnimationComplete()
+        }
+    }
+    
+    // MARK: - Generate Background Tiles
+    private func generateBackgroundTiles() {
+        let tileCount = 50
+        let colors: [Color] = [
+            .modaicsChrome1.opacity(0.3),
+            .modaicsChrome2.opacity(0.3),
+            .modaicsChrome3.opacity(0.3),
+            .modaicsDenim1.opacity(0.2),
+            .modaicsDenim2.opacity(0.2)
+        ]
+        
+        for _ in 0..<tileCount {
+            let randomX = CGFloat.random(in: 0...UIScreen.main.bounds.width)
+            let randomY = CGFloat.random(in: 0...UIScreen.main.bounds.height)
+            let randomSize = CGFloat.random(in: 20...60)
+            let randomColor = colors.randomElement() ?? .modaicsChrome1
+            let randomDelay = Double.random(in: 0...0.5)
+            let randomRotation = Double.random(in: 0...360)
+            
+            backgroundTiles.append(
+                TileData(
+                    position: CGPoint(x: randomX, y: randomY),
+                    size: randomSize,
+                    color: randomColor,
+                    delay: randomDelay,
+                    rotation: randomRotation
+                )
+            )
+        }
     }
 }
 
+// MARK: - Supporting Components
+struct FeatureTag: View {
+    let icon: String
+    let text: String
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.caption)
+            Text(text)
+                .font(.caption)
+                .fontWeight(.medium)
+        }
+        .foregroundColor(.modaicsChrome1)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(
+            Capsule()
+                .fill(Color.modaicsChrome1.opacity(0.15))
+                .overlay(
+                    Capsule()
+                        .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+}
+
+struct MosaicBackgroundTile: View {
+    let color: Color
+    let size: CGFloat
+    let rotation: Double
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: size * 0.15)
+            .fill(
+                LinearGradient(
+                    colors: [color, color.opacity(0.5)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .frame(width: size, height: size)
+            .rotationEffect(.degrees(rotation))
+            .blur(radius: 1)
+    }
+}
+
+struct MosaicLoadingIndicator: View {
+    @State private var rotation: Double = 0
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<3, id: \.self) { index in
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(
+                        LinearGradient(
+                            colors: [.modaicsChrome1, .modaicsChrome2],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 8, height: 8)
+                    .rotationEffect(.degrees(rotation + Double(index) * 120))
+                    .scaleEffect(1 + sin(rotation * .pi / 180 + Double(index)) * 0.2)
+            }
+        }
+        .onAppear {
+            withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
+                rotation = 360
+            }
+        }
+    }
+}

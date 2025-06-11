@@ -2,14 +2,12 @@
 //  EnhancedItemCard.swift
 //  ModaicsAppTemp
 //
-//  Created by Harvey Houlahan on 6/6/2025.
-//
-
-
-//
 //  EnhancedUIComponents.swift
 //  Premium UI components for Modaics that elevate the user experience
 //
+//  Created by Harvey Houlahan on 6/6/2025.
+//
+
 
 import SwiftUI
 import Foundation
@@ -808,5 +806,17 @@ struct SustainabilityTipCard: View {
                         .stroke(Color.modaicsAccent.opacity(0.15), lineWidth: 1)
                 )
         )
+    }
+}
+
+struct SustainabilityMetric: View {
+    let icon: String; let value: String; let label: String; let color: Color
+    var body: some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .foregroundColor(color)
+            Text(value).font(.headline).foregroundColor(.modaicsCotton)
+            Text(label).font(.caption).foregroundColor(.modaicsCottonLight)
+        }
     }
 }

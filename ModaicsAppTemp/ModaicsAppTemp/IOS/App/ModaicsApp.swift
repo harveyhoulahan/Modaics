@@ -1,15 +1,14 @@
 //
-//  ModaicsApp.swift
-//  Modaics
+//  MosaicMainAppView.swift
+//  ModaicsAppTemp
 //
-//  Created by Harvey Houlahan on 3/6/2025.
+//  Created by Harvey Houlahan on 8/6/2025.
 //
 
+
 //
-//  ModaicsApp.swift
-//  Modaics
-//
-//  Created by Harvey Houlahan on 3/6/2025.
+//  MosaicMainAppView.swift
+//  Modaics - Main app structure with mosaic-themed navigation
 //
 
 import SwiftUI
@@ -18,137 +17,395 @@ import Combine
 import UIKit
 #endif
 
-// MARK: - Color Theme
-extension Color {
-    // Dark sophisticated background colors
-    static let modaicsDarkBlue = Color(red: 0.1, green: 0.15, blue: 0.2)
-    static let modaicsMidBlue = Color(red: 0.15, green: 0.2, blue: 0.3)
-    static let modaicsLightBlue = Color(red: 0.2, green: 0.25, blue: 0.35)
-    
-    // Chrome/metallic colors
-    static let modaicsChrome1 = Color(red: 0.7, green: 0.75, blue: 0.8)
-    static let modaicsChrome2 = Color(red: 0.5, green: 0.55, blue: 0.65)
-    static let modaicsChrome3 = Color(red: 0.6, green: 0.65, blue: 0.75)
-    
-    // Denim blue for middle section
-    static let modaicsDenim1 = Color(red: 0.2, green: 0.4, blue: 0.7)
-    static let modaicsDenim2 = Color(red: 0.15, green: 0.3, blue: 0.6)
-    
-    // Cotton white variations
-    static let modaicsCotton = Color.white.opacity(0.9)
-    static let modaicsCottonLight = Color.white.opacity(0.6)
-}
-
-// MARK: - Custom Modifiers
-struct ShimmerEffect: ViewModifier {
-    @State private var phase: CGFloat = 0
-    
-    func body(content: Content) -> some View {
-        content
-            .overlay(
-                LinearGradient(
-                    colors: [
-                        Color.white.opacity(0),
-                        Color.white.opacity(0.3),
-                        Color.white.opacity(0)
-                    ],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .rotationEffect(.degrees(30))
-                .offset(x: phase * 200 - 100)
-                .mask(content)
-            )
-            .onAppear {
-                withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
-                    phase = 1
-                }
-            }
-    }
-}
-
-// MARK: - Custom Animations
-extension Animation {
-    static let modaicsSpring = Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.1)
-    static let modaicsSmoothSpring = Animation.spring(response: 0.8, dampingFraction: 0.9, blendDuration: 0.1)
-    static let modaicsElastic = Animation.spring(response: 1.2, dampingFraction: 0.6, blendDuration: 0.1)
-}
-
-
-// MARK: - Enhanced Main App View
-struct MainAppView: View {
+// MARK: - Enhanced Main App View with Mosaic Navigation
+struct MosaicMainAppView: View {
     let userType: ContentView.UserType
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var selectedTab = 0
-    @State private var contentOpacity: Double = 0
-    @State private var tabBarOffset: CGFloat = 100
+    @State private var tabConnections: [TabConnection] = []
+    @State private var mosaicPulse: CGFloat = 1.0
     
-    init(userType: ContentView.UserType) {
-        self.userType = userType
-        
-        // Customize tab bar appearance only on iOS
-        #if canImport(UIKit)
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color.modaicsDarkBlue.opacity(0.95))
-        
-        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color.modaicsChrome1)
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor(Color.modaicsChrome1)
-        ]
-        
-        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Color.modaicsChrome2.opacity(0.6))
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor(Color.modaicsChrome2.opacity(0.6))
-        ]
-        
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-        #endif
+    struct TabConnection {
+        let from: Int
+        let to: Int
+        let strength: CGFloat
     }
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView(userType: userType)
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
+        ZStack(alignment: .bottom) {
+            // Tab content with mosaic background
+            ZStack {
+                // Dynamic mosaic background that responds to navigation
+                MosaicBackgroundView(activeTab: selectedTab)
+                    .ignoresSafeArea()
+                
+                // Main content
+                Group {
+                    switch selectedTab {
+                    case 0:
+                        HomeView(userType: userType)
+                            .environmentObject(viewModel)
+                    case 1:
+                        DiscoverView()
+                            .environmentObject(viewModel)
+                    case 2:
+                        CreateView(userType: userType)
+                            .environmentObject(viewModel)
+                    case 3:
+                        CommunityView()
+                            .environmentObject(viewModel)
+                    case 4:
+                        ProfileView(userType: userType)
+                            .environmentObject(viewModel)
+                    default:
+                        EmptyView()
+                    }
                 }
-                .tag(0)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)
+                ))
+            }
             
-            EnhancedDiscoverView()
-                .environmentObject(viewModel)
-                .tabItem {
-                    Label("Discover", systemImage: "magnifyingglass")
-                }
-                .tag(1)
-            
-            SellView(userType: userType)
-                .tabItem {
-                    Label("Create", systemImage: "plus.circle.fill")
-                }
-                .tag(2)
-            
-            CommunityView()
-                .tabItem {
-                    Label("Community", systemImage: "person.2.fill")
-                }
-                .tag(3)
-            
-            ProfileView(userType: userType)
-                .tabItem {
-                    Label("Profile", systemImage: "person.fill")
-                }
-                .tag(4)
+            // Custom mosaic tab bar
+            MosaicTabBar(
+                selectedTab: $selectedTab,
+                userType: userType,
+                connections: $tabConnections
+            )
+            .background(
+                // Subtle glass morphism effect
+                Color.clear.background(.ultraThinMaterial)
+                    .overlay(
+                        LinearGradient(
+                            colors: [
+                                Color.modaicsDarkBlue.opacity(0.8),
+                                Color.modaicsMidBlue.opacity(0.6)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+            )
         }
-        .opacity(contentOpacity)
         .onAppear {
-            withAnimation(.modaicsSpring) {
-                contentOpacity = 1
-                tabBarOffset = 0
+            setupTabConnections()
+            startPulseAnimation()
+        }
+    }
+    
+    private func setupTabConnections() {
+        // Create initial connections between tabs based on user behavior
+        tabConnections = [
+            TabConnection(from: 0, to: 1, strength: 0.8), // Home to Discover
+            TabConnection(from: 1, to: 2, strength: 0.6), // Discover to Create
+            TabConnection(from: 2, to: 3, strength: 0.7), // Create to Community
+            TabConnection(from: 3, to: 4, strength: 0.5)  // Community to Profile
+        ]
+    }
+    
+    private func startPulseAnimation() {
+        withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
+            mosaicPulse = 1.1
+        }
+    }
+}
+
+// MARK: - Mosaic Tab Bar
+struct MosaicTabBar: View {
+    @Binding var selectedTab: Int
+    let userType: ContentView.UserType
+    @Binding var connections: [MosaicMainAppView.TabConnection]
+    
+    @State private var tileScales: [CGFloat] = Array(repeating: 1.0, count: 5)
+    @State private var connectionOpacity: Double = 0.3
+    
+    let tabIcons = ["house.fill", "magnifyingglass", "plus.circle.fill", "person.2.fill", "person.fill"]
+    let tabTitles = ["Home", "Discover", "Create", "Community", "Profile"]
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                // Connection lines between tabs
+                Canvas { context, size in
+                    for connection in connections {
+                        drawConnection(
+                            context: context,
+                            size: size,
+                            from: connection.from,
+                            to: connection.to,
+                            strength: connection.strength
+                        )
+                    }
+                }
+                .opacity(connectionOpacity)
+                
+                // Tab items
+                HStack(spacing: 0) {
+                    ForEach(0..<5, id: \.self) { index in
+                        MosaicTabItem(
+                            icon: tabIcons[index],
+                            title: tabTitles[index],
+                            isSelected: selectedTab == index,
+                            scale: tileScales[index]
+                        )
+                        .onTapGesture {
+                            selectTab(index)
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+        }
+        .frame(height: 88)
+        .onAppear {
+            animateConnections()
+        }
+    }
+    
+    private func selectTab(_ index: Int) {
+        let previousTab = selectedTab
+        
+        // Haptic feedback
+        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+        impactFeedback.impactOccurred()
+        
+        // Animate selection
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            selectedTab = index
+            
+            // Scale animation for selected tile
+            tileScales[index] = 1.2
+            
+            // Create ripple effect
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    tileScales[index] = 1.0
+                }
+            }
+        }
+        
+        // Update connections
+        updateConnections(from: previousTab, to: index)
+    }
+    
+    private func updateConnections(from: Int, to: Int) {
+        // Strengthen connection between selected tabs
+        if let index = connections.firstIndex(where: {
+            ($0.from == from && $0.to == to) || ($0.from == to && $0.to == from)
+        }) {
+            withAnimation(.easeInOut(duration: 0.5)) {
+                connections[index] = MosaicMainAppView.TabConnection(
+                    from: from,
+                    to: to,
+                    strength: min(1.0, connections[index].strength + 0.1)
+                )
+            }
+        }
+    }
+    
+    private func animateConnections() {
+        withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+            connectionOpacity = 0.6
+        }
+    }
+    
+    private func drawConnection(context: GraphicsContext, size: CGSize, from: Int, to: Int, strength: CGFloat) {
+        let itemWidth = size.width / 5
+        let fromX = CGFloat(from) * itemWidth + itemWidth / 2
+        let toX = CGFloat(to) * itemWidth + itemWidth / 2
+        let y = size.height / 2
+        
+        var path = Path()
+        path.move(to: CGPoint(x: fromX, y: y))
+        
+        // Create curved connection
+        let controlY = y - 20 * strength
+        path.addQuadCurve(
+            to: CGPoint(x: toX, y: y),
+            control: CGPoint(x: (fromX + toX) / 2, y: controlY)
+        )
+        
+        context.stroke(
+            path,
+            with: .linearGradient(
+                Gradient(colors: [
+                    Color.modaicsChrome1.opacity(strength * 0.3),
+                    Color.modaicsChrome2.opacity(strength * 0.5),
+                    Color.modaicsChrome1.opacity(strength * 0.3)
+                ]),
+                startPoint: CGPoint(x: fromX, y: y),
+                endPoint: CGPoint(x: toX, y: y)
+            ),
+            lineWidth: 2 * strength
+        )
+    }
+}
+
+// MARK: - Mosaic Tab Item
+struct MosaicTabItem: View {
+    let icon: String
+    let title: String
+    let isSelected: Bool
+    let scale: CGFloat
+    
+    @State private var tileRotation: Double = 0
+    @State private var glowIntensity: Double = 0
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            ZStack {
+                // Hexagonal background
+                HexagonShape()
+                    .fill(
+                        LinearGradient(
+                            colors: isSelected ?
+                                [Color.modaicsChrome1, Color.modaicsChrome2] :
+                                [Color.modaicsChrome2.opacity(0.3), Color.modaicsChrome3.opacity(0.3)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 44, height: 44)
+                    .shadow(
+                        color: isSelected ? Color.modaicsChrome1.opacity(0.5) : .clear,
+                        radius: isSelected ? 8 : 0,
+                        y: 2
+                    )
+                    .scaleEffect(scale)
+                    .rotationEffect(.degrees(tileRotation))
+                
+                // Glow effect for selected state
+                if isSelected {
+                    HexagonShape()
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.5), Color.modaicsChrome1.opacity(0.3)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ),
+                            lineWidth: 1
+                        )
+                        .frame(width: 44, height: 44)
+                        .scaleEffect(scale * (1 + glowIntensity * 0.1))
+                        .blur(radius: 1)
+                }
+                
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCotton.opacity(0.7))
+                    .scaleEffect(scale)
+            }
+            
+            Text(title)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(isSelected ? .modaicsChrome1 : .modaicsCotton.opacity(0.6))
+                .scaleEffect(isSelected ? 1 : 0.9)
+        }
+        .frame(maxWidth: .infinity)
+        .onAppear {
+            if isSelected {
+                animateSelection()
+            }
+        }
+        .onChange(of: isSelected) { oldValue, newValue in
+            if newValue {
+                animateSelection()
+            }
+        }
+    }
+    
+    private func animateSelection() {
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+            tileRotation = 360
+        }
+        
+        withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) {
+            glowIntensity = 1
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            tileRotation = 0
+        }
+    }
+}
+
+// MARK: - Mosaic Background View
+struct MosaicBackgroundView: View {
+    let activeTab: Int
+    @State private var tiles: [BackgroundTile] = []
+    @State private var animationPhase: Double = 0
+    
+    struct BackgroundTile: Identifiable {
+        let id = UUID()
+        var position: CGPoint
+        var size: CGFloat
+        var color: Color
+        var opacity: Double
+        var rotation: Double
+    }
+    
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 0.1)) { timeline in
+            Canvas { context, size in
+                for tile in tiles {
+                    drawTile(context: &context, tile: tile, time: timeline.date.timeIntervalSince1970)
+                }
+            }
+        }
+        .onAppear {
+            generateTiles()
+        }
+        .onChange(of: activeTab) { oldTab, newTab in
+            animateTileTransition(from: oldTab, to: newTab)
+        }
+    }
+    
+    private func generateTiles() {
+        tiles = (0..<30).map { index in
+            BackgroundTile(
+                position: CGPoint(
+                    x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
+                    y: CGFloat.random(in: 0...UIScreen.main.bounds.height)
+                ),
+                size: CGFloat.random(in: 20...60),
+                color: [Color.modaicsChrome1, .modaicsChrome2, .modaicsChrome3, .modaicsDenim1].randomElement()!,
+                opacity: Double.random(in: 0.05...0.15),
+                rotation: Double.random(in: 0...360)
+            )
+        }
+    }
+    
+    private func drawTile(context: inout GraphicsContext, tile: BackgroundTile, time: TimeInterval) {
+            let animatedY = tile.position.y + sin(time + Double(tile.id.hashValue)) * 20
+            let animatedRotation = tile.rotation + time * 10
+            
+            context.opacity = tile.opacity
+            context.translateBy(x: tile.position.x, y: animatedY)
+            context.rotate(by: .degrees(animatedRotation))
+            
+            let rect = CGRect(x: -tile.size/2, y: -tile.size/2, width: tile.size, height: tile.size)
+            context.fill(
+                RoundedRectangle(cornerRadius: tile.size * 0.2).path(in: rect),
+                with: .linearGradient(
+                    Gradient(colors: [tile.color, tile.color.opacity(0.5)]),
+                    startPoint: rect.origin,
+                    endPoint: CGPoint(x: rect.maxX, y: rect.maxY)
+                )
+            )
+        }
+    
+    private func animateTileTransition(from: Int, to: Int) {
+        withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
+            // Rearrange tiles based on new tab
+            for index in tiles.indices {
+                tiles[index].opacity = Double.random(in: 0.05...0.15)
+                tiles[index].rotation += Double(to - from) * 45
             }
         }
     }
 }
+
 
 // MARK: - Premium Welcome Card
 struct PremiumWelcomeCard: View {
@@ -297,6 +554,7 @@ struct PremiumFeatureTile: View {
         }
     }
 }
+
 struct SimpleRecommender {
     static func similarItems(
         to target: FashionItem,

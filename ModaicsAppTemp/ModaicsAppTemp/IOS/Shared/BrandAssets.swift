@@ -313,3 +313,129 @@ extension Font {
         .system(size: size, weight: .light, design: .default)
     }
 }
+
+// MARK: - Color Theme
+extension Color {
+    // Dark sophisticated background colors
+    static let modaicsDarkBlue = Color(red: 0.1, green: 0.15, blue: 0.2)
+    static let modaicsMidBlue = Color(red: 0.15, green: 0.2, blue: 0.3)
+    static let modaicsLightBlue = Color(red: 0.2, green: 0.25, blue: 0.35)
+    
+    // Chrome/metallic colors
+    static let modaicsChrome1 = Color(red: 0.7, green: 0.75, blue: 0.8)
+    static let modaicsChrome2 = Color(red: 0.5, green: 0.55, blue: 0.65)
+    static let modaicsChrome3 = Color(red: 0.6, green: 0.65, blue: 0.75)
+    
+    // Denim blue for middle section
+    static let modaicsDenim1 = Color(red: 0.2, green: 0.4, blue: 0.7)
+    static let modaicsDenim2 = Color(red: 0.15, green: 0.3, blue: 0.6)
+    
+    // Cotton white variations
+    static let modaicsCotton = Color.white.opacity(0.9)
+    static let modaicsCottonLight = Color.white.opacity(0.6)
+}
+
+// MARK: - Custom Modifiers
+struct ShimmerEffect: ViewModifier {
+    @State private var phase: CGFloat = 0
+    
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0),
+                        Color.white.opacity(0.3),
+                        Color.white.opacity(0)
+                    ],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .rotationEffect(.degrees(30))
+                .offset(x: phase * 200 - 100)
+                .mask(content)
+            )
+            .onAppear {
+                withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
+                    phase = 1
+                }
+            }
+    }
+}
+
+// MARK: - Custom Animations
+extension Animation {
+    static let modaicsSpring = Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.1)
+    static let modaicsSmoothSpring = Animation.spring(response: 0.8, dampingFraction: 0.9, blendDuration: 0.1)
+    static let modaicsElastic = Animation.spring(response: 1.2, dampingFraction: 0.6, blendDuration: 0.1)
+}
+
+// MARK: - Chrome Door Component
+struct ChromeDoor: View {
+    let isLeft: Bool
+    @State private var handleGlow: Bool = false
+    
+    var body: some View {
+        ZStack {
+            // Main door body with premium gradient
+            RoundedRectangle(cornerRadius: 10)
+                .fill(
+                    LinearGradient(
+                        colors: isLeft ?
+                            [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3] :
+                            [.modaicsChrome3, .modaicsChrome2, .modaicsChrome1],
+                        startPoint: isLeft ? .topLeading : .topTrailing,
+                        endPoint: isLeft ? .bottomTrailing : .bottomLeading
+                    )
+                )
+                .frame(width: 45, height: 130)
+                .overlay(
+                    // Metallic sheen effect
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.3),
+                            Color.clear,
+                            Color.white.opacity(0.1)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .blendMode(.overlay)
+                )
+            
+            // Cotton texture overlay
+            VStack(spacing: 6) {
+                ForEach(0..<3, id: \.self) { _ in
+                    Capsule()
+                        .fill(Color.white.opacity(0.2))
+                        .frame(width: 28, height: 2)
+                        .blur(radius: 0.5)
+                }
+            }
+            
+            // Premium chrome handle
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [.white, .modaicsChrome1],
+                        center: .topLeading,
+                        startRadius: 1,
+                        endRadius: 8
+                    )
+                )
+                .frame(width: 10, height: 10)
+                .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
+                .overlay(
+                    Circle()
+                        .stroke(Color.white.opacity(0.8), lineWidth: 0.5)
+                )
+                .scaleEffect(handleGlow ? 1.2 : 1.0)
+                .offset(x: isLeft ? 15 : -15, y: 0)
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 2).repeatForever()) {
+                        handleGlow = true
+                    }
+                }
+        }
+    }
+}

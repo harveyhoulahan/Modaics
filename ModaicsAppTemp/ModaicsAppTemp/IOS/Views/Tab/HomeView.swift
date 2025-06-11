@@ -75,7 +75,7 @@ struct HomeView: View {
     // MARK: - header
     private var header: some View {
         HStack {
-            ModaicsLogo(size: 120)
+            MiniMosaicLogo()
             Text("modaics")
                 .font(.system(size: 24, weight: .ultraLight, design: .serif))
                 .foregroundStyle(
