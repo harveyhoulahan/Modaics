@@ -314,7 +314,6 @@ extension Font {
     }
 }
 
-<<<<<<< Updated upstream
 // MARK: - Color Theme
 extension Color {
     // Dark sophisticated background colors
@@ -815,3 +814,5 @@ struct MiniMosaicLogo: View {
 >>>>>>> Stashed changes
     }
 }
+=======
+>>>>>>> b7843a8 (Changing old logo to new in splash screen and home screen)

@@ -75,7 +75,11 @@ struct HomeView: View {
     // MARK: - header
     private var header: some View {
         HStack {
+<<<<<<< HEAD
             MiniMosaicLogo()
+=======
+            ModaicsMosaicLogo(size: 100)
+>>>>>>> b7843a8 (Changing old logo to new in splash screen and home screen)
             Text("modaics")
                 .font(.system(size: 24, weight: .ultraLight, design: .serif))
                 .foregroundStyle(
