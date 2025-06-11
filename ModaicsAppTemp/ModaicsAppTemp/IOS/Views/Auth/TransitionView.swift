@@ -52,7 +52,7 @@ struct TransitionView: View {
             // ───────── loading text + dots
             VStack(spacing: 24) {
                 Text(userType == .user
-                     ? "Preparing your wardrobe..."
+                     ? "Assembling your wardrobe..."
                      : "Setting up your brand dashboard...")
                     .font(.title3.weight(.light))
                     .foregroundStyle(

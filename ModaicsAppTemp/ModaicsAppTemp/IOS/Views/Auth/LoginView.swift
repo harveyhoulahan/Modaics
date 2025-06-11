@@ -48,7 +48,7 @@ struct LoginView: View {
 
     private var header: some View {
         HStack {
-            ModaicsLogo(size: 60)
+            ModaicsMosaicLogo(size: 80)
             Text("modaics")
                 .font(.system(size: 32, weight: .ultraLight, design: .serif))
                 .foregroundStyle(
