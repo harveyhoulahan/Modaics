@@ -246,7 +246,7 @@ struct DiscoverView: View {
         RefreshableGrid(
             items: viewModel.currentSearchResults,
             columns: 2,
-            spacing: 16,
+            spacing: 20,
             horizontalPadding: 20,
             onRefresh: {
                 await viewModel.loadInitialRecommendations()

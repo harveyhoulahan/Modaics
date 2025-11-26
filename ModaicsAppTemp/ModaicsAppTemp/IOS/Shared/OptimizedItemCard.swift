@@ -39,34 +39,44 @@ struct OptimizedItemCard: View {
             // Streamlined content
             contentSection
         }
+        .frame(maxWidth: .infinity)
+        .fixedSize(horizontal: false, vertical: true)
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(.ultraThinMaterial)
                 .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
         )
+        .clipped()
+        .layoutPriority(1)
     }
     
     @ViewBuilder
     private var imageSection: some View {
-        ZStack(alignment: .topTrailing) {
-            // Cached async image
-            if let imageURL = item.imageURLs.first {
-                CachedAsyncImage(url: imageURL) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    SkeletonRectangle(height: 200, cornerRadius: 16)
+        GeometryReader { geometry in
+            ZStack(alignment: .topTrailing) {
+                // Cached async image
+                if let imageURL = item.imageURLs.first {
+                    CachedAsyncImage(url: imageURL) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                    } placeholder: {
+                        SkeletonRectangle(height: geometry.size.height, cornerRadius: 16)
+                    }
+                } else {
+                    placeholderImage
+                        .frame(width: geometry.size.width, height: geometry.size.height)
                 }
-                .aspectRatio(3/4, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-            } else {
-                placeholderImage
+                
+                // Overlay badges and buttons
+                overlayContent
             }
-            
-            // Overlay badges and buttons
-            overlayContent
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
+        .frame(height: 240)
+        .clipped()
     }
     
     @ViewBuilder
@@ -79,7 +89,7 @@ struct OptimizedItemCard: View {
                     endPoint: .bottomTrailing
                 )
             )
-            .aspectRatio(3/4, contentMode: .fit)
+            .frame(height: 240)
             .overlay(
                 VStack(spacing: 12) {
                     Image(systemName: "photo.artframe")
@@ -138,10 +148,10 @@ struct OptimizedItemCard: View {
     private var likeButton: some View {
         Button {
             HapticManager.shared.impact(.light)
-            withAnimation(.modaicsElastic) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 isLiked.toggle()
-                viewModel.toggleLike(for: item)
             }
+            viewModel.toggleLike(for: item)
         } label: {
             ZStack {
                 Circle()
@@ -155,7 +165,7 @@ struct OptimizedItemCard: View {
                 Image(systemName: isLiked ? "heart.fill" : "heart")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(isLiked ? .red : .white)
-                    .scaleEffect(isLiked ? 1.2 : 1.0)
+                    .scaleEffect(isLiked ? 1.1 : 1.0)
             }
         }
         .buttonStyle(.plain)

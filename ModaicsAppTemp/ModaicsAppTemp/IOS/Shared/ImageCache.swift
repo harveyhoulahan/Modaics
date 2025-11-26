@@ -17,9 +17,9 @@ actor ImageCacheManager {
     private var downloadTasks: [String: Task<UIImage?, Never>] = [:]
     
     private init() {
-        // Configure cache limits
-        cache.countLimit = 200 // Maximum 200 images in memory
-        cache.totalCostLimit = 100 * 1024 * 1024 // 100 MB
+        // Configure cache limits for better performance
+        cache.countLimit = 150 // Reduced for better memory management
+        cache.totalCostLimit = 80 * 1024 * 1024 // 80 MB
     }
     
     func image(for urlString: String) -> UIImage? {
@@ -50,14 +50,15 @@ actor ImageCacheManager {
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 
-                // Decode and optimize image
+                // Decode and optimize image with higher quality
                 guard let image = UIImage(data: data) else { return nil }
                 
-                // Downsample for better memory usage
-                let downsampledImage = await downsample(image: image, to: CGSize(width: 800, height: 800))
+                // Downsample to balanced resolution for crisp rendering without excessive memory
+                // 1200px provides 2.5x quality for 240px cards (retina optimized)
+                let downsampledImage = downsample(image: image, to: CGSize(width: 1200, height: 1200))
                 
                 // Cache the result
-                await setImage(downsampledImage, for: urlString)
+                setImage(downsampledImage, for: urlString)
                 
                 return downsampledImage
             } catch {
@@ -72,7 +73,7 @@ actor ImageCacheManager {
         return result
     }
     
-    private func downsample(image: UIImage, to targetSize: CGSize) async -> UIImage {
+    private func downsample(image: UIImage, to targetSize: CGSize) -> UIImage {
         let size = image.size
         let widthRatio = targetSize.width / size.width
         let heightRatio = targetSize.height / size.height
@@ -83,8 +84,16 @@ actor ImageCacheManager {
         
         let newSize = CGSize(width: size.width * ratio, height: size.height * ratio)
         
-        let renderer = UIGraphicsImageRenderer(size: newSize)
-        return renderer.image { _ in
+        // Use higher quality rendering for crisp images
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 3.0 // 3x for retina quality
+        format.opaque = false
+        format.preferredRange = .standard
+        
+        let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
+        return renderer.image { context in
+            // Enable high quality interpolation
+            context.cgContext.interpolationQuality = .high
             image.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
@@ -116,7 +125,10 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
     var body: some View {
         Group {
             if let uiImage = loadedImage {
-                content(Image(uiImage: uiImage))
+                content(Image(uiImage: uiImage)
+                    .interpolation(.high)
+                    .antialiased(true)
+                )
             } else {
                 placeholder()
                     .task {
@@ -139,9 +151,8 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
         
         // Download if not cached
         if let downloaded = await ImageCacheManager.shared.downloadImage(from: urlString) {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                loadedImage = downloaded
-            }
+            // Instant update, no animation for better performance
+            loadedImage = downloaded
         }
         
         isLoading = false

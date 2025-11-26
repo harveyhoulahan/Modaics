@@ -40,11 +40,13 @@ struct PerformanceGrid<Item: Identifiable, ItemView: View>: View {
         ScrollView(showsIndicators: showsIndicators) {
             LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible(), spacing: spacing), count: columns),
+                alignment: .leading,
                 spacing: spacing
             ) {
                 ForEach(items) { item in
                     itemView(item)
                         .id(item.id)
+                        .frame(maxWidth: .infinity)
                 }
             }
             .padding(.horizontal, horizontalPadding)
@@ -124,11 +126,13 @@ struct RefreshableGrid<Item: Identifiable, ItemView: View>: View {
         ScrollView {
             LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible(), spacing: spacing), count: columns),
+                alignment: .leading,
                 spacing: spacing
             ) {
                 ForEach(items) { item in
                     itemView(item)
                         .id(item.id)
+                        .frame(maxWidth: .infinity)
                 }
             }
             .padding(.horizontal, horizontalPadding)
