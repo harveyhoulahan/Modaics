@@ -1,6 +1,46 @@
 version: '3.9'
 
 services:
+  # PostgreSQL database with pgvector for FindThisFit search
+  modaics-db:
+    image: pgvector/pgvector:pg16
+    container_name: modaics-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: modaics
+    ports:
+      - "5432:5432"
+    volumes:
+      - modaics-db-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI backend with FindThisFit CLIP search
+  backend-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: modaics-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./models:/app/models
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@modaics-db:5432/modaics
+      - MODEL_PATH=/app/models
+      - CLIP_MODEL=sentence-transformers/clip-ViT-B-32
+    depends_on:
+      modaics-db:
+        condition: service_healthy
+    command: uvicorn backend.app:app --host 0.0.0.0 --port 8000 --reload
+
+  # ML training service (for CoreML model generation)
   ml-training:
     build:
       context: .
@@ -15,14 +55,8 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
+    profiles:
+      - training  # Only run when explicitly requested
 
-  backend-api:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./models:/app/models:ro
-    environment:
-      - MODEL_PATH=/app/models/best_fashion_model.pth
+volumes:
+  modaics-db-data:
