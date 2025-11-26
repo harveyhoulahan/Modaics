@@ -181,7 +181,7 @@ struct OptimizedItemCard: View {
             
             // Price and category
             HStack {
-                Text("$\(Int(item.price))")
+                Text("$\(Int(item.listingPrice))")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(
                         LinearGradient(
@@ -193,8 +193,8 @@ struct OptimizedItemCard: View {
                 
                 Spacer()
                 
-                if !item.category.isEmpty {
-                    Text(item.category)
+                if item.category != .other {
+                    Text(item.category.rawValue)
                         .font(.caption2)
                         .foregroundColor(.modaicsCottonLight)
                         .padding(.horizontal, 8)
@@ -226,9 +226,9 @@ struct OptimizedItemCard: View {
         switch item.condition {
         case .new: return .green
         case .likeNew: return .blue
+        case .excellent: return .teal
         case .good: return .yellow
         case .fair: return .orange
-        case .worn: return .red
         }
     }
 }
