@@ -17,14 +17,14 @@ class HapticManager {
     private let impactLight = UIImpactFeedbackGenerator(style: .light)
     private let impactMedium = UIImpactFeedbackGenerator(style: .medium)
     private let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
-    private let selection = UISelectionFeedbackGenerator()
+    private let selectionGenerator = UISelectionFeedbackGenerator()
     private let notification = UINotificationFeedbackGenerator()
     
     private init() {
         // Prepare generators for faster response
         impactLight.prepare()
         impactMedium.prepare()
-        selection.prepare()
+        selectionGenerator.prepare()
     }
     
     // MARK: - Impact Feedback
@@ -57,9 +57,9 @@ class HapticManager {
     }
     
     // MARK: - Selection Feedback
-    func selection() {
-        selection.selectionChanged()
-        selection.prepare()
+    func selectionChanged() {
+        selectionGenerator.selectionChanged()
+        selectionGenerator.prepare()
     }
     
     // MARK: - Notification Feedback
@@ -117,12 +117,6 @@ extension View {
             }
         )
     }
-    
-    func hapticSelection() -> some View {
-        self.onChange(of: true) { _ in
-            HapticManager.shared.selection()
-        }
-    }
 }
 
 // MARK: - Button Style with Haptics
@@ -134,8 +128,8 @@ struct HapticButtonStyle: ButtonStyle {
         configuration.label
             .scaleEffect(configuration.isPressed ? scaleEffect : 1.0)
             .animation(.modaicsSpring, value: configuration.isPressed)
-            .onChange(of: configuration.isPressed) { isPressed in
-                if isPressed {
+            .onChange(of: configuration.isPressed) {
+                if configuration.isPressed {
                     HapticManager.shared.impact(hapticStyle)
                 }
             }
