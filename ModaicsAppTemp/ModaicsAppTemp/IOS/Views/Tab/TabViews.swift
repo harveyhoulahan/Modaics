@@ -243,20 +243,22 @@ struct DiscoverView: View {
     }
     
     private var itemsGrid: some View {
-        ScrollView {
-            LazyVGrid(columns: [
-                GridItem(.flexible(), spacing: 16),
-                GridItem(.flexible(), spacing: 16)
-            ], spacing: 16) {
-                ForEach(viewModel.currentSearchResults) { item in
-                    EnhancedItemCard(item: item)
-                        .onTapGesture {
-                            viewModel.trackItemView(item)
-                            selectedItem = item
-                        }
-                }
+        RefreshableGrid(
+            items: viewModel.currentSearchResults,
+            columns: 2,
+            spacing: 16,
+            horizontalPadding: 20,
+            onRefresh: {
+                await viewModel.loadInitialRecommendations()
             }
-            .padding(20)
+        ) { item in
+            OptimizedItemCard(item: item)
+                .environmentObject(viewModel)
+                .onTapGesture {
+                    HapticManager.shared.cardTap()
+                    viewModel.trackItemView(item)
+                    selectedItem = item
+                }
         }
     }
     
@@ -275,18 +277,16 @@ struct DiscoverView: View {
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
             
-            Button("Clear Filters") {
+            GlassButton(
+                "Clear Filters",
+                icon: "xmark.circle.fill",
+                style: .primary,
+                size: .medium
+            ) {
                 viewModel.selectedFilters = FilterOptions()
                 viewModel.searchQuery = ""
                 viewModel.selectedCategory = nil
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 12)
-            .background(
-                LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                               startPoint: .leading, endPoint: .trailing))
-            .foregroundColor(.modaicsDarkBlue)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()

@@ -38,6 +38,7 @@ models/
 Embeddings.json
 Filenames.json
 createml_training_data/
+export_progress.log
 
 # IDEs / OS
 .idea/

@@ -31,7 +31,7 @@ struct HomeView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 28) {
+                    LazyVStack(alignment: .leading, spacing: 28) {
 
                         header.padding(.horizontal, 20)
                                .padding(.top, 12)
@@ -65,6 +65,11 @@ struct HomeView: View {
                     }
                     .padding(.vertical)
                 }
+                .refreshable {
+                    HapticManager.shared.impact(.light)
+                    await refreshContent()
+                    HapticManager.shared.success()
+                }
             }
             .toolbar(.hidden, for: .navigationBar)
         }
@@ -91,12 +96,18 @@ struct HomeView: View {
             Spacer()
 
             HStack(spacing: 20) {
-                Button { showNotifications = true } label: {
+                Button { 
+                    HapticManager.shared.buttonTap()
+                    showNotifications = true 
+                } label: {
                     Image(systemName: "bell")
                         .font(.title3)
                         .foregroundColor(.modaicsChrome1)
                 }
-                Button { showSettings = true } label: {
+                Button { 
+                    HapticManager.shared.buttonTap()
+                    showSettings = true 
+                } label: {
                     Image(systemName: "gearshape")
                         .font(.title3)
                         .foregroundColor(.modaicsChrome1)
@@ -203,5 +214,10 @@ struct HomeView: View {
                 cardVisible[i] = true
             }
         }
+    }
+    
+    private func refreshContent() async {
+        // Refresh recommendations and data
+        await viewModel.loadInitialRecommendations()
     }
 }

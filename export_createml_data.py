@@ -48,6 +48,12 @@ async def export_for_createml():
     
     print(f"\n📦 Preparing to export {len(items):,} items...")
     
+    # SKIP first 5500 already downloaded items
+    SKIP_COUNT = 5500
+    items_to_process = items[SKIP_COUNT:]
+    print(f"⏩ Skipping first {SKIP_COUNT:,} already downloaded items")
+    print(f"📦 Processing remaining {len(items_to_process):,} items...")
+    
     # Statistics
     stats = {
         'category': defaultdict(int),
@@ -65,7 +71,7 @@ async def export_for_createml():
     
     # Download images with progress
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
-        for idx, item in enumerate(items, 1):
+        for idx, item in enumerate(items_to_process, start=SKIP_COUNT + 1):
             try:
                 title_lower = item['title'].lower()
                 
