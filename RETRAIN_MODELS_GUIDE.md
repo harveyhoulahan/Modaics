@@ -2,123 +2,119 @@
 
 ## Problem Analysis
 
-Your current models have poor accuracy because:
+Your current models have poor accuracy NOT because of bad labeling, but because **58.7% of your source data lacks color information in titles** and **32.5% can't be categorized from title alone**.
 
-### Color Classifier
-- **63% of training data is "unknown"** (9,289 / 14,629 images)
-- Model learned that most items are "unknown" → defaults to it
-- Only 393 blue examples, 270 navy, etc.
+### Current Training Data (from title parsing):
+- **Color**: 58.7% "unknown" (22,885 / 38,970 items) - titles don't mention color
+- **Category**: 32.5% "other" (12,674 / 38,970 items) - can't determine from title
+- **Brand**: 61.4% "other" (23,941 / 38,970 items) - not in top 35 tracked brands
 
-### Category Classifier  
-- **28% is "other"** (4,121 / 14,629 images)
-- Jacket (2,599) vs Shirt (885) confusion at boundaries
-- Blue Supreme jacket → "shirt" at 41.8% confidence
+### Model Performance:
+- **Brand Classifier**: 99.6% ✅ (works because visible in images - Supreme logo)
+- **Color Classifier**: 92.7% predicting "unknown" ❌ (learned that most items are "unknown")
+- **Category Classifier**: 41.8% predicting "shirt" for jacket ❌ (confusion between similar categories)
 
-### Brand Classifier
-- **Actually works great!** Supreme at 99.6% ✅
-- Good training data distribution
+## Root Cause: Unstructured Source Data
 
-## Solution: Clean Training Data
-
-### Step 1: Fix Colors in Database
-
-Run this SQL to relabel "unknown" colors based on actual color names in titles:
-
-```sql
--- Update items with color keywords in title
-UPDATE items 
-SET color = 'blue' 
-WHERE (color IS NULL OR color = 'unknown') 
-AND (title ILIKE '%blue%' OR title ILIKE '%navy%');
-
-UPDATE items 
-SET color = 'black'
-WHERE (color IS NULL OR color = 'unknown')
-AND title ILIKE '%black%';
-
-UPDATE items
-SET color = 'white'  
-WHERE (color IS NULL OR color = 'unknown')
-AND (title ILIKE '%white%' OR title ILIKE '%cream%');
-
-UPDATE items
-SET color = 'red'
-WHERE (color IS NULL OR color = 'unknown')  
-AND (title ILIKE '%red%' OR title ILIKE '%burgundy%');
-
-UPDATE items
-SET color = 'green'
-WHERE (color IS NULL OR color = 'unknown')
-AND (title ILIKE '%green%' OR title ILIKE '%olive%');
-
-UPDATE items
-SET color = 'brown'
-WHERE (color IS NULL OR color = 'unknown')
-AND (title ILIKE '%brown%' OR title ILIKE '%tan%' OR title ILIKE '%beige%');
-
-UPDATE items  
-SET color = 'gray'
-WHERE (color IS NULL OR color = 'unknown')
-AND (title ILIKE '%gray%' OR title ILIKE '%grey%' OR title ILIKE '%charcoal%');
-
-UPDATE items
-SET color = 'pink'  
-WHERE (color IS NULL OR color = 'unknown')
-AND title ILIKE '%pink%';
-
-UPDATE items
-SET color = 'purple'
-WHERE (color IS NULL OR color = 'unknown')  
-AND (title ILIKE '%purple%' OR title ILIKE '%lavender%');
-
-UPDATE items
-SET color = 'yellow'
-WHERE (color IS NULL OR color = 'unknown')
-AND (title ILIKE '%yellow%' OR title ILIKE '%mustard%');
-
-UPDATE items
-SET color = 'orange'  
-WHERE (color IS NULL OR color = 'unknown')
-AND (title ILIKE '%orange%' OR title ILIKE '%rust%');
-
--- Check remaining unknowns
-SELECT COUNT(*) FROM items WHERE color = 'unknown' OR color IS NULL;
+Your Find This Fit scraper only captures:
+```python
+# fashion_items table
+title: "Prada Candy Cosmetictoiletry Bags Boxed"  # Unstructured
+description: None
+brand: None  # Not extracted
+category: None  # Not extracted
+color: None  # Not extracted
 ```
 
-### Step 2: Fix Categories
-
-```sql
--- Better category detection from titles
-UPDATE items
-SET category = 'jacket'
-WHERE (category = 'other' OR category = 'shirt')  
-AND (title ILIKE '%jacket%' OR title ILIKE '%coat%' OR title ILIKE '%blazer%');
-
-UPDATE items
-SET category = 'hoodie'
-WHERE category = 'other'
-AND (title ILIKE '%hoodie%' OR title ILIKE '%hoody%');
-
-UPDATE items  
-SET category = 'sweater'
-WHERE category = 'other'
-AND (title ILIKE '%sweater%' OR title ILIKE '%jumper%' OR title ILIKE '%cardigan%');
-
-UPDATE items
-SET category = 'jeans'  
-WHERE category = 'pants'
-AND title ILIKE '%jeans%';
-
-UPDATE items
-SET category = 'sneakers'
-WHERE category = 'shoes'  
-AND (title ILIKE '%sneaker%' OR title ILIKE '%trainer%');
-
--- Check remaining "other"
-SELECT COUNT(*) FROM items WHERE category = 'other';
+You then parse titles with keyword matching:
+```python
+# export_createml_data.py
+if 'blue' in title_lower: color = 'blue'
+if 'jacket' in title_lower: category = 'jacket'
+if 'prada' in title_lower: brand = 'prada'
+# → 58.7% don't mention color, 32.5% don't fit categories
 ```
 
-### Step 3: Re-Export Training Data
+## Solution 1: Use Marketplace APIs (BEST)
+
+## Solution 1: Use Marketplace APIs (BEST)
+
+Depop, Grailed, and Vinted all provide structured data in their APIs:
+
+**Depop API** (example):
+```json
+{
+  "id": "12345",
+  "title": "Supreme Box Logo Hoodie",
+  "price": 450,
+  "brand_id": 235,  // ← Structured brand!
+  "category_id": 12,  // ← Structured category!
+  "colour": "Navy",  // ← Structured color!
+  "condition": "Used - Excellent",
+  "size": "L",
+  "description": "...",
+  "photos": ["url1", "url2"]
+}
+```
+
+**Update your scrapers** to extract these fields:
+```python
+# In your Depop scraper
+async def scrape_depop_item(item_id):
+    data = await fetch_depop_api(item_id)
+    
+    return {
+        'title': data['title'],
+        'brand': BRAND_MAP.get(data['brand_id'], 'Unknown'),  # Map ID to name
+        'category': CATEGORY_MAP.get(data['category_id']),
+        'color': data['colour'],  # Already structured!
+        'condition': data['condition'],
+        'size': data['size'],
+        # ...
+    }
+```
+
+**Expected improvement:**
+- Colors: 58.7% "unknown" → **~10% unknown** (only items truly missing data)
+- Categories: 32.5% "other" → **~5% other** (only truly uncategorizable items)
+
+## Solution 2: Vision API for Color (MEDIUM)
+
+Use your existing Vision color detection to label the 22,885 "unknown" items:
+
+```python
+# populate_colors_from_vision.py
+import asyncio
+import asyncpg
+from ModaicsAppTemp.IOS.Shared.VisionAnalysisService import VisionAnalysisService
+
+async def populate_missing_colors():
+    conn = await asyncpg.connect(...)
+    vision = VisionAnalysisService()
+    
+    # Get items with unknown color
+    items = await conn.fetch("""
+        SELECT id, image_url 
+        FROM fashion_items 
+        WHERE color = 'unknown' AND image_url IS NOT NULL
+    """)
+    
+    for item in items:
+        image = download_image(item['image_url'])
+        colors = await vision.detectColors(in: image)
+        
+        if colors:
+            await conn.execute("""
+                UPDATE fashion_items 
+                SET color = $1 
+                WHERE id = $2
+            """, colors[0], item['id'])
+```
+
+**Expected improvement:**
+- Colors: 58.7% "unknown" → **~15% unknown** (some images still unclear)
+
+## Solution 3: Manual Category Rules (QUICK FIX)
 
 ```bash
 # Delete old training images
