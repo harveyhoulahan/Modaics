@@ -33,55 +33,41 @@ struct MosaicMainAppView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Tab content with mosaic background
-            ZStack {
-                // Dynamic mosaic background that responds to navigation
-                // Commented out - causing visual overlay issues
-                // MosaicBackgroundView(activeTab: selectedTab)
-                //     .ignoresSafeArea()
-                
-                // Main content
-                Group {
-                    switch selectedTab {
-                    case 0:
-                        HomeView(userType: userType)
-                            .environmentObject(viewModel)
-                    case 1:
-                        DiscoverView()
-                            .environmentObject(viewModel)
-                    case 2:
-                        CreateView(userType: userType)
-                            .environmentObject(viewModel)
-                    case 3:
-                        CommunityView()
-                            .environmentObject(viewModel)
-                    case 4:
-                        ProfileView(userType: userType)
-                            .environmentObject(viewModel)
-                    default:
-                        EmptyView()
-                    }
+            // Tab content
+            Group {
+                switch selectedTab {
+                case 0:
+                    HomeView(userType: userType)
+                        .environmentObject(viewModel)
+                case 1:
+                    DiscoverView()
+                        .environmentObject(viewModel)
+                case 2:
+                    CreateView(userType: userType)
+                        .environmentObject(viewModel)
+                case 3:
+                    CommunityView()
+                        .environmentObject(viewModel)
+                case 4:
+                    ProfileView(userType: userType)
+                        .environmentObject(viewModel)
+                default:
+                    EmptyView()
                 }
-                .transition(.asymmetric(
-                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                    removal: .move(edge: .leading).combined(with: .opacity)
-                ))
             }
             
-            // Custom mosaic tab bar
-            MosaicTabBar(
+            // Simplified tab bar
+            SimplifiedTabBar(
                 selectedTab: $selectedTab,
-                userType: userType,
-                connections: $tabConnections
+                userType: userType
             )
             .background(
-                // Subtle glass morphism effect
-                Color.clear.background(.ultraThinMaterial)
+                Color.modaicsDarkBlue.opacity(0.95)
                     .overlay(
                         LinearGradient(
                             colors: [
-                                Color.modaicsDarkBlue.opacity(0.8),
-                                Color.modaicsMidBlue.opacity(0.6)
+                                Color.modaicsChrome1.opacity(0.1),
+                                Color.clear
                             ],
                             startPoint: .top,
                             endPoint: .bottom
@@ -89,30 +75,50 @@ struct MosaicMainAppView: View {
                     )
             )
         }
-        .onAppear {
-            setupTabConnections()
-            startPulseAnimation()
-        }
-    }
-    
-    private func setupTabConnections() {
-        // Create initial connections between tabs based on user behavior
-        tabConnections = [
-            TabConnection(from: 0, to: 1, strength: 0.8), // Home to Discover
-            TabConnection(from: 1, to: 2, strength: 0.6), // Discover to Create
-            TabConnection(from: 2, to: 3, strength: 0.7), // Create to Community
-            TabConnection(from: 3, to: 4, strength: 0.5)  // Community to Profile
-        ]
-    }
-    
-    private func startPulseAnimation() {
-        withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
-            mosaicPulse = 1.1
-        }
     }
 }
 
-// MARK: - Mosaic Tab Bar
+// MARK: - Simplified Tab Bar
+struct SimplifiedTabBar: View {
+    @Binding var selectedTab: Int
+    let userType: ContentView.UserType
+    
+    private let tabs = [
+        ("Home", "house.fill"),
+        ("Discover", "magnifyingglass"),
+        ("Create", "plus.circle.fill"),
+        ("Community", "person.2.fill"),
+        ("Profile", "person.fill")
+    ]
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<tabs.count, id: \.self) { index in
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        selectedTab = index
+                    }
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: tabs[index].1)
+                            .font(.system(size: 22))
+                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight.opacity(0.6))
+                        
+                        Text(tabs[index].0)
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight.opacity(0.6))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                }
+            }
+        }
+        .padding(.bottom, 8)
+        .background(Color.modaicsDarkBlue)
+    }
+}
+
+// MARK: - Old Complex Tab Bar (keeping for reference, not used)
 struct MosaicTabBar: View {
     @Binding var selectedTab: Int
     let userType: ContentView.UserType

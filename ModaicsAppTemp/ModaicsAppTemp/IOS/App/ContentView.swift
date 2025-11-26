@@ -53,18 +53,18 @@ struct ContentView: View {
                 case .splash:
                     SplashView(onAnimationComplete: {
                         logoAnimationComplete = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            withMosaicTransition {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            withAnimation(.easeOut(duration: 0.4)) {
                                 currentStage = .login
                             }
                         }
                     })
-                    .transition(.mosaicDissolve)
+                    .transition(.opacity)
                     
                 case .login:
                     LoginView(onUserSelect: { type in
                         userType = type
-                        withMosaicTransition {
+                        withAnimation(.easeOut(duration: 0.4)) {
                             currentStage = .transition
                         }
                         
@@ -77,16 +77,16 @@ struct ContentView: View {
                         Task {
                             await preloadUserData()
                             contentReady = true
-                            withMosaicTransition {
+                            withAnimation(.easeOut(duration: 0.4)) {
                                 currentStage = .main
                             }
                         }
                     })
-                    .transition(.mosaicAssemble)
+                    .transition(.opacity)
                     
                 case .transition:
-                    MosaicTransitionView(userType: userType, contentReady: contentReady)
-                        .transition(.opacity.combined(with: .scale))
+                    TransitionLoadingView(userType: userType)
+                        .transition(.opacity)
                     
                 case .main:
                     MosaicMainAppView(userType: userType ?? .user)
@@ -95,7 +95,7 @@ struct ContentView: View {
                 }
             }
         }
-        .animation(.easeInOut(duration: 0.8), value: currentStage)
+        .animation(.easeInOut(duration: 0.4), value: currentStage)
     }
     
     // MARK: - Helper Functions
@@ -119,206 +119,20 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Mosaic Transition View
-struct MosaicTransitionView: View {
+// MARK: - Simple Transition View
+struct TransitionLoadingView: View {
     let userType: ContentView.UserType?
-    let contentReady: Bool
-    
-    @State private var tilePositions: [CGPoint] = []
-    @State private var tilesVisible = false
     
     var body: some View {
-        ZStack {
-            // Animated mosaic pattern forming
-            ForEach(0..<20, id: \.self) { index in
-                MosaicTransitionTile(
-                    index: index,
-                    totalTiles: 20,
-                    isVisible: tilesVisible
-                )
-            }
+        VStack(spacing: 24) {
+            ModaicsMosaicLogo(size: 80)
             
-            VStack(spacing: 20) {
-                ModaicsMosaicLogo(size: 80)
-                    .scaleEffect(tilesVisible ? 1 : 0.8)
-                    .opacity(tilesVisible ? 1 : 0)
-                
-                Text(userType == .user ? "Assembling your wardrobe..." : "Preparing your brand dashboard...")
-                    .font(.system(size: 20, weight: .light))
-                    .foregroundColor(.modaicsCotton)
-                    .opacity(tilesVisible ? 1 : 0)
-                
-                MosaicLoadingIndicator()
-            }
-        }
-        .onAppear {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
-                tilesVisible = true
-            }
-        }
-    }
-}
-
-// MARK: - Mosaic Transition Tile
-struct MosaicTransitionTile: View {
-    let index: Int
-    let totalTiles: Int
-    let isVisible: Bool
-    
-    @State private var position: CGPoint = .zero
-    @State private var rotation: Double = 0
-    @State private var scale: CGFloat = 0
-    
-    var body: some View {
-        RoundedRectangle(cornerRadius: 8)
-            .fill(
-                LinearGradient(
-                    colors: [
-                        Color.modaicsChrome1.opacity(0.3),
-                        Color.modaicsChrome2.opacity(0.4)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .frame(width: 60, height: 60)
-            .rotationEffect(.degrees(rotation))
-            .scaleEffect(scale)
-            .position(position)
-            .onAppear {
-                calculateInitialPosition()
-                if isVisible {
-                    animateIn()
-                }
-            }
-            .onChange(of: isVisible) { oldValue, newValue in
-                if newValue {
-                    animateIn()
-                }
-            }
-    }
-    
-    private func calculateInitialPosition() {
-        let angle = (Double(index) / Double(totalTiles)) * 2 * .pi
-        let radius = 150.0
-        let centerX = UIScreen.main.bounds.width / 2
-        let centerY = UIScreen.main.bounds.height / 2
-        
-        position = CGPoint(
-            x: centerX + cos(angle) * radius * 2,
-            y: centerY + sin(angle) * radius * 2
-        )
-        rotation = Double.random(in: 0...360)
-    }
-    
-    private func animateIn() {
-        let angle = (Double(index) / Double(totalTiles)) * 2 * .pi
-        let radius = 100.0
-        let centerX = UIScreen.main.bounds.width / 2
-        let centerY = UIScreen.main.bounds.height / 2
-        
-        withAnimation(
-            .spring(response: 0.8, dampingFraction: 0.6)
-            .delay(Double(index) * 0.05)
-        ) {
-            position = CGPoint(
-                x: centerX + cos(angle) * radius,
-                y: centerY + sin(angle) * radius
-            )
-            rotation = 0
-            scale = 1
-        }
-    }
-}
-
-// MARK: - Custom Mosaic Transitions
-extension AnyTransition {
-    static var mosaicDissolve: AnyTransition {
-        .asymmetric(
-            insertion: .scale.combined(with: .opacity),
-            removal: .modifier(
-                active: MosaicDissolveModifier(progress: 1),
-                identity: MosaicDissolveModifier(progress: 0)
-            )
-        )
-    }
-    
-    static var mosaicAssemble: AnyTransition {
-        .modifier(
-            active: MosaicAssembleModifier(progress: 0),
-            identity: MosaicAssembleModifier(progress: 1)
-        )
-    }
-    
-    static var mosaicReveal: AnyTransition {
-        .asymmetric(
-            insertion: .modifier(
-                active: MosaicRevealModifier(progress: 0),
-                identity: MosaicRevealModifier(progress: 1)
-            ),
-            removal: .scale.combined(with: .opacity)
-        )
-    }
-}
-
-// MARK: - Transition Modifiers
-struct MosaicDissolveModifier: ViewModifier {
-    let progress: Double
-    
-    func body(content: Content) -> some View {
-        content
-            .opacity(1 - progress)
-            .scaleEffect(1 - progress * 0.2)
-            .blur(radius: progress * 10)
-    }
-}
-
-struct MosaicAssembleModifier: ViewModifier {
-    let progress: Double
-    
-    func body(content: Content) -> some View {
-        content
-            .opacity(progress)
-            .scaleEffect(0.8 + progress * 0.2)
-            .rotationEffect(.degrees((1 - progress) * 5))
-    }
-}
-
-struct MosaicRevealModifier: ViewModifier {
-    let progress: Double
-    
-    func body(content: Content) -> some View {
-        content
-            .opacity(progress)
-            .mask(
-                MosaicRevealMask(progress: progress)
-            )
-    }
-}
-
-struct MosaicRevealMask: View {
-    let progress: Double
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ForEach(0..<5, id: \.self) { row in
-                ForEach(0..<5, id: \.self) { col in
-                    let index = row * 5 + col
-                    let delay = Double(index) / 25.0
-                    let tileProgress = max(0, min(1, (progress - delay) * 2))
-                    
-                    Rectangle()
-                        .frame(
-                            width: geometry.size.width / 5,
-                            height: geometry.size.height / 5
-                        )
-                        .scaleEffect(tileProgress)
-                        .position(
-                            x: CGFloat(col) * geometry.size.width / 5 + geometry.size.width / 10,
-                            y: CGFloat(row) * geometry.size.height / 5 + geometry.size.height / 10
-                        )
-                }
-            }
+            Text(userType == .user ? "Setting up your wardrobe..." : "Preparing your dashboard...")
+                .font(.system(size: 18, weight: .light))
+                .foregroundColor(.modaicsCotton)
+            
+            ProgressView()
+                .tint(.modaicsChrome1)
         }
     }
 }
