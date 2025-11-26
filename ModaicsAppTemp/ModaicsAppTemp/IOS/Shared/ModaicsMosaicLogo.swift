@@ -16,7 +16,8 @@ struct ModaicsMosaicLogo: View {
     @State private var animationPhase: Double = 0
     @State private var glowIntensity: Double = 0.5
     @State private var tileRotations: [Double] = Array(repeating: 0, count: 12)
-    @State private var tileScales: [CGFloat] = Array(repeating: 0.8, count: 12)
+    @State private var tileScales: [CGFloat] = Array(repeating: 1.0, count: 12)
+    @State private var hasAnimated = false
     
     init(size: CGFloat = 120) {
         self.size = size
@@ -166,30 +167,33 @@ struct ModaicsMosaicLogo: View {
             }
         }
         .onAppear {
+            // Only animate once to prevent jarring re-animations
+            guard !hasAnimated else { return }
+            hasAnimated = true
             startAnimations()
         }
     }
     
     private func startAnimations() {
-        // Main rotation animation
-        withAnimation(.linear(duration: 30).repeatForever(autoreverses: false)) {
+        // Subtle main rotation animation
+        withAnimation(.linear(duration: 40).repeatForever(autoreverses: false)) {
             animationPhase = .pi * 2
         }
         
-        // Glow pulsing
-        withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
-            glowIntensity = 1.0
+        // Gentle glow pulsing
+        withAnimation(.easeInOut(duration: 4).repeatForever(autoreverses: true)) {
+            glowIntensity = 0.8
         }
         
-        // Individual tile animations
+        // Very subtle tile animations
         for index in tileRotations.indices {
             withAnimation(
-                .easeInOut(duration: Double.random(in: 2...4))
+                .easeInOut(duration: Double.random(in: 3...5))
                 .repeatForever(autoreverses: true)
-                .delay(Double(index) * 0.1)
+                .delay(Double(index) * 0.15)
             ) {
-                tileRotations[index] = Double.random(in: -30...30)
-                tileScales[index] = CGFloat.random(in: 0.9...1.1)
+                tileRotations[index] = Double.random(in: -15...15)
+                tileScales[index] = CGFloat.random(in: 0.95...1.05)
             }
         }
     }

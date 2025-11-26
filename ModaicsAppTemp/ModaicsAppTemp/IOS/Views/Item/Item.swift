@@ -32,13 +32,16 @@ struct FashionItem: Identifiable, Codable {
     var likeCount: Int
     var isAvailable: Bool
     var embeddingVector: [Float]? // For ML recommendations
+    var externalURL: String? // Link to external marketplace (Depop, Grailed, Vinted)
+    var similarity: Double? // Similarity score from AI search (0-1)
     var tags: [String] {
         colourTags + styleTags
     }
     
     // Computed properties
     var priceReduction: Double {
-        guard originalPrice > 0 else { return 0 }
+        guard originalPrice > 0, listingPrice >= 0, !originalPrice.isNaN, !listingPrice.isNaN else { return 0 }
+        guard originalPrice > listingPrice else { return 0 }
         return ((originalPrice - listingPrice) / originalPrice) * 100
     }
     
@@ -68,7 +71,9 @@ struct FashionItem: Identifiable, Codable {
         viewCount: Int = 0,
         likeCount: Int = 0,
         isAvailable: Bool = true,
-        embeddingVector: [Float]? = nil
+        embeddingVector: [Float]? = nil,
+        externalURL: String? = nil,
+        similarity: Double? = nil
     ) {
         self.id = id
         self.name = name
@@ -92,6 +97,8 @@ struct FashionItem: Identifiable, Codable {
         self.likeCount = likeCount
         self.isAvailable = isAvailable
         self.embeddingVector = embeddingVector
+        self.externalURL = externalURL
+        self.similarity = similarity
     }
 }
 
@@ -127,7 +134,7 @@ enum Category: String, CaseIterable, Codable {
         case .bags: return "bag"
         case .jewelry: return "sparkles"
         case .other: return "questionmark.circle"
-        case .jackets: return "jumper"
+        case .jackets: return "coat" // Changed from "jumper" which doesn't exist
         }
     }
 }

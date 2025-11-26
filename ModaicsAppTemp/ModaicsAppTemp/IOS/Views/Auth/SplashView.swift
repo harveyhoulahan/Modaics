@@ -23,7 +23,6 @@ struct SplashView: View {
     @State private var mosaicTilesVisible = false
     @State private var textOpacity: Double = 0
     @State private var textOffset: CGFloat = 50
-    @State private var shimmerOffset: CGFloat = -300
     @State private var backgroundTiles: [TileData] = []
     @State private var taglineOpacity: Double = 0
     
@@ -78,34 +77,15 @@ struct SplashView: View {
                 
                 // Brand typography with shimmer
                 VStack(spacing: 16) {
-                    ZStack {
-                        Text("modaics")
-                            .font(.system(size: 56, weight: .ultraLight, design: .serif))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
+                    Text("modaics")
+                        .font(.system(size: 56, weight: .ultraLight, design: .serif))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3],
+                                startPoint: .leading,
+                                endPoint: .trailing
                             )
-                        
-                        // Shimmer overlay
-                        LinearGradient(
-                            colors: [
-                                Color.clear,
-                                Color.white.opacity(0.4),
-                                Color.clear
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
                         )
-                        .frame(width: 80)
-                        .offset(x: shimmerOffset)
-                        .mask(
-                            Text("modaics")
-                                .font(.system(size: 56, weight: .ultraLight, design: .serif))
-                        )
-                    }
                     
                     Text("A digital mosaic of sustainable fashion")
                         .font(.system(size: 18, weight: .light))
@@ -171,63 +151,58 @@ struct SplashView: View {
     
     // MARK: - Animation Sequence
     private func startAnimationSequence() {
-        // Logo entrance
-        withAnimation(.spring(response: 1.2, dampingFraction: 0.7, blendDuration: 0)) {
+        // Logo entrance - smoother and faster
+        withAnimation(.spring(response: 0.8, dampingFraction: 0.75)) {
             logoScale = 1.0
             logoOpacity = 1.0
             logoRotation = 0
         }
         
-        // Background tiles cascade
-        for (index, _) in backgroundTiles.enumerated() {
+        // Background tiles cascade - reduced for performance
+        for (index, _) in backgroundTiles.prefix(30).enumerated() {
             withAnimation(
-                .spring(response: 0.8, dampingFraction: 0.6)
-                .delay(Double(index) * 0.02 + 0.3)
+                .spring(response: 0.6, dampingFraction: 0.7)
+                .delay(Double(index) * 0.015 + 0.2)
             ) {
-                backgroundTiles[index].opacity = 0.15
+                backgroundTiles[index].opacity = 0.12
                 backgroundTiles[index].scale = 1.0
             }
         }
         
-        // Text appearance
-        withAnimation(.easeOut(duration: 0.8).delay(0.8)) {
+        // Text appearance - smoother
+        withAnimation(.easeOut(duration: 0.6).delay(0.5)) {
             textOpacity = 1.0
             textOffset = 0
         }
         
-        // Shimmer effect
-        withAnimation(.linear(duration: 2).delay(1.2).repeatForever(autoreverses: false)) {
-            shimmerOffset = 300
-        }
-        
         // Tagline fade in
-        withAnimation(.easeIn(duration: 0.6).delay(1.0)) {
+        withAnimation(.easeIn(duration: 0.5).delay(0.7)) {
             taglineOpacity = 1.0
         }
         
         // Trigger completion
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             onAnimationComplete()
         }
     }
     
     // MARK: - Generate Background Tiles
     private func generateBackgroundTiles() {
-        let tileCount = 50
+        let tileCount = 35 // Reduced from 50 for better performance
         let colors: [Color] = [
-            .modaicsChrome1.opacity(0.3),
-            .modaicsChrome2.opacity(0.3),
-            .modaicsChrome3.opacity(0.3),
-            .modaicsDenim1.opacity(0.2),
-            .modaicsDenim2.opacity(0.2)
+            .modaicsChrome1.opacity(0.25),
+            .modaicsChrome2.opacity(0.25),
+            .modaicsChrome3.opacity(0.25),
+            .modaicsDenim1.opacity(0.15),
+            .modaicsDenim2.opacity(0.15)
         ]
         
         for _ in 0..<tileCount {
             let randomX = CGFloat.random(in: 0...UIScreen.main.bounds.width)
             let randomY = CGFloat.random(in: 0...UIScreen.main.bounds.height)
-            let randomSize = CGFloat.random(in: 20...60)
+            let randomSize = CGFloat.random(in: 25...55)
             let randomColor = colors.randomElement() ?? .modaicsChrome1
-            let randomDelay = Double.random(in: 0...0.5)
+            let randomDelay = Double.random(in: 0...0.3)
             let randomRotation = Double.random(in: 0...360)
             
             backgroundTiles.append(

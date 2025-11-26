@@ -37,6 +37,7 @@ models/
 *.mlmodel
 Embeddings.json
 Filenames.json
+createml_training_data/
 
 # IDEs / OS
 .idea/

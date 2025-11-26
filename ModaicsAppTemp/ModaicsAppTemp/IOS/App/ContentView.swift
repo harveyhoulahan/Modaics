@@ -53,8 +53,8 @@ struct ContentView: View {
                 case .splash:
                     SplashView(onAnimationComplete: {
                         logoAnimationComplete = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            withAnimation(.easeOut(duration: 0.4)) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            withAnimation(.easeInOut(duration: 0.5)) {
                                 currentStage = .login
                             }
                         }
@@ -64,7 +64,7 @@ struct ContentView: View {
                 case .login:
                     LoginView(onUserSelect: { type in
                         userType = type
-                        withAnimation(.easeOut(duration: 0.4)) {
+                        withAnimation(.easeInOut(duration: 0.5)) {
                             currentStage = .transition
                         }
                         
@@ -77,7 +77,9 @@ struct ContentView: View {
                         Task {
                             await preloadUserData()
                             contentReady = true
-                            withAnimation(.easeOut(duration: 0.4)) {
+                            // Add small delay before showing main content
+                            try? await Task.sleep(nanoseconds: 200_000_000)
+                            withAnimation(.easeInOut(duration: 0.6)) {
                                 currentStage = .main
                             }
                         }
@@ -95,7 +97,7 @@ struct ContentView: View {
                 }
             }
         }
-        .animation(.easeInOut(duration: 0.4), value: currentStage)
+        .animation(.easeInOut(duration: 0.5), value: currentStage)
     }
     
     // MARK: - Helper Functions
@@ -110,7 +112,7 @@ struct ContentView: View {
     
     private func preloadUserData() async {
         // Simulate data loading - replace with actual API calls
-        try? await Task.sleep(nanoseconds: 1_500_000_000)
+        try? await Task.sleep(nanoseconds: 1_200_000_000)
         
         // Preload recommendations
         if let firstItem = viewModel.allItems.first {

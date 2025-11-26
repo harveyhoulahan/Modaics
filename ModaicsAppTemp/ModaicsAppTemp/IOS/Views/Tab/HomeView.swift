@@ -15,6 +15,7 @@ struct HomeView: View {
     @State private var headerOffset:  CGFloat = -50
     @State private var welcomeScale:  CGFloat = 0.90
     @State private var cardVisible               = [false, false, false, false]
+    @State private var hasAnimated = false
 
     // sheets
     @State private var showNotifications = false
@@ -69,7 +70,12 @@ struct HomeView: View {
         }
         .sheet(isPresented: $showNotifications) { NotificationsView() }
         .sheet(isPresented: $showSettings)      { SettingsView()      }
-        .onAppear { runAppearAnimations() }
+        .onAppear {
+            // Only animate once to prevent jarring transitions when switching tabs
+            guard !hasAnimated else { return }
+            hasAnimated = true
+            runAppearAnimations()
+        }
     }
 
     // MARK: - header
@@ -187,12 +193,13 @@ struct HomeView: View {
     }
 
     private func runAppearAnimations() {
-        withAnimation(.modaicsSpring) {
+        // Smooth, staggered entrance animations
+        withAnimation(.easeOut(duration: 0.6)) {
             headerOffset  = 0
             welcomeScale  = 1
         }
         for i in cardVisible.indices {
-            withAnimation(.modaicsSpring.delay(0.3 + Double(i)*0.1)) {
+            withAnimation(.easeOut(duration: 0.5).delay(0.2 + Double(i)*0.08)) {
                 cardVisible[i] = true
             }
         }

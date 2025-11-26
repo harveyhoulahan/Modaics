@@ -17,7 +17,6 @@ struct EnhancedItemCard: View {
     let item: FashionItem
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var isLiked = false
-    @State private var cardScale: CGFloat = 1.0
     @State private var imageLoaded = false
     @State private var sustainabilityVisible = false
     
@@ -34,21 +33,28 @@ struct EnhancedItemCard: View {
                 .fill(.ultraThinMaterial)
                 .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
         )
-        .scaleEffect(cardScale)
-        .onTapGesture {
-            withAnimation(.modaicsSpring) {
-                cardScale = 0.98
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation(.modaicsSpring) {
-                    cardScale = 1.0
-                }
-            }
-        }
         .onAppear {
             withAnimation(.modaicsSpring.delay(0.2)) {
                 sustainabilityVisible = true
             }
+        }
+    }
+    
+    private var placeholderView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "photo.artframe")
+                .font(.system(size: 32, weight: .ultraLight))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.modaicsChrome1.opacity(0.6), .modaicsChrome2.opacity(0.4)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+            
+            Text("Premium Fashion")
+                .font(.modaicsCaption(12))
+                .foregroundColor(.modaicsCottonLight)
         }
     }
     
@@ -66,33 +72,47 @@ struct EnhancedItemCard: View {
                 .aspectRatio(3/4, contentMode: .fit)
                 .overlay(
                     Group {
-                        if let imageName = item.imageURLs.first,
-                           let uiImage = UIImage(named: imageName) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFill()
-                                .opacity(imageLoaded ? 1 : 0)
-                                .onAppear {
-                                    withAnimation(.easeInOut(duration: 0.6)) {
-                                        imageLoaded = true
+                        if let imageURLString = item.imageURLs.first, !imageURLString.isEmpty {
+                            // Check if it's a local image name or a URL
+                            if imageURLString.hasPrefix("http://") || imageURLString.hasPrefix("https://") {
+                                // Load from URL using AsyncImage
+                                AsyncImage(url: URL(string: imageURLString)) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                            .tint(.modaicsChrome1)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .opacity(imageLoaded ? 1 : 0)
+                                            .onAppear {
+                                                withAnimation(.easeInOut(duration: 0.6)) {
+                                                    imageLoaded = true
+                                                }
+                                            }
+                                    case .failure:
+                                        placeholderView
+                                    @unknown default:
+                                        placeholderView
                                     }
                                 }
-                        } else {
-                            VStack(spacing: 12) {
-                                Image(systemName: "photo.artframe")
-                                    .font(.system(size: 32, weight: .ultraLight))
-                                    .foregroundStyle(
-                                        LinearGradient(
-                                            colors: [.modaicsChrome1.opacity(0.6), .modaicsChrome2.opacity(0.4)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                                
-                                Text("Premium Fashion")
-                                    .font(.modaicsCaption(12))
-                                    .foregroundColor(.modaicsCottonLight)
+                            } else if let uiImage = UIImage(named: imageURLString) {
+                                // Load local image
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .opacity(imageLoaded ? 1 : 0)
+                                    .onAppear {
+                                        withAnimation(.easeInOut(duration: 0.6)) {
+                                            imageLoaded = true
+                                        }
+                                    }
+                            } else {
+                                placeholderView
                             }
+                        } else {
+                            placeholderView
                         }
                     }
                 )
@@ -150,9 +170,27 @@ struct EnhancedItemCard: View {
                     HStack {
                         SustainabilityBadge(score: item.sustainabilityScore)
                         Spacer()
+                        
+                        // Platform badge (if from external marketplace)
+                        if let externalURL = item.externalURL, !externalURL.isEmpty {
+                            PlatformBadge(url: externalURL)
+                        }
                     }
                 }
                 .padding(12)
+            }
+            
+            // Similarity badge (if AI search result)
+            if let similarity = item.similarity, similarity > 0 {
+                VStack {
+                    HStack {
+                        Spacer()
+                        SimilarityBadge(similarity: similarity)
+                    }
+                    Spacer()
+                }
+                .padding(.top, 60)
+                .padding(.trailing, 12)
             }
         }
     }
@@ -182,7 +220,7 @@ struct EnhancedItemCard: View {
             // Price section with enhanced styling
             HStack(alignment: .bottom, spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("$\(Int(item.listingPrice))")
+                    Text("$\(Int(max(0, item.listingPrice.isNaN ? 0 : item.listingPrice)))")
                         .font(.modaicsHeadline(20))
                         .foregroundStyle(
                             LinearGradient(
@@ -192,7 +230,8 @@ struct EnhancedItemCard: View {
                             )
                         )
                     
-                    if item.originalPrice > item.listingPrice {
+                    if !item.originalPrice.isNaN && !item.listingPrice.isNaN && !item.priceReduction.isNaN && 
+                       item.originalPrice > item.listingPrice && item.priceReduction > 0 && item.priceReduction.isFinite {
                         HStack(spacing: 4) {
                             Text("$\(Int(item.originalPrice))")
                                 .font(.modaicsCaption(12))
@@ -818,5 +857,63 @@ struct SustainabilityMetric: View {
             Text(value).font(.headline).foregroundColor(.modaicsCotton)
             Text(label).font(.caption).foregroundColor(.modaicsCottonLight)
         }
+    }
+}
+
+// MARK: - Platform Badge
+struct PlatformBadge: View {
+    let url: String
+    
+    var platformInfo: (name: String, color: Color) {
+        if url.contains("depop") {
+            return ("Depop", Color.red)
+        } else if url.contains("grailed") {
+            return ("Grailed", Color.gray)
+        } else if url.contains("vinted") {
+            return ("Vinted", Color.blue)
+        } else {
+            return ("Market", Color.modaicsChrome1)
+        }
+    }
+    
+    var body: some View {
+        Text(platformInfo.name)
+            .font(.modaicsCaption(10))
+            .fontWeight(.bold)
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(
+                Capsule()
+                    .fill(platformInfo.color)
+            )
+    }
+}
+
+// MARK: - Similarity Badge
+struct SimilarityBadge: View {
+    let similarity: Double
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "sparkles")
+                .font(.system(size: 10, weight: .bold))
+                .foregroundColor(.modaicsAccent)
+            
+            Text("\(Int(similarity * 100))%")
+                .font(.modaicsCaption(11))
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(
+            Capsule()
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    Capsule()
+                        .stroke(Color.modaicsAccent.opacity(0.5), lineWidth: 1)
+                )
+        )
     }
 }

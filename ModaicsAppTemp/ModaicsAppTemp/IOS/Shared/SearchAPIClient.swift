@@ -25,31 +25,69 @@ struct SearchRequest: Codable {
 
 struct SearchResult: Codable, Identifiable {
     let id: Int
-    let title: String
-    let price: Double
-    let imageUrl: String
-    let itemUrl: String
-    let platform: String
-    let brand: String?
-    let size: String?
-    let condition: String?
+    let externalId: String?
+    let title: String?
+    let description: String?
+    let price: Double?
+    let url: String?
+    let imageUrl: String?
+    let source: String?
+    let distance: Double?
     let similarity: Double?
+    let redirectUrl: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, price, platform, brand, size, condition, similarity
+        case id
+        case externalId = "external_id"
+        case title
+        case description
+        case price
+        case url
         case imageUrl = "image_url"
-        case itemUrl = "item_url"
+        case source
+        case distance
+        case similarity
+        case redirectUrl = "redirect_url"
+    }
+    
+    // Computed properties for compatibility
+    var itemUrl: String {
+        redirectUrl ?? url ?? ""
+    }
+    
+    var platform: String {
+        source?.capitalized ?? "Unknown"
+    }
+    
+    var brand: String? {
+        // Extract brand from title if possible
+        extractBrand(from: title)
+    }
+    
+    private func extractBrand(from title: String?) -> String? {
+        guard let title = title else { return nil }
+        // Common brand patterns - could be enhanced
+        let brands = ["Prada", "Gucci", "Rick Owens", "Yohji Yamamoto", "Comme des Garçons", 
+                     "Nike", "Adidas", "Supreme", "Palace", "Stone Island", "CP Company",
+                     "Burberry", "Louis Vuitton", "Hermès", "Chanel", "Dior"]
+        for brand in brands {
+            if title.localizedCaseInsensitiveContains(brand) {
+                return brand
+            }
+        }
+        return nil
     }
 }
 
 struct SearchResponse: Codable {
-    let results: [SearchResult]
-    let count: Int
-    let queryType: String
+    let items: [SearchResult]
     
-    enum CodingKeys: String, CodingKey {
-        case results, count
-        case queryType = "query_type"
+    var count: Int {
+        items.count
+    }
+    
+    var queryType: String {
+        "search"
     }
 }
 
@@ -189,7 +227,7 @@ class SearchAPIClient: ObservableObject {
         // Decode response
         do {
             let searchResponse = try JSONDecoder().decode(SearchResponse.self, from: data)
-            return searchResponse.results
+            return searchResponse.items
         } catch {
             throw SearchAPIError.decodingError(error)
         }
@@ -213,7 +251,7 @@ class SearchAPIClient: ObservableObject {
             // Try to decode health response
             if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                let status = json["status"] as? String {
-                return status == "healthy"
+                return status == "ok" || status == "healthy"
             }
             
             return false
@@ -229,29 +267,50 @@ extension SearchAPIClient {
     
     /// Convert SearchResult to FashionItem for compatibility with existing UI
     static func toFashionItem(_ result: SearchResult) -> FashionItem {
-        // Map platform to category
+        let title = result.title ?? "Unknown Item"
+        let platform = result.platform
+        
+        // Safely extract price with fallback to 0
+        let price = result.price ?? 0.0
+        let safePrice = price.isNaN || price.isInfinite ? 0.0 : max(0, price)
+        let originalPrice = safePrice > 0 ? safePrice * 1.5 : 0.0
+        
+        // Map title/description to category
         let category: Category = {
-            let title = result.title.lowercased()
-            if title.contains("dress") { return .dresses }
-            if title.contains("shirt") || title.contains("top") || title.contains("tee") { return .tops }
-            if title.contains("pant") || title.contains("jean") || title.contains("trouser") { return .bottoms }
-            if title.contains("jacket") || title.contains("coat") { return .outerwear }
-            if title.contains("shoe") || title.contains("boot") || title.contains("sneaker") { return .shoes }
+            let searchText = (title + " " + (result.description ?? "")).lowercased()
+            if searchText.contains("dress") || searchText.contains("gown") { return .dresses }
+            if searchText.contains("shirt") || searchText.contains("top") || searchText.contains("tee") || searchText.contains("blouse") { return .tops }
+            if searchText.contains("pant") || searchText.contains("jean") || searchText.contains("trouser") || searchText.contains("short") { return .bottoms }
+            if searchText.contains("jacket") || searchText.contains("coat") || searchText.contains("blazer") || searchText.contains("cardigan") { return .outerwear }
+            if searchText.contains("shoe") || searchText.contains("boot") || searchText.contains("sneaker") || searchText.contains("trainer") { return .shoes }
+            if searchText.contains("bag") || searchText.contains("accessory") || searchText.contains("hat") || searchText.contains("scarf") { return .accessories }
             return .accessories
         }()
         
-        // Map condition string to Condition enum
+        // Map platform/condition to Condition enum
         let condition: Condition = {
-            guard let conditionStr = result.condition?.lowercased() else { return .good }
-            if conditionStr.contains("new") || conditionStr.contains("like new") { return .likeNew }
-            if conditionStr.contains("excellent") { return .excellent }
-            if conditionStr.contains("fair") || conditionStr.contains("used") { return .fair }
-            return .good
+            let desc = (result.description ?? "").lowercased()
+            if desc.contains("new with tags") || desc.contains("nwt") || desc.contains("brand new") { return .likeNew }
+            if desc.contains("excellent") || desc.contains("mint") || desc.contains("perfect") { return .excellent }
+            if desc.contains("good") || desc.contains("great") { return .good }
+            if desc.contains("fair") || desc.contains("used") || desc.contains("worn") { return .fair }
+            return .good // Default for secondhand
         }()
         
-        // Calculate sustainability score based on platform/condition
+        // Calculate sustainability score based on platform/condition and similarity
+        let baseScore = 70 // Secondhand items start at 70
+        let conditionBonus: Int = {
+            switch condition {
+            case .new: return 15
+            case .likeNew: return 10
+            case .excellent: return 8
+            case .good: return 5
+            case .fair: return 2
+            }
+        }()
+        
         let sustainabilityScore = SustainabilityScore(
-            totalScore: 70, // Default score for secondhand items
+            totalScore: min(baseScore + conditionBonus, 100),
             carbonFootprint: 2.5,
             waterUsage: 500,
             isRecycled: true, // All secondhand items are "recycled"
@@ -260,28 +319,33 @@ extension SearchAPIClient {
             fibreTraceVerified: false
         )
         
+        // Get image URL, fallback to empty string
+        let imageURLs = result.imageUrl.map { [$0] } ?? []
+        
         return FashionItem(
             id: UUID(),
-            name: result.title,
-            brand: result.brand ?? "Unknown",
+            name: title,
+            brand: result.brand ?? platform,
             category: category,
-            size: result.size ?? "N/A",
+            size: "N/A",
             condition: condition,
-            originalPrice: result.price * 1.5, // Estimate original price
-            listingPrice: result.price,
-            description: "Sourced from \(result.platform.capitalized)",
-            imageURLs: [result.imageUrl],
+            originalPrice: originalPrice,
+            listingPrice: safePrice,
+            description: result.description ?? "Sourced from \(platform)",
+            imageURLs: imageURLs,
             sustainabilityScore: sustainabilityScore,
             materialComposition: [],
             colorTags: [],
-            styleTags: [],
+            styleTags: [platform.lowercased(), "secondhand", "vintage"],
             location: "Secondhand Marketplace",
-            ownerId: "marketplace",
+            ownerId: "marketplace_\(platform.lowercased())",
             createdAt: Date(),
             updatedAt: Date(),
             viewCount: 0,
             likeCount: 0,
-            isAvailable: true
+            isAvailable: true,
+            externalURL: result.itemUrl,
+            similarity: result.similarity
         )
     }
 }
@@ -295,27 +359,29 @@ extension SearchAPIClient {
     static let sampleResults: [SearchResult] = [
         SearchResult(
             id: 1,
+            externalId: "123",
             title: "Vintage Prada Nylon Bag",
+            description: "Authentic vintage Prada bag in excellent condition",
             price: 450.00,
+            url: "https://depop.com/item/123",
             imageUrl: "https://example.com/bag.jpg",
-            itemUrl: "https://depop.com/item/123",
-            platform: "depop",
-            brand: "Prada",
-            size: "One Size",
-            condition: "Excellent",
-            similarity: 0.95
+            source: "depop",
+            distance: 0.05,
+            similarity: 0.95,
+            redirectUrl: "depop://product/123"
         ),
         SearchResult(
             id: 2,
+            externalId: "456",
             title: "Rick Owens DRKSHDW Ramones",
+            description: "Classic Rick Owens sneakers, size 42",
             price: 325.00,
+            url: "https://grailed.com/item/456",
             imageUrl: "https://example.com/shoes.jpg",
-            itemUrl: "https://grailed.com/item/456",
-            platform: "grailed",
-            brand: "Rick Owens",
-            size: "42 EU",
-            condition: "Good",
-            similarity: 0.89
+            source: "grailed",
+            distance: 0.11,
+            similarity: 0.89,
+            redirectUrl: "https://grailed.com/listings/456"
         )
     ]
 }

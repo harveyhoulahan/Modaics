@@ -13,6 +13,10 @@ struct DiscoverView: View {
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var showFilters = false
     @State private var selectedItem: FashionItem?
+    @State private var showImagePicker = false
+    @State private var showImageSourcePicker = false
+    @State private var imageSourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var showAISearchInfo = false
     
     var body: some View {
         NavigationStack {
@@ -23,6 +27,13 @@ struct DiscoverView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
+                    // AI Search Toggle & Status
+                    if viewModel.isAISearchEnabled || viewModel.selectedSearchImage != nil {
+                        aiSearchHeader
+                            .padding(.horizontal, 20)
+                            .padding(.top, 12)
+                    }
+                    
                     // Search Bar
                     searchBar
                         .padding(.horizontal, 20)
@@ -37,7 +48,7 @@ struct DiscoverView: View {
                         ProgressView()
                             .tint(.modaicsChrome1)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if viewModel.filteredItems.isEmpty {
+                    } else if viewModel.currentSearchResults.isEmpty {
                         emptyState
                     } else {
                         itemsGrid
@@ -46,6 +57,14 @@ struct DiscoverView: View {
             }
             .toolbar(.hidden, for: .navigationBar)
         }
+        .onAppear {
+            // Load initial AI recommendations when view appears
+            Task {
+                if viewModel.currentSearchResults.isEmpty {
+                    await viewModel.loadInitialRecommendations()
+                }
+            }
+        }
         .sheet(isPresented: $showFilters) {
             FilterView(filters: $viewModel.selectedFilters)
         }
@@ -53,6 +72,76 @@ struct DiscoverView: View {
             ItemDetailView(item: item)
                 .environmentObject(viewModel)
         }
+        .sheet(isPresented: $showImagePicker) {
+            CameraImagePicker(
+                image: Binding(
+                    get: { viewModel.selectedSearchImage },
+                    set: { image in
+                        if let image = image {
+                            viewModel.selectedSearchImage = image
+                            Task {
+                                await viewModel.performAISearch(query: viewModel.searchQuery.isEmpty ? nil : viewModel.searchQuery, image: image)
+                            }
+                        }
+                    }
+                ),
+                sourceType: imageSourceType
+            )
+        }
+        .confirmationDialog("Choose Image Source", isPresented: $showImageSourcePicker, titleVisibility: .visible) {
+            Button("Take Photo") {
+                imageSourceType = .camera
+                showImagePicker = true
+            }
+            Button("Choose from Library") {
+                imageSourceType = .photoLibrary
+                showImagePicker = true
+            }
+            Button("Cancel", role: .cancel) { }
+        }
+        .alert("AI Search", isPresented: $showAISearchInfo) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.isAISearchEnabled 
+                ? "AI search is active. Upload an image or enter text to find similar items across Depop, Grailed, and Vinted."
+                : "AI search is unavailable. Make sure the backend server is running on http://localhost:8000")
+        }
+    }
+    
+    private var aiSearchHeader: some View {
+        HStack(spacing: 12) {
+            // AI Status indicator
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(viewModel.isAISearchEnabled ? Color.green : Color.orange)
+                    .frame(width: 8, height: 8)
+                
+                Text(viewModel.isAISearchEnabled ? "AI Search Active" : "Local Search")
+                    .font(.caption)
+                    .foregroundColor(.modaicsCottonLight)
+            }
+            
+            Spacer()
+            
+            // Info button
+            Button {
+                showAISearchInfo = true
+            } label: {
+                Image(systemName: "info.circle")
+                    .foregroundColor(.modaicsChrome1)
+            }
+            
+            // Toggle button
+            Button {
+                viewModel.toggleSearchMode()
+            } label: {
+                Image(systemName: viewModel.isAISearchEnabled ? "sparkles" : "sparkles.slash")
+                    .foregroundColor(viewModel.isAISearchEnabled ? .modaicsChrome1 : .modaicsCottonLight)
+            }
+        }
+        .padding()
+        .background(Color.modaicsDarkBlue.opacity(0.4))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
     private var searchBar: some View {
@@ -66,10 +155,65 @@ struct DiscoverView: View {
                 .foregroundColor(.modaicsCotton)
                 .textFieldStyle(.plain)
             
-            Button { showFilters = true } label: {
-                Image(systemName: "slider.horizontal.3")
-                    .foregroundColor(.modaicsChrome1)
-                    .font(.title3)
+            // Image search button with preview
+            if viewModel.selectedSearchImage != nil {
+                Button {
+                    viewModel.selectedSearchImage = nil
+                    Task {
+                        await viewModel.performAISearch(query: viewModel.searchQuery.isEmpty ? nil : viewModel.searchQuery, image: nil)
+                    }
+                } label: {
+                    ZStack {
+                        if let searchImage = viewModel.selectedSearchImage {
+                            Image(uiImage: searchImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 32, height: 32)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.white)
+                            .background(Circle().fill(Color.black.opacity(0.5)))
+                            .font(.caption)
+                            .offset(x: 12, y: -12)
+                    }
+                    .frame(width: 32, height: 32)
+                }
+            }
+            
+            // Camera/Gallery button
+            Button {
+                showImageSourcePicker = true
+            } label: {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(LinearGradient(
+                            colors: [.modaicsChrome1.opacity(0.2), .modaicsChrome2.opacity(0.2)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                        .frame(width: 36, height: 36)
+                    
+                    Image(systemName: "camera.fill")
+                        .foregroundColor(.modaicsChrome1)
+                        .font(.system(size: 16, weight: .medium))
+                }
+            }
+            
+            // Filters button
+            Button {
+                showFilters = true
+            } label: {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.modaicsChrome1.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    
+                    Image(systemName: "slider.horizontal.3")
+                        .foregroundColor(.modaicsChrome1)
+                        .font(.system(size: 16, weight: .medium))
+                }
             }
         }
         .padding()
@@ -104,8 +248,8 @@ struct DiscoverView: View {
                 GridItem(.flexible(), spacing: 16),
                 GridItem(.flexible(), spacing: 16)
             ], spacing: 16) {
-                ForEach(viewModel.filteredItems) { item in
-                    ItemCard(item: item)
+                ForEach(viewModel.currentSearchResults) { item in
+                    EnhancedItemCard(item: item)
                         .onTapGesture {
                             viewModel.trackItemView(item)
                             selectedItem = item
@@ -320,7 +464,7 @@ struct CreateView: View {
                 }
                 
                 // Size Picker
-                VStack(alignment: \.leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
                     Picker("Size", selection: $selectedSize) {
                         ForEach(["XS", "S", "M", "L", "XL", "XXL"], id: \.self) { size in
                             Text(size).tag(size)
@@ -497,66 +641,142 @@ struct CommunityView: View {
     @State private var selectedTab = 0
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                // Tab Selection
-                Picker("Community", selection: $selectedTab) {
-                    Text("Feed").tag(0)
-                    Text("Events").tag(1)
-                    Text("Swaps").tag(2)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
+        NavigationStack {
+            ZStack {
+                // Match gradient background
+                LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
                 
-                switch selectedTab {
-                case 0:
-                    feedView
-                case 1:
-                    eventsView
-                case 2:
-                    swapsView
-                default:
-                    feedView
+                VStack(spacing: 0) {
+                    // Title
+                    HStack {
+                        Text("Community")
+                            .font(.system(size: 32, weight: .ultraLight, design: .serif))
+                            .foregroundColor(.modaicsCotton)
+                        
+                        Spacer()
+                        
+                        Button {
+                            // Create post action
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.modaicsChrome1)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 12)
+                    
+                    // Tab Selection
+                    HStack(spacing: 12) {
+                        ForEach([("Feed", 0), ("Events", 1), ("Swaps", 2)], id: \.1) { title, tag in
+                            Button {
+                                selectedTab = tag
+                            } label: {
+                                Text(title)
+                                    .font(.system(size: 15, weight: .medium))
+                                    .foregroundColor(selectedTab == tag ? .modaicsDarkBlue : .modaicsCottonLight)
+                                    .padding(.horizontal, 24)
+                                    .padding(.vertical, 10)
+                                    .background(
+                                        selectedTab == tag
+                                            ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
+                                                           startPoint: .leading, endPoint: .trailing)
+                                            : LinearGradient(colors: [Color.modaicsDarkBlue.opacity(0.4)],
+                                                           startPoint: .leading, endPoint: .trailing)
+                                    )
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 16)
+                    
+                    switch selectedTab {
+                    case 0:
+                        feedView
+                    case 1:
+                        eventsView
+                    case 2:
+                        swapsView
+                    default:
+                        feedView
+                    }
                 }
             }
-            .navigationTitle("Community")
-            .navigationBarItems(
-                trailing: Button(action: {}) {
-                    Image(systemName: "plus.circle.fill")
-                }
-            )
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
     
     private var feedView: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                ForEach(viewModel.communityPosts) { post in
-                    CommunityPostCard(post: post)
+            if viewModel.communityPosts.isEmpty {
+                VStack(spacing: 20) {
+                    Image(systemName: "bubble.left.and.bubble.right")
+                        .font(.system(size: 60))
+                        .foregroundColor(.modaicsChrome1.opacity(0.3))
+                    
+                    Text("No posts yet")
+                        .font(.system(size: 22, weight: .light, design: .serif))
+                        .foregroundColor(.modaicsCotton)
+                    
+                    Text("Be the first to share with the community")
+                        .font(.subheadline)
+                        .foregroundColor(.modaicsCottonLight)
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 100)
+            } else {
+                VStack(spacing: 16) {
+                    ForEach(viewModel.communityPosts) { post in
+                        CommunityPostCard(post: post)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
             }
-            .padding()
         }
     }
     
     private var eventsView: some View {
         ScrollView {
-            VStack(spacing: 16) {
-                ForEach(0..<3) { _ in
-                    EventCard()
-                }
+            VStack(spacing: 20) {
+                Image(systemName: "calendar")
+                    .font(.system(size: 60))
+                    .foregroundColor(.modaicsChrome1.opacity(0.3))
+                
+                Text("No upcoming events")
+                    .font(.system(size: 22, weight: .light, design: .serif))
+                    .foregroundColor(.modaicsCotton)
+                
+                Text("Check back soon for community events")
+                    .font(.subheadline)
+                    .foregroundColor(.modaicsCottonLight)
             }
-            .padding()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 100)
         }
     }
     
     private var swapsView: some View {
         ScrollView {
-            VStack(spacing: 16) {
-                SwapRequestCard()
-                SwapRequestCard()
+            VStack(spacing: 20) {
+                Image(systemName: "arrow.left.arrow.right")
+                    .font(.system(size: 60))
+                    .foregroundColor(.modaicsChrome1.opacity(0.3))
+                
+                Text("No active swaps")
+                    .font(.system(size: 22, weight: .light, design: .serif))
+                    .foregroundColor(.modaicsCotton)
+                
+                Text("Start a swap to exchange items sustainably")
+                    .font(.subheadline)
+                    .foregroundColor(.modaicsCottonLight)
             }
-            .padding()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 100)
         }
     }
 }
@@ -568,34 +788,65 @@ struct ProfileView: View {
     @State private var selectedTab = 0
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Profile Header
-                    profileHeader
-                    
-                    // Stats
-                    statsSection
-                    
-                    // Tab Selection
-                    Picker("Profile Content", selection: $selectedTab) {
-                        Text("Wardrobe").tag(0)
-                        Text("Liked").tag(1)
-                        Text("Reviews").tag(2)
+        NavigationStack {
+            ZStack {
+                // Match gradient background
+                LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Settings button
+                        HStack {
+                            Spacer()
+                            Button {
+                                // Settings action
+                            } label: {
+                                Image(systemName: "gearshape")
+                                    .font(.title2)
+                                    .foregroundColor(.modaicsChrome1)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                        
+                        // Profile Header
+                        profileHeader
+                        
+                        // Stats
+                        statsSection
+                        
+                        // Tab Selection
+                        HStack(spacing: 12) {
+                            ForEach([("Wardrobe", 0), ("Liked", 1), ("Reviews", 2)], id: \.1) { title, tag in
+                                Button {
+                                    selectedTab = tag
+                                } label: {
+                                    Text(title)
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(selectedTab == tag ? .modaicsDarkBlue : .modaicsCottonLight)
+                                        .padding(.horizontal, 20)
+                                        .padding(.vertical, 10)
+                                        .background(
+                                            selectedTab == tag
+                                                ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
+                                                               startPoint: .leading, endPoint: .trailing)
+                                                : LinearGradient(colors: [Color.modaicsDarkBlue.opacity(0.4)],
+                                                               startPoint: .leading, endPoint: .trailing)
+                                        )
+                                        .clipShape(Capsule())
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        // Content based on selection
+                        contentSection
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding(.horizontal)
-                    
-                    // Content based on selection
-                    contentSection
                 }
             }
-            .navigationTitle("Profile")
-            .navigationBarItems(
-                trailing: Button(action: {}) {
-                    Image(systemName: "gearshape")
-                }
-            )
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
     
@@ -603,7 +854,7 @@ struct ProfileView: View {
         VStack(spacing: 16) {
             Circle()
                 .fill(LinearGradient(
-                    colors: [.blue, .purple],
+                    colors: [.modaicsChrome1, .modaicsChrome2],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 ))
@@ -612,7 +863,7 @@ struct ProfileView: View {
                     Text(viewModel.currentUser?.username.prefix(1).uppercased() ?? "U")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
+                        .foregroundColor(.modaicsDarkBlue)
                 )
             
             VStack(spacing: 8) {
@@ -620,17 +871,19 @@ struct ProfileView: View {
                     Text(viewModel.currentUser?.username ?? "Username")
                         .font(.title2)
                         .fontWeight(.bold)
+                        .foregroundColor(.modaicsCotton)
                     
                     if viewModel.currentUser?.isVerified == true {
                         Image(systemName: "checkmark.seal.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.modaicsChrome1)
                     }
                 }
                 
                 Text(viewModel.currentUser?.bio ?? "No bio yet")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.modaicsCottonLight)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
                 
                 HStack {
                     Image(systemName: "location.fill")
@@ -638,32 +891,49 @@ struct ProfileView: View {
                     Text(viewModel.currentUser?.location ?? "Location")
                         .font(.caption)
                 }
-                .foregroundColor(.secondary)
+                .foregroundColor(.modaicsCottonLight)
             }
             
-            HStack(spacing: 20) {
+            HStack(spacing: 12) {
                 Button("Edit Profile") {
                     // Edit action
                 }
-                .buttonStyle(.bordered)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(.modaicsCotton)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Color.modaicsDarkBlue.opacity(0.6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 Button("Share") {
                     // Share action
                 }
-                .buttonStyle(.borderedProminent)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(.modaicsDarkBlue)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(
+                    LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
+                                 startPoint: .leading, endPoint: .trailing)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
         .padding()
     }
     
     private var statsSection: some View {
-        HStack(spacing: 30) {
+        HStack(spacing: 20) {
             StatItem(value: "\(viewModel.userWardrobe.count)", label: "Items")
             StatItem(value: "\(viewModel.currentUser?.followers.count ?? 0)", label: "Followers")
             StatItem(value: "\(viewModel.currentUser?.following.count ?? 0)", label: "Following")
             StatItem(value: "\(viewModel.calculateUserSustainabilityScore())", label: "Eco Score")
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .background(Color.modaicsDarkBlue.opacity(0.4))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(.horizontal, 20)
     }
     
     private var contentSection: some View {
@@ -682,9 +952,21 @@ struct ProfileView: View {
                 .padding()
             case 1:
                 // Liked items
-                Text("Liked items will appear here")
-                    .foregroundColor(.secondary)
-                    .padding()
+                VStack(spacing: 20) {
+                    Image(systemName: "heart")
+                        .font(.system(size: 60))
+                        .foregroundColor(.modaicsChrome1.opacity(0.3))
+                    
+                    Text("No liked items yet")
+                        .font(.system(size: 18, weight: .light, design: .serif))
+                        .foregroundColor(.modaicsCotton)
+                    
+                    Text("Start exploring to find items you love")
+                        .font(.subheadline)
+                        .foregroundColor(.modaicsCottonLight)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
             case 2:
                 // Reviews
                 VStack(spacing: 16) {
@@ -778,11 +1060,12 @@ struct ItemCard: View {
                     .lineLimit(2)
                 
                 HStack {
-                    Text("$\(Int(item.listingPrice))")
+                    Text("$\(Int(max(0, item.listingPrice.isNaN ? 0 : item.listingPrice)))")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.modaicsChrome1)
                     
-                    if item.originalPrice > item.listingPrice {
+                    if !item.originalPrice.isNaN && !item.listingPrice.isNaN && 
+                       item.originalPrice > item.listingPrice {
                         Text("$\(Int(item.originalPrice))")
                             .font(.caption)
                             .strikethrough()
@@ -801,7 +1084,6 @@ struct ItemCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
-
 
 struct ItemDetailView: View {
     let item: FashionItem
@@ -863,19 +1145,35 @@ struct ItemDetailView: View {
     // ───────── sub-views
     private var imageCarousel: some View {
         TabView(selection: $selectedImg) {
-            // if your model stores multiple image names, replace 0..<item.images.count
-            ForEach(0..<3) { idx in
+            // Use actual imageURLs from the item
+            ForEach(Array((item.imageURLs.isEmpty ? [""] : item.imageURLs).enumerated()), id: \.offset) { idx, imageURLString in
                 ZStack {
-                    if let ui = UIImage(named: item.name) {
+                    if !imageURLString.isEmpty && (imageURLString.hasPrefix("http://") || imageURLString.hasPrefix("https://")) {
+                        // Load from URL using AsyncImage
+                        AsyncImage(url: URL(string: imageURLString)) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .tint(.modaicsChrome1)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .background(Color.gray.opacity(0.2))
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            case .failure:
+                                placeholderImage
+                            @unknown default:
+                                placeholderImage
+                            }
+                        }
+                    } else if !imageURLString.isEmpty, let ui = UIImage(named: imageURLString) {
+                        // Local image
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFill()
                     } else {
-                        RoundedRectangle(cornerRadius: 0)
-                            .fill(Color.gray.opacity(0.2))
-                            .overlay(Image(systemName: "photo")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.gray.opacity(0.5)))
+                        placeholderImage
                     }
                 }
                 .tag(idx)
@@ -887,6 +1185,21 @@ struct ItemDetailView: View {
         .background(Color.black.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
+    
+    private var placeholderImage: some View {
+        RoundedRectangle(cornerRadius: 0)
+            .fill(Color.gray.opacity(0.2))
+            .overlay(
+                VStack(spacing: 12) {
+                    Image(systemName: "photo")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray.opacity(0.5))
+                    Text(item.brand)
+                        .font(.caption)
+                        .foregroundColor(.gray.opacity(0.5))
+                }
+            )
+    }
 
     private var priceBlock: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -895,11 +1208,12 @@ struct ItemDetailView: View {
             Text(item.name).font(.title2.weight(.bold)).foregroundColor(.modaicsCotton)
 
             HStack(spacing: 8) {
-                Text("$\(Int(item.listingPrice))")
+                Text("$\(Int(max(0, item.listingPrice.isNaN ? 0 : item.listingPrice)))")
                     .font(.title.weight(.bold))
                     .foregroundColor(.modaicsChrome1)
 
-                if item.originalPrice > item.listingPrice {
+                if !item.originalPrice.isNaN && !item.listingPrice.isNaN && !item.priceReduction.isNaN &&
+                   item.originalPrice > item.listingPrice && item.priceReduction > 0 && item.priceReduction.isFinite {
                     Text("$\(Int(item.originalPrice))")
                         .strikethrough()
                         .foregroundColor(.modaicsCottonLight)
@@ -917,17 +1231,35 @@ struct ItemDetailView: View {
 
     private var actionButtons: some View {
         HStack(spacing: 12) {
-            Button { /* checkout flow */ } label: {
-                Label("Buy Now", systemImage: "bag.fill")
-                    .frame(maxWidth: .infinity)
+            // If item has external URL (from marketplace), show "View on [Platform]" button
+            if let externalURL = item.externalURL, !externalURL.isEmpty, let url = URL(string: externalURL) {
+                Button {
+                    UIApplication.shared.open(url)
+                } label: {
+                    Label("View on \(getPlatformName(from: externalURL))", systemImage: "arrow.up.forward.app")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Button { /* checkout flow */ } label: {
+                    Label("Buy Now", systemImage: "bag.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
 
             Button { viewModel.toggleLike(for: item) } label: {
                 Image(systemName: viewModel.isLiked(item) ? "heart.fill" : "heart")
             }
             .buttonStyle(.bordered)
         }
+    }
+    
+    private func getPlatformName(from urlString: String) -> String {
+        if urlString.contains("depop") { return "Depop" }
+        if urlString.contains("grailed") { return "Grailed" }
+        if urlString.contains("vinted") { return "Vinted" }
+        return "Marketplace"
     }
 
     private var detailsCard: some View {
@@ -1223,10 +1555,11 @@ struct StatItem: View {
             Text(value)
                 .font(.title2)
                 .fontWeight(.bold)
+                .foregroundColor(.modaicsChrome1)
             
             Text(label)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(.modaicsCottonLight)
         }
     }
 }
@@ -1349,6 +1682,46 @@ struct ImagePicker: UIViewControllerRepresentable {
                     }
                 }
             }
+        }
+    }
+}
+
+// MARK: - Camera Image Picker
+struct CameraImagePicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    var sourceType: UIImagePickerController.SourceType
+    @Environment(\.dismiss) var dismiss
+    
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = sourceType
+        picker.delegate = context.coordinator
+        picker.allowsEditing = false
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: CameraImagePicker
+        
+        init(_ parent: CameraImagePicker) {
+            self.parent = parent
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.image = image
+            }
+            parent.dismiss()
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.dismiss()
         }
     }
 }

@@ -43,7 +43,7 @@ struct MosaicMainAppView: View {
                     DiscoverView()
                         .environmentObject(viewModel)
                 case 2:
-                    CreateView(userType: userType)
+                    SmartCreateView(userType: userType)
                         .environmentObject(viewModel)
                 case 3:
                     CommunityView()
