@@ -843,8 +843,11 @@ struct ItemDetailView: View {
         let activity = UIActivityViewController(
             activityItems: ["Check out \(item.name) on Modaics!"],
             applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?
-            .present(activity, animated: true)
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            rootViewController.present(activity, animated: true)
+        }
         #endif
     }
 }

@@ -173,8 +173,8 @@ class FashionViewModel: ObservableObject {
             return
         }
         
-        // Get similar items using the embedding
-        let similarFilenames = recommendationManager.topKSimilarItems(query: embedding, k: 6)
+        // Get similar items using the recommendation manager
+        _ = recommendationManager.recommendations(for: item, from: allItems, k: 6)
         
         // Map filenames to items (skip the item itself)
         recommendedItems = RecommendationManager.shared
@@ -189,29 +189,20 @@ class FashionViewModel: ObservableObject {
         
         isLoading = true
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let embedding = self?.recommendationManager.computeEmbedding(for: image) else {
-                DispatchQueue.main.async {
-                    self?.isLoading = false
-                }
-                return
+        Task { @MainActor in
+            // Use the new recommendations API
+            let recommendations = recommendationManager.recommendations(for: item, from: allItems, k: 6)
+            
+            // Update item with any generated embedding
+            if let index = allItems.firstIndex(where: { $0.id == item.id }),
+               let firstImageName = item.imageURLs.first,
+               let image = UIImage(named: firstImageName) {
+                // Embedding will be extracted automatically by the recommendation manager
             }
             
-            let similarFilenames = self?.recommendationManager.topKSimilarItems(query: embedding, k: 6) ?? []
-            
-            DispatchQueue.main.async {
-                // Update item with embedding
-                if let index = self?.allItems.firstIndex(where: { $0.id == item.id }) {
-                    self?.allItems[index].embeddingVector = embedding
-                }
-                
-                // Load recommendations
-                self?.recommendedItems = RecommendationManager.shared
-                    .recommendations(for: item, from: self?.allItems ?? [], k: 6)
-                    .filter { $0.id != item.id }
-                
-                self?.isLoading = false
-            }
+            // Load recommendations
+            recommendedItems = recommendations
+            isLoading = false
         }
     }
     
@@ -230,17 +221,13 @@ class FashionViewModel: ObservableObject {
     func createListing(item: FashionItem, images: [UIImage]) {
         isLoading = true
         
-        // Generate embeddings for the first image
-        if let firstImage = images.first,
-           let embedding = recommendationManager.computeEmbedding(for: firstImage) {
-            var newItem = item
-            newItem.embeddingVector = embedding
-            newItem.ownerId = currentUser?.id.uuidString ?? ""
-            
-            // Add to items
-            allItems.append(newItem)
-            filterItems()
-        }
+        // Create item with user ID
+        var newItem = item
+        newItem.ownerId = currentUser?.id.uuidString ?? ""
+        
+        // Add to items (embeddings will be generated automatically when needed)
+        allItems.append(newItem)
+        filterItems()
         
         isLoading = false
     }

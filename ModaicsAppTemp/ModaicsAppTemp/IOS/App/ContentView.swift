@@ -91,7 +91,7 @@ struct ContentView: View {
                 case .main:
                     MosaicMainAppView(userType: userType ?? .user)
                         .environmentObject(viewModel)
-                        .transition(.mosaicReveal)
+                        .transition(.opacity)
                 }
             }
         }

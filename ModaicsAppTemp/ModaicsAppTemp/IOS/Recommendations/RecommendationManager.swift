@@ -64,9 +64,9 @@ final class RecommendationManager {
         if let model = mlModel {
             Task.detached(priority: .userInitiated) {
                 if let uiImg = await self.loadFirstImage(for: queryItem),
-                   let vec   = self.extractEmbedding(from: uiImg, with: model) {
+                   let _   = self.extractEmbedding(from: uiImg, with: model) {
 
-                    // You can store `vec` somewhere persistent later if you wish.
+                    // You can store the embedding somewhere persistent later if you wish.
                 }
             }
         }
