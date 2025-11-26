@@ -36,8 +36,9 @@ struct MosaicMainAppView: View {
             // Tab content with mosaic background
             ZStack {
                 // Dynamic mosaic background that responds to navigation
-                MosaicBackgroundView(activeTab: selectedTab)
-                    .ignoresSafeArea()
+                // Commented out - causing visual overlay issues
+                // MosaicBackgroundView(activeTab: selectedTab)
+                //     .ignoresSafeArea()
                 
                 // Main content
                 Group {

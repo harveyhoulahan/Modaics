@@ -261,7 +261,7 @@ extension SearchAPIClient {
         )
         
         return FashionItem(
-            id: "\(result.id)",
+            id: UUID(),
             name: result.title,
             brand: result.brand ?? "Unknown",
             category: category,
