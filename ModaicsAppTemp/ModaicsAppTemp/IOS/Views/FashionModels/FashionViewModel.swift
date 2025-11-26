@@ -167,23 +167,21 @@ class FashionViewModel: ObservableObject {
     
     // MARK: - Recommendations
     func loadRecommendations(for item: FashionItem) {
-        guard let embedding = item.embeddingVector else {
-            // If no embedding, generate one from the first image
-            generateEmbeddingAndRecommend(for: item)
+        // Try using existing embedding first
+        if item.embeddingVector != nil {
+            // Map filenames to items (skip the item itself)
+            recommendedItems = RecommendationManager.shared
+                .recommendations(for: item, from: allItems, k: 6)
             return
         }
         
-        // Get similar items using the recommendation manager
-        _ = recommendationManager.recommendations(for: item, from: allItems, k: 6)
-        
-        // Map filenames to items (skip the item itself)
-        recommendedItems = RecommendationManager.shared
-            .recommendations(for: item, from: allItems, k: 6)
+        // If no embedding, generate recommendations anyway
+        generateEmbeddingAndRecommend(for: item)
     }
     
     private func generateEmbeddingAndRecommend(for item: FashionItem) {
         guard let firstImageName = item.imageURLs.first,
-              let image = UIImage(named: firstImageName) else {
+              let _ = UIImage(named: firstImageName) else {
             return
         }
         
@@ -193,10 +191,10 @@ class FashionViewModel: ObservableObject {
             // Use the new recommendations API
             let recommendations = recommendationManager.recommendations(for: item, from: allItems, k: 6)
             
-            // Update item with any generated embedding
-            if let index = allItems.firstIndex(where: { $0.id == item.id }),
-               let firstImageName = item.imageURLs.first,
-               let image = UIImage(named: firstImageName) {
+            // Update item with any generated embedding (if needed)
+            if let _ = allItems.firstIndex(where: { $0.id == item.id }),
+               let _ = item.imageURLs.first,
+               let _ = UIImage(named: firstImageName) {
                 // Embedding will be extracted automatically by the recommendation manager
             }
             

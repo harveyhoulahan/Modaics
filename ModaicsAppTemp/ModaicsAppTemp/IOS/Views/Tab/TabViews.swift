@@ -15,51 +15,66 @@ struct DiscoverView: View {
     @State private var selectedItem: FashionItem?
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                // Search Bar
-                searchBar
+        NavigationStack {
+            ZStack {
+                // Match HomeView gradient background
+                LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
                 
-                // Category Scroll
-                categoryScroll
-                
-                // Items Grid
-                if viewModel.isLoading {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if viewModel.filteredItems.isEmpty {
-                    emptyState
-                } else {
-                    itemsGrid
+                VStack(spacing: 0) {
+                    // Search Bar
+                    searchBar
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                    
+                    // Category Scroll
+                    categoryScroll
+                        .padding(.top, 12)
+                    
+                    // Items Grid
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .tint(.modaicsChrome1)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else if viewModel.filteredItems.isEmpty {
+                        emptyState
+                    } else {
+                        itemsGrid
+                    }
                 }
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Discover")
-            .navigationBarItems(
-                trailing: Button(action: { showFilters = true }) {
-                    Image(systemName: "slider.horizontal.3")
-                }
-            )
-            .sheet(isPresented: $showFilters) {
-                FilterView(filters: $viewModel.selectedFilters)
-            }
-            .sheet(item: $selectedItem) { item in
-                ItemDetailView(item: item)
-                    .environmentObject(viewModel)
-            }
+            .toolbar(.hidden, for: .navigationBar)
+        }
+        .sheet(isPresented: $showFilters) {
+            FilterView(filters: $viewModel.selectedFilters)
+        }
+        .sheet(item: $selectedItem) { item in
+            ItemDetailView(item: item)
+                .environmentObject(viewModel)
         }
     }
     
     private var searchBar: some View {
-        HStack {
+        HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
+                .foregroundColor(.modaicsChrome1)
+                .font(.title3)
             
             TextField("Search items, brands, or styles...", text: $viewModel.searchQuery)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(.system(size: 16))
+                .foregroundColor(.modaicsCotton)
+                .textFieldStyle(.plain)
+            
+            Button { showFilters = true } label: {
+                Image(systemName: "slider.horizontal.3")
+                    .foregroundColor(.modaicsChrome1)
+                    .font(.title3)
+            }
         }
         .padding()
-        .background(Color.white)
+        .background(Color.modaicsDarkBlue.opacity(0.6))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
     
     private var categoryScroll: some View {
@@ -79,10 +94,8 @@ struct DiscoverView: View {
                     )
                 }
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 20)
         }
-        .padding(.vertical, 8)
-        .background(Color.white)
     }
     
     private var itemsGrid: some View {
@@ -99,7 +112,7 @@ struct DiscoverView: View {
                         }
                 }
             }
-            .padding()
+            .padding(20)
         }
     }
     
@@ -107,15 +120,15 @@ struct DiscoverView: View {
         VStack(spacing: 20) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 60))
-                .foregroundColor(.gray.opacity(0.3))
+                .foregroundColor(.modaicsChrome1.opacity(0.3))
             
             Text("No items found")
-                .font(.headline)
-                .foregroundColor(.gray)
+                .font(.system(size: 22, weight: .light, design: .serif))
+                .foregroundColor(.modaicsCotton)
             
             Text("Try adjusting your filters or search query")
                 .font(.subheadline)
-                .foregroundColor(.gray.opacity(0.8))
+                .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
             
             Button("Clear Filters") {
@@ -123,7 +136,13 @@ struct DiscoverView: View {
                 viewModel.searchQuery = ""
                 viewModel.selectedCategory = nil
             }
-            .buttonStyle(.bordered)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 12)
+            .background(
+                LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
+                               startPoint: .leading, endPoint: .trailing))
+            .foregroundColor(.modaicsDarkBlue)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
@@ -134,6 +153,7 @@ struct DiscoverView: View {
 struct CreateView: View {
     let userType: ContentView.UserType
     @EnvironmentObject var viewModel: FashionViewModel
+    @Environment(\.dismiss) var dismiss
     @State private var showImagePicker = false
     @State private var selectedImages: [UIImage] = []
     @State private var itemName = ""
@@ -154,148 +174,292 @@ struct CreateView: View {
     }
     
     var body: some View {
-        NavigationView {
-            Form {
-                // Images Section
-                Section {
-                    if selectedImages.isEmpty {
-                        Button(action: { showImagePicker = true }) {
-                            VStack(spacing: 12) {
-                                Image(systemName: "camera.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.gray)
-                                Text("Add Photos")
-                                    .foregroundColor(.gray)
-                            }
-                            .frame(maxWidth: .infinity, minHeight: 200)
-                            .background(Color.gray.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+        NavigationStack {
+            ZStack {
+                // Match HomeView gradient
+                LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
+                               startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Title
+                        Text(userType == .user ? "Sell Item" : "List Product")
+                            .font(.system(size: 32, weight: .ultraLight, design: .serif))
+                            .foregroundColor(.modaicsCotton)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 20)
+                        
+                        // Images Section
+                        imageSection
+                        
+                        // Item Details
+                        detailsSection
+                        
+                        // Pricing
+                        pricingSection
+                        
+                        // Description
+                        descriptionSection
+                        
+                        // Sustainability
+                        sustainabilitySection
+                        
+                        // Submit Button
+                        Button {
+                            createListing()
+                        } label: {
+                            Text("List Item")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundColor(.modaicsDarkBlue)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(
+                                    LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
+                                                 startPoint: .leading, endPoint: .trailing))
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
                         }
-                    } else {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(selectedImages.indices, id: \.self) { index in
-                                    Image(uiImage: selectedImages[index])
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 100, height: 150)
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
-                                
-                                Button(action: { showImagePicker = true }) {
-                                    VStack {
-                                        Image(systemName: "plus")
-                                            .font(.title2)
-                                    }
-                                    .frame(width: 100, height: 150)
-                                    .background(Color.gray.opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
+                        .disabled(itemName.isEmpty || brand.isEmpty || selectedImages.isEmpty)
+                        .opacity(itemName.isEmpty || brand.isEmpty || selectedImages.isEmpty ? 0.5 : 1)
+                        
+                        Spacer(minLength: 40)
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            .toolbar(.hidden, for: .navigationBar)
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(images: $selectedImages)
+        }
+    }
+    
+    private var imageSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Photos")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.modaicsCotton)
+            
+            if selectedImages.isEmpty {
+                Button(action: { showImagePicker = true }) {
+                    VStack(spacing: 16) {
+                        Image(systemName: "camera.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.modaicsChrome1)
+                        Text("Add Photos")
+                            .font(.system(size: 16))
+                            .foregroundColor(.modaicsCottonLight)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 200)
+                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(selectedImages.indices, id: \.self) { index in
+                            Image(uiImage: selectedImages[index])
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 120, height: 160)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        
+                        Button(action: { showImagePicker = true }) {
+                            VStack {
+                                Image(systemName: "plus")
+                                    .font(.title2)
+                                    .foregroundColor(.modaicsChrome1)
                             }
+                            .frame(width: 120, height: 160)
+                            .background(Color.modaicsDarkBlue.opacity(0.6))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
                     }
                 }
-                
-                // Basic Info
-                Section("Item Details") {
+            }
+        }
+    }
+    
+    private var detailsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Item Details")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.modaicsCotton)
+            
+            VStack(spacing: 12) {
+                // Item Name
+                VStack(alignment: .leading, spacing: 8) {
                     TextField("Item Name", text: $itemName)
+                        .foregroundColor(.modaicsCotton)
+                        .padding()
+                        .background(Color.modaicsDarkBlue.opacity(0.6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                
+                // Brand
+                VStack(alignment: .leading, spacing: 8) {
                     TextField("Brand", text: $brand)
-                    
+                        .foregroundColor(.modaicsCotton)
+                        .padding()
+                        .background(Color.modaicsDarkBlue.opacity(0.6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                
+                // Category Picker
+                VStack(alignment: .leading, spacing: 8) {
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(Category.allCases, id: \.self) { category in
                             Text(category.rawValue).tag(category)
                         }
                     }
-                    
+                    .pickerStyle(.menu)
+                    .padding()
+                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                
+                // Size Picker
+                VStack(alignment: \.leading, spacing: 8) {
                     Picker("Size", selection: $selectedSize) {
                         ForEach(["XS", "S", "M", "L", "XL", "XXL"], id: \.self) { size in
                             Text(size).tag(size)
                         }
                     }
-                    
+                    .pickerStyle(.menu)
+                    .padding()
+                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                
+                // Condition Picker
+                VStack(alignment: .leading, spacing: 8) {
                     Picker("Condition", selection: $selectedCondition) {
                         ForEach(Condition.allCases, id: \.self) { condition in
                             Text(condition.rawValue).tag(condition)
                         }
                     }
+                    .pickerStyle(.menu)
+                    .padding()
+                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+            }
+        }
+    }
+    
+    private var pricingSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Pricing")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.modaicsCotton)
+            
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Original Price")
+                        .foregroundColor(.modaicsCottonLight)
+                    Spacer()
+                    TextField("$0", text: $originalPrice)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(.modaicsCotton)
+                }
+                .padding()
+                .background(Color.modaicsDarkBlue.opacity(0.6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                // Pricing
-                Section("Pricing") {
+                HStack {
+                    Text("Listing Price")
+                        .foregroundColor(.modaicsCottonLight)
+                    Spacer()
+                    TextField("$0", text: $listingPrice)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(.modaicsCotton)
+                }
+                .padding()
+                .background(Color.modaicsDarkBlue.opacity(0.6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                if let original = Double(originalPrice),
+                   let listing = Double(listingPrice),
+                   original > listing {
                     HStack {
-                        Text("Original Price")
-                        Spacer()
-                        TextField("$0", text: $originalPrice)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
+                        Image(systemName: "tag.fill")
+                            .foregroundColor(.green)
+                        Text("\(Int((original - listing) / original * 100))% off")
+                            .foregroundColor(.green)
                     }
-                    
-                    HStack {
-                        Text("Listing Price")
-                        Spacer()
-                        TextField("$0", text: $listingPrice)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    
-                    if let original = Double(originalPrice),
-                       let listing = Double(listingPrice),
-                       original > listing {
-                        HStack {
-                            Image(systemName: "tag.fill")
-                                .foregroundColor(.green)
-                            Text("\(Int((original - listing) / original * 100))% off")
-                                .foregroundColor(.green)
-                        }
-                    }
+                    .font(.subheadline)
                 }
+            }
+        }
+    }
+    
+    private var descriptionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Description")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.modaicsCotton)
+            
+            TextEditor(text: $description)
+                .frame(minHeight: 120)
+                .padding(8)
+                .foregroundColor(.modaicsCotton)
+                .scrollContentBackground(.hidden)
+                .background(Color.modaicsDarkBlue.opacity(0.6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+    
+    private var sustainabilitySection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Sustainability")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.modaicsCotton)
+            
+            VStack(spacing: 12) {
+                Toggle("Recycled Materials", isOn: $sustainabilityInfo.isRecycled)
+                    .foregroundColor(.modaicsCotton)
+                    .padding()
+                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                // Description
-                Section("Description") {
-                    TextEditor(text: $description)
-                        .frame(minHeight: 100)
-                }
+                Toggle("Certified Sustainable", isOn: $sustainabilityInfo.isCertified)
+                    .foregroundColor(.modaicsCotton)
+                    .padding()
+                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                // Sustainability
-                Section("Sustainability Information") {
-                    Toggle("Recycled Materials", isOn: $sustainabilityInfo.isRecycled)
-                    Toggle("Certified Sustainable", isOn: $sustainabilityInfo.isCertified)
-                    
-                    if sustainabilityInfo.isCertified {
-                        VStack(alignment: .leading) {
-                            Text("Certifications")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            
-                            ForEach(["GOTS", "Fair Trade", "B Corp", "OEKO-TEX"], id: \.self) { cert in
+                if sustainabilityInfo.isCertified {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Certifications")
+                            .font(.subheadline)
+                            .foregroundColor(.modaicsCottonLight)
+                        
+                        ForEach(["GOTS", "Fair Trade", "B Corp", "OEKO-TEX"], id: \.self) { cert in
+                            Button {
+                                if sustainabilityInfo.certifications.contains(cert) {
+                                    sustainabilityInfo.certifications.removeAll { $0 == cert }
+                                } else {
+                                    sustainabilityInfo.certifications.append(cert)
+                                }
+                            } label: {
                                 HStack {
                                     Image(systemName: sustainabilityInfo.certifications.contains(cert) ? "checkmark.circle.fill" : "circle")
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(.modaicsChrome1)
                                     Text(cert)
+                                        .foregroundColor(.modaicsCotton)
+                                    Spacer()
                                 }
-                                .onTapGesture {
-                                    if sustainabilityInfo.certifications.contains(cert) {
-                                        sustainabilityInfo.certifications.removeAll { $0 == cert }
-                                    } else {
-                                        sustainabilityInfo.certifications.append(cert)
-                                    }
-                                }
+                                .padding()
+                                .background(Color.modaicsDarkBlue.opacity(0.6))
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                         }
                     }
                 }
             }
-            .navigationTitle(userType == .user ? "Sell Item" : "List Product")
-            .navigationBarItems(
-                leading: Button("Cancel") {},
-                trailing: Button("List") {
-                    createListing()
-                }
-                .disabled(itemName.isEmpty || brand.isEmpty || selectedImages.isEmpty)
-            )
-        }
-        .sheet(isPresented: $showImagePicker) {
-            ImagePicker(images: $selectedImages)
         }
     }
     
@@ -544,18 +708,24 @@ struct CategoryChip: View {
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 if let category = category {
                     Image(systemName: category.icon)
                         .font(.caption)
                 }
                 Text(category?.rawValue ?? "All")
-                    .font(.subheadline)
+                    .font(.system(size: 14, weight: .medium))
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(isSelected ? Color.blue : Color.gray.opacity(0.2))
-            .foregroundColor(isSelected ? .white : .primary)
+            .padding(.vertical, 10)
+            .background(
+                isSelected
+                    ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
+                                   startPoint: .leading, endPoint: .trailing)
+                    : LinearGradient(colors: [Color.modaicsDarkBlue.opacity(0.6)],
+                                   startPoint: .leading, endPoint: .trailing)
+            )
+            .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCottonLight)
             .clipShape(Capsule())
         }
     }
@@ -567,14 +737,14 @@ struct ItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Image placeholder
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.2))
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.modaicsDarkBlue.opacity(0.4))
                 .aspectRatio(3/4, contentMode: .fit)
                 .overlay(
                     VStack {
                         Image(systemName: "photo")
                             .font(.largeTitle)
-                            .foregroundColor(.gray.opacity(0.5))
+                            .foregroundColor(.modaicsChrome1.opacity(0.3))
                     }
                 )
                 .overlay(
@@ -585,7 +755,8 @@ struct ItemCard: View {
                             Image(systemName: "leaf.fill")
                             Text("\(item.sustainabilityScore.totalScore)")
                         }
-                        .font(.caption)
+                        .font(.caption2)
+                        .fontWeight(.semibold)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(item.sustainabilityScore.sustainabilityColor)
@@ -599,32 +770,35 @@ struct ItemCard: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.brand)
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.modaicsCottonLight)
                 
                 Text(item.name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.modaicsCotton)
                     .lineLimit(2)
                 
                 HStack {
                     Text("$\(Int(item.listingPrice))")
-                        .font(.headline)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.modaicsChrome1)
                     
                     if item.originalPrice > item.listingPrice {
                         Text("$\(Int(item.originalPrice))")
                             .font(.caption)
                             .strikethrough()
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.modaicsCottonLight)
                     }
                     
                     Spacer()
                     
                     Image(systemName: "heart")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.modaicsChrome1)
                 }
             }
         }
+        .background(Color.modaicsDarkBlue.opacity(0.3))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
