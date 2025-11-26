@@ -20,9 +20,40 @@ class VisionAnalysisService: ObservableObject {
     
     private let backendURL: String = "http://10.20.99.164:8000"
     
-    private init() {} // Private init to enforce singleton
+    // Core ML Models
+    private var categoryModel: FashionCategoryClassifier?
+    private var colorModel: FashionColourClassifier?
+    private var brandModel: FashionBrandClassifier?
     
-    /// Full AI analysis pipeline using Vision + CLIP
+    private init() {
+        loadModels()
+    }
+    
+    /// Load all Create ML models
+    private func loadModels() {
+        do {
+            categoryModel = try FashionCategoryClassifier(configuration: MLModelConfiguration())
+            print("✅ Loaded FashionCategoryClassifier")
+        } catch {
+            print("❌ Failed to load category model: \(error)")
+        }
+        
+        do {
+            colorModel = try FashionColourClassifier(configuration: MLModelConfiguration())
+            print("✅ Loaded FashionColourClassifier")
+        } catch {
+            print("❌ Failed to load color model: \(error)")
+        }
+        
+        do {
+            brandModel = try FashionBrandClassifier(configuration: MLModelConfiguration())
+            print("✅ Loaded FashionBrandClassifier")
+        } catch {
+            print("❌ Failed to load brand model: \(error)")
+        }
+    }
+    
+    /// Full AI analysis pipeline using Vision + CLIP + Create ML
     func analyzeItem(images: [UIImage]) async -> ItemAnalysisResult? {
         guard !images.isEmpty else { return nil }
         
@@ -30,21 +61,27 @@ class VisionAnalysisService: ObservableObject {
         error = nil
         
         // Run all analyses in parallel
-        async let colorAnalysis = detectColors(in: images.first!)
-        async let objectAnalysis = detectObjects(in: images.first!)
+        async let mlCategory = classifyWithML(image: images.first!)
+        async let mlColor = classifyColorWithML(image: images.first!)
+        async let mlBrand = classifyBrandWithML(image: images.first!)
+        async let visionColor = detectColors(in: images.first!) // Fallback for ML
         async let textAnalysis = detectText(in: images.first!)
         async let clipAnalysis = analyzeWithCLIP(image: images.first!)
         
         // Wait for all results
-        let colors = await colorAnalysis
-        let objects = await objectAnalysis
+        let category = await mlCategory
+        let color = await mlColor
+        let brand = await mlBrand
+        let visionColors = await visionColor
         let texts = await textAnalysis
         let clipResult = await clipAnalysis
         
         // Combine all analyses
         let result = combineAnalyses(
-            colors: colors,
-            objects: objects,
+            mlCategory: category,
+            mlColor: color,
+            mlBrand: brand,
+            visionColors: visionColors,
             texts: texts,
             clipResult: clipResult
         )
@@ -54,9 +91,70 @@ class VisionAnalysisService: ObservableObject {
         return result
     }
     
-    // MARK: - Vision Framework Analysis
+    // MARK: - Create ML Classification
     
-    /// Detect dominant colors using Vision framework with nuanced color detection
+    /// Classify category using trained Create ML model
+    private func classifyWithML(image: UIImage) async -> (category: String, confidence: Double)? {
+        guard let categoryModel = categoryModel,
+              let pixelBuffer = image.pixelBuffer() else { return nil }
+        
+        do {
+            let prediction = try categoryModel.prediction(image: pixelBuffer)
+            let targetLabel = prediction.target
+            let confidence = prediction.targetProbability[targetLabel] ?? 0.0
+            print("🏷️ ML Category: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
+            return (targetLabel, confidence)
+        } catch {
+            print("❌ Category classification error: \(error)")
+            return nil
+        }
+    }
+    
+    /// Classify color using trained Create ML model
+    private func classifyColorWithML(image: UIImage) async -> (color: String, confidence: Double)? {
+        guard let colorModel = colorModel,
+              let pixelBuffer = image.pixelBuffer() else { return nil }
+        
+        do {
+            let prediction = try colorModel.prediction(image: pixelBuffer)
+            let targetLabel = prediction.target
+            let confidence = prediction.targetProbability[targetLabel] ?? 0.0
+            print("🎨 ML Color: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
+            return (targetLabel, confidence)
+        } catch {
+            print("❌ Color classification error: \(error)")
+            return nil
+        }
+    }
+    
+    /// Classify brand using trained Create ML model
+    private func classifyBrandWithML(image: UIImage) async -> (brand: String, confidence: Double)? {
+        guard let brandModel = brandModel,
+              let pixelBuffer = image.pixelBuffer() else { return nil }
+        
+        do {
+            let prediction = try brandModel.prediction(image: pixelBuffer)
+            let targetLabel = prediction.target
+            let confidence = prediction.targetProbability[targetLabel] ?? 0.0
+            
+            // Only return brand if confidence is high enough (>30%)
+            // Many items won't have visible brand markers
+            if confidence > 0.3 {
+                print("👔 ML Brand: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
+                return (targetLabel, confidence)
+            } else {
+                print("👔 ML Brand: Low confidence (\(String(format: "%.1f%%", confidence * 100))), skipping")
+                return nil
+            }
+        } catch {
+            print("❌ Brand classification error: \(error)")
+            return nil
+        }
+    }
+    
+    // MARK: - Legacy Vision Framework Analysis (Fallback)
+    
+    /// Detect dominant colors using Vision framework with nuanced color detection (FALLBACK)
     private func detectColors(in image: UIImage) async -> [String] {
         guard let cgImage = image.cgImage else { return [] }
         
@@ -316,15 +414,10 @@ class VisionAnalysisService: ObservableObject {
         return "Multicolor"
     }
     
-    /// Detect objects and classify clothing type
+    /// Detect objects and classify clothing type (DEPRECATED - now using Create ML)
     private func detectObjects(in image: UIImage) async -> [String] {
-        guard image.cgImage != nil else { return [] }
-        
-        return await withCheckedContinuation { continuation in
-            // For now, return empty - will be replaced by Create ML model
-            // TODO: Load Create ML clothing classifier model
-            continuation.resume(returning: [])
-        }
+        // No longer needed - Create ML handles this
+        return []
     }
     
     /// Detect text in image (brand names, tags, etc.)
@@ -388,66 +481,94 @@ class VisionAnalysisService: ObservableObject {
     // MARK: - Combine Analyses
     
     private func combineAnalyses(
-        colors: [String],
-        objects: [String],
+        mlCategory: (category: String, confidence: Double)?,
+        mlColor: (color: String, confidence: Double)?,
+        mlBrand: (brand: String, confidence: Double)?,
+        visionColors: [String],
         texts: [String],
         clipResult: CLIPAnalysisResult?
     ) -> ItemAnalysisResult {
         
-        // Extract brand from detected text (OCR from tag/logo)
-        let brandKeywords = ["AMI", "AMI PARIS", "Nike", "Adidas", "Prada", "Gucci", "Louis Vuitton", 
-                           "Chanel", "Dior", "Balenciaga", "Versace", "Fendi", "Burberry",
-                           "Zara", "H&M", "Uniqlo", "Gap", "Levi's", "Ralph Lauren", "Polo",
-                           "Supreme", "Palace", "Stone Island", "Carhartt", "Dickies"]
+        // Category: Use ML if confidence > 50% and not "other"
+        // For low confidence, use CLIP or context clues
+        let category: Category
+        var categorySource = "ML"
         
-        var detectedBrand = ""
-        
-        // First try OCR text (most accurate)
-        for text in texts {
-            let cleanText = text.uppercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            for brand in brandKeywords {
-                if cleanText.contains(brand.uppercased()) {
-                    detectedBrand = brand
-                    break
-                }
+        if let mlCat = mlCategory, mlCat.confidence > 0.5 && mlCat.category.lowercased() != "other" {
+            // Good ML prediction
+            category = Category(rawValue: mlCat.category) ?? .tops
+            categorySource = "ML (\(String(format: "%.1f%%", mlCat.confidence * 100)))"
+        } else if let mlCat = mlCategory, mlCat.confidence > 0.35 {
+            // Low confidence ML - check if it makes sense
+            let catLower = mlCat.category.lowercased()
+            
+            // If ML says "shirt" but confidence is low, check if it's actually outerwear
+            if catLower == "shirt" && (visionColors.first?.lowercased().contains("navy") == true || 
+                                       visionColors.first?.lowercased().contains("blue") == true) {
+                // Blue/Navy items are often jackets mislabeled as shirts
+                category = .outerwear
+                categorySource = "Vision override (blue/navy suggests jacket)"
+            } else {
+                category = Category(rawValue: mlCat.category) ?? .tops
+                categorySource = "ML low confidence (\(String(format: "%.1f%%", mlCat.confidence * 100)))"
             }
-            if !detectedBrand.isEmpty { break }
+        } else if let clip = clipResult {
+            category = Category(rawValue: clip.category) ?? .tops
+            categorySource = "CLIP fallback"
+        } else {
+            category = .tops
+            categorySource = "default"
         }
         
-        // If no brand from OCR, try CLIP matches
+        print("🏷️ Final category: \(category.rawValue) from \(categorySource)")
+        
+        // Color: Use ML only if NOT "unknown" and confidence > 40%
+        // Otherwise fall back to Vision color detection
+        var primaryColor: String
+        if let mlCol = mlColor, 
+           mlCol.color.lowercased() != "unknown" && mlCol.confidence > 0.4 {
+            primaryColor = mlCol.color
+            print("✅ Using ML color: \(mlCol.color) (\(String(format: "%.1f%%", mlCol.confidence * 100)))")
+        } else {
+            primaryColor = visionColors.first ?? "Gray"
+            print("✅ Using Vision fallback color: \(primaryColor)")
+        }
+        
+        // Use ML brand if available with good confidence
+        var detectedBrand = mlBrand?.brand ?? ""
+        
+        // Fallback: Try to find brand from OCR text
+        if detectedBrand.isEmpty {
+            let brandKeywords = ["AMI", "AMI PARIS", "Nike", "Adidas", "Prada", "Gucci", "Louis Vuitton", 
+                               "Chanel", "Dior", "Balenciaga", "Versace", "Fendi", "Burberry",
+                               "Zara", "H&M", "Uniqlo", "Gap", "Levi's", "Ralph Lauren", "Polo",
+                               "Supreme", "Palace", "Stone Island", "Carhartt", "Dickies"]
+            
+            for text in texts {
+                let cleanText = text.uppercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                for brand in brandKeywords {
+                    if cleanText.contains(brand.uppercased()) {
+                        detectedBrand = brand
+                        break
+                    }
+                }
+                if !detectedBrand.isEmpty { break }
+            }
+        }
+        
+        // Last resort: CLIP brand
         if detectedBrand.isEmpty, let clip = clipResult {
             detectedBrand = clip.likelyBrand
         }
         
-        // Determine category from CLIP (it's good at this)
-        let category: Category
-        if let clip = clipResult {
-            category = Category(rawValue: clip.category) ?? .tops
-        } else {
-            category = .tops
-        }
-        
-        // Use actual detected colors from Vision (not keywords!)
-        let primaryColor = colors.first ?? "Gray"
-        
-        // Build better item name: [Color] [Sleeve] [Type] 
+        // Build item name: [Color] [Type]
         var nameParts: [String] = []
         
         // Add color
         nameParts.append(primaryColor)
         
-        // Add sleeve length from CLIP
-        if let clip = clipResult {
-            let itemLower = clip.detectedItem.lowercased()
-            if itemLower.contains("long sleeve") || itemLower.contains("long-sleeve") {
-                nameParts.append("Long Sleeve")
-            } else if itemLower.contains("short sleeve") || itemLower.contains("short-sleeve") {
-                nameParts.append("Short Sleeve")
-            }
-        }
-        
-        // Add specific item type from CLIP
-        var itemType = ""
+        // Add specific item type from category or CLIP
+        var itemType = category.rawValue.capitalized
         if let clip = clipResult {
             let itemLower = clip.detectedItem.lowercased()
             if itemLower.contains("polo") {
@@ -460,19 +581,10 @@ class VisionAnalysisService: ObservableObject {
                 itemType = "Sweater"
             } else if itemLower.contains("jacket") {
                 itemType = "Jacket"
-            } else if itemLower.contains("shirt") && !itemLower.contains("t-shirt") {
-                itemType = "Shirt"
             } else if itemLower.contains("jeans") {
                 itemType = "Jeans"
-            } else if itemLower.contains("pants") {
-                itemType = "Pants"
-            } else if itemLower.contains("dress") {
-                itemType = "Dress"
             } else if itemLower.contains("sneaker") || itemLower.contains("trainer") {
                 itemType = "Sneakers"
-            } else {
-                // Fallback to category
-                itemType = category.rawValue.capitalized
             }
         }
         
@@ -480,7 +592,7 @@ class VisionAnalysisService: ObservableObject {
         
         let itemName = nameParts.joined(separator: " ")
         
-        // Generate better description
+        // Generate description
         var description = ""
         
         if !detectedBrand.isEmpty {
@@ -494,7 +606,7 @@ class VisionAnalysisService: ObservableObject {
             description += "Made from \(clip.materials[0].lowercased()). "
         }
         
-        // Add condition assessment
+        // Add condition
         if let clip = clipResult {
             switch clip.estimatedCondition {
             case .new:
@@ -510,8 +622,14 @@ class VisionAnalysisService: ObservableObject {
             }
         }
         
-        // Add styling suggestion
         description += "Perfect for \(category == .tops ? "casual styling" : category == .outerwear ? "layering" : category == .shoes ? "everyday wear" : "your wardrobe")."
+        
+        // Calculate overall confidence (average of ML predictions)
+        var confidences: [Double] = []
+        if let catConf = mlCategory?.confidence { confidences.append(catConf) }
+        if let colConf = mlColor?.confidence { confidences.append(colConf) }
+        if let brandConf = mlBrand?.confidence { confidences.append(brandConf) }
+        let avgConfidence = confidences.isEmpty ? 0.5 : confidences.reduce(0, +) / Double(confidences.count)
         
         return ItemAnalysisResult(
             suggestedName: itemName,
@@ -520,10 +638,10 @@ class VisionAnalysisService: ObservableObject {
             suggestedCondition: clipResult?.estimatedCondition ?? .excellent,
             suggestedSize: clipResult?.estimatedSize ?? "M",
             suggestedDescription: description,
-            detectedColors: colors,
+            detectedColors: [primaryColor],
             detectedMaterials: clipResult?.materials ?? [],
             suggestedPrice: clipResult?.estimatedPrice,
-            confidence: clipResult?.confidence ?? 0.5
+            confidence: avgConfidence
         )
     }
     
@@ -698,5 +816,62 @@ extension CIImage {
         context.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
         
         return CIColor(red: CGFloat(bitmap[0]) / 255, green: CGFloat(bitmap[1]) / 255, blue: CGFloat(bitmap[2]) / 255, alpha: CGFloat(bitmap[3]) / 255)
+    }
+}
+
+// MARK: - UIImage Extension for ML Models
+
+extension UIImage {
+    /// Convert UIImage to CVPixelBuffer for Core ML
+    func pixelBuffer() -> CVPixelBuffer? {
+        let width = Int(size.width)
+        let height = Int(size.height)
+        
+        let attrs = [
+            kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
+            kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue
+        ] as CFDictionary
+        
+        var pixelBuffer: CVPixelBuffer?
+        let status = CVPixelBufferCreate(
+            kCFAllocatorDefault,
+            width,
+            height,
+            kCVPixelFormatType_32ARGB,
+            attrs,
+            &pixelBuffer
+        )
+        
+        guard status == kCVReturnSuccess, let buffer = pixelBuffer else {
+            return nil
+        }
+        
+        CVPixelBufferLockBaseAddress(buffer, CVPixelBufferLockFlags(rawValue: 0))
+        let pixelData = CVPixelBufferGetBaseAddress(buffer)
+        
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        guard let context = CGContext(
+            data: pixelData,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
+            space: rgbColorSpace,
+            bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue
+        ) else {
+            CVPixelBufferUnlockBaseAddress(buffer, CVPixelBufferLockFlags(rawValue: 0))
+            return nil
+        }
+        
+        context.translateBy(x: 0, y: CGFloat(height))
+        context.scaleBy(x: 1.0, y: -1.0)
+        
+        UIGraphicsPushContext(context)
+        draw(in: CGRect(x: 0, y: 0, width: width, height: height))
+        UIGraphicsPopContext()
+        
+        CVPixelBufferUnlockBaseAddress(buffer, CVPixelBufferLockFlags(rawValue: 0))
+        
+        return buffer
     }
 }
