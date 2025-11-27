@@ -728,7 +728,7 @@ struct CreateItemView: View {
             return Color.green
         case .excellent, .good:
             return Color.yellow
-        case .fair, .worn:
+        case .fair:
             return Color.orange
         }
     }

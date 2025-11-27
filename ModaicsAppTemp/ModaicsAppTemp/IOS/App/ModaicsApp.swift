@@ -133,7 +133,7 @@ struct SimplifiedTabBar: View {
                     }
                 }
             }
-            .padding(.bottom, 8) // Extra space at bottom
+            .padding(.bottom, 16) // Extra space at bottom
             .background(Color.appBg)
         }
     }

@@ -121,35 +121,48 @@ struct DiscoverView: View {
     private var modeSwitcher: some View {
         HStack(spacing: 12) {
             ForEach(DiscoverMode.allCases, id: \.self) { mode in
-                Button {
+                ModeButton(mode: mode, isSelected: discoverMode == mode) {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         discoverMode = mode
+                        HapticManager.shared.impact(.light)
                     }
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: mode.icon)
-                            .font(.system(size: 14, weight: .medium, design: .monospaced))
-                        
-                        Text(mode.rawValue)
-                            .font(.system(size: 15, weight: .medium, design: .monospaced))
-                    }
-                    .foregroundColor(discoverMode == mode ? .modaicsCotton : .modaicsCottonLight)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .background(
-                        Rectangle()
-                            .fill(discoverMode == mode ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
-                            .overlay(
-                                Rectangle()
-                                    .stroke(
-                                        discoverMode == mode ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
-                                        lineWidth: 1.5
-                                    )
-                            )
-                    )
                 }
-                .buttonStyle(PlainButtonStyle())
             }
+        }
+    }
+    
+    // MARK: - Mode Button Component
+    private struct ModeButton: View {
+        let mode: DiscoverMode
+        let isSelected: Bool
+        let action: () -> Void
+        
+        var body: some View {
+            HStack(spacing: 6) {
+                Image(systemName: mode.icon)
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
+                
+                Text(mode.rawValue)
+                    .font(.system(size: 15, weight: .medium, design: .monospaced))
+            }
+            .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background(modeButtonBackground)
+            .contentShape(Rectangle())
+            .onTapGesture(perform: action)
+        }
+        
+        private var modeButtonBackground: some View {
+            Rectangle()
+                .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
+                .overlay(
+                    Rectangle()
+                        .stroke(
+                            isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
+                            lineWidth: 1.5
+                        )
+                )
         }
     }
     
@@ -1049,16 +1062,16 @@ struct ItemCard: View {
     let item: FashionItem
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             // Image placeholder
             Rectangle()
-                .fill(Color.modaicsDarkBlue.opacity(0.4))
+                .fill(Color.appSurface)
                 .aspectRatio(3/4, contentMode: .fit)
                 .overlay(
                     VStack {
                         Image(systemName: "photo")
                             .font(.largeTitle)
-                            .foregroundColor(.modaicsChrome1.opacity(0.3))
+                            .foregroundColor(.appTextMuted.opacity(0.3))
                     }
                 )
                 .overlay(
@@ -1067,53 +1080,69 @@ struct ItemCard: View {
                         Spacer()
                         HStack(spacing: 4) {
                             Image(systemName: "leaf.fill")
+                                .font(.system(size: 10, weight: .medium))
                             Text("\(item.sustainabilityScore.totalScore)")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
                         }
-                        .font(.caption2)
-                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(item.sustainabilityScore.sustainabilityColor)
-                        .foregroundColor(.white)
-                        .clipShape(Rectangle())
+                        .background(
+                            Rectangle()
+                                .fill(item.sustainabilityScore.sustainabilityColor)
+                        )
                         .padding(8)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 )
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.brand)
-                    .font(.caption)
-                    .foregroundColor(.modaicsCottonLight)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(item.brand.uppercased())
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .tracking(0.5)
+                    .foregroundColor(.appTextMuted)
                 
                 Text(item.name)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .foregroundColor(.appTextMain)
                     .lineLimit(2)
                 
                 HStack {
                     Text("$\(Int(max(0, item.listingPrice.isNaN ? 0 : item.listingPrice)))")
-                        .font(.system(size: 16, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsChrome1)
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appRed)
                     
                     if !item.originalPrice.isNaN && !item.listingPrice.isNaN && 
                        item.originalPrice > item.listingPrice {
                         Text("$\(Int(item.originalPrice))")
-                            .font(.caption)
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
                             .strikethrough()
-                            .foregroundColor(.modaicsCottonLight)
+                            .foregroundColor(.appTextMuted)
                     }
                     
                     Spacer()
                     
-                    Image(systemName: "heart")
-                        .font(.caption)
-                        .foregroundColor(.modaicsChrome1)
+                    Rectangle()
+                        .fill(Color.appSurface)
+                        .frame(width: 24, height: 24)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+                        .overlay(
+                            Image(systemName: "heart")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.appTextMuted)
+                        )
                 }
             }
+            .padding(12)
+            .background(Color.appSurface)
         }
-        .background(Color.modaicsDarkBlue.opacity(0.3))
-        .clipShape(Rectangle())
+        .overlay(
+            Rectangle()
+                .stroke(Color.appBorder, lineWidth: 1)
+        )
     }
 }
 
@@ -1601,73 +1630,234 @@ struct FilterView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section("Price Range") {
-                    HStack {
-                        Text("Min")
-                        TextField("$0", value: $filters.minPrice, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                    }
+        ZStack {
+            Color.appBg.ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Text("FILTERS")
+                        .font(.system(size: 20, weight: .medium, design: .monospaced))
+                        .tracking(1.5)
+                        .foregroundColor(.appTextMain)
                     
-                    HStack {
-                        Text("Max")
-                        TextField("$999", value: $filters.maxPrice, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Spacer()
+                    
+                    Button {
+                        filters = FilterOptions()
+                        HapticManager.shared.impact(.light)
+                    } label: {
+                        Text("RESET")
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .tracking(1)
+                            .foregroundColor(.appTextMuted)
                     }
                 }
+                .padding(20)
+                .background(Color.appSurface)
+                .overlay(
+                    Rectangle()
+                        .fill(Color.appBorder)
+                        .frame(height: 1),
+                    alignment: .bottom
+                )
                 
-                Section("Condition") {
-                    ForEach(Condition.allCases, id: \.self) { condition in
-                        HStack {
-                            Text(condition.rawValue)
-                            Spacer()
-                            if filters.conditions.contains(condition) {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.blue)
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Price Range
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("PRICE RANGE")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .tracking(1)
+                                .foregroundColor(.appTextMuted)
+                            
+                            HStack(spacing: 12) {
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text("MIN")
+                                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.appTextMuted)
+                                    
+                                    TextField("$0", value: $filters.minPrice, format: .currency(code: "USD"))
+                                        .keyboardType(.decimalPad)
+                                        .font(.system(size: 15, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.appTextMain)
+                                        .padding(12)
+                                        .background(Color.appSurface)
+                                        .overlay(
+                                            Rectangle()
+                                                .stroke(Color.appBorder, lineWidth: 1)
+                                        )
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text("MAX")
+                                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.appTextMuted)
+                                    
+                                    TextField("$999", value: $filters.maxPrice, format: .currency(code: "USD"))
+                                        .keyboardType(.decimalPad)
+                                        .font(.system(size: 15, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.appTextMain)
+                                        .padding(12)
+                                        .background(Color.appSurface)
+                                        .overlay(
+                                            Rectangle()
+                                                .stroke(Color.appBorder, lineWidth: 1)
+                                        )
+                                }
                             }
                         }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            if filters.conditions.contains(condition) {
-                                filters.conditions.remove(condition)
-                            } else {
-                                filters.conditions.insert(condition)
+                        .padding(16)
+                        .background(Color.appSurface)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+                        
+                        // Condition
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("CONDITION")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .tracking(1)
+                                .foregroundColor(.appTextMuted)
+                            
+                            VStack(spacing: 8) {
+                                ForEach(Condition.allCases, id: \.self) { condition in
+                                    HStack {
+                                        Rectangle()
+                                            .fill(filters.conditions.contains(condition) ? Color.appRed : Color.appSurface)
+                                            .frame(width: 20, height: 20)
+                                            .overlay(
+                                                Rectangle()
+                                                    .stroke(Color.appBorder, lineWidth: 1)
+                                            )
+                                            .overlay(
+                                                Image(systemName: "checkmark")
+                                                    .font(.system(size: 12, weight: .medium))
+                                                    .foregroundColor(.white)
+                                                    .opacity(filters.conditions.contains(condition) ? 1 : 0)
+                                            )
+                                        
+                                        Text(condition.rawValue.uppercased())
+                                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                                            .tracking(0.5)
+                                            .foregroundColor(.appTextMain)
+                                        
+                                        Spacer()
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        if filters.conditions.contains(condition) {
+                                            filters.conditions.remove(condition)
+                                        } else {
+                                            filters.conditions.insert(condition)
+                                        }
+                                        HapticManager.shared.impact(.light)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Sustainability") {
-                    VStack(alignment: .leading) {
-                        Text("Minimum Score: \(filters.minimumSustainabilityScore)")
-                        Slider(value: Binding(
-                            get: { Double(filters.minimumSustainabilityScore) },
-                            set: { filters.minimumSustainabilityScore = Int($0) }
-                        ), in: 0...100, step: 10)
-                    }
-                }
-                
-                Section("Sort By") {
-                    Picker("Sort", selection: $filters.sortBy) {
-                        ForEach(FilterOptions.SortOption.allCases, id: \.self) { option in
-                            Text(option.rawValue).tag(option)
+                        .padding(16)
+                        .background(Color.appSurface)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+                        
+                        // Sustainability
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("SUSTAINABILITY")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .tracking(1)
+                                .foregroundColor(.appTextMuted)
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("MINIMUM SCORE")
+                                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.appTextMain)
+                                    Spacer()
+                                    Text("\(filters.minimumSustainabilityScore)")
+                                        .font(.system(size: 15, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.appRed)
+                                }
+                                
+                                Slider(value: Binding(
+                                    get: { Double(filters.minimumSustainabilityScore) },
+                                    set: { filters.minimumSustainabilityScore = Int($0) }
+                                ), in: 0...100, step: 10)
+                                    .tint(.appRed)
+                            }
                         }
+                        .padding(16)
+                        .background(Color.appSurface)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+                        
+                        // Sort By
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("SORT BY")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .tracking(1)
+                                .foregroundColor(.appTextMuted)
+                            
+                            Menu {
+                                ForEach(FilterOptions.SortOption.allCases, id: \.self) { option in
+                                    Button {
+                                        filters.sortBy = option
+                                        HapticManager.shared.impact(.light)
+                                    } label: {
+                                        Text(option.rawValue)
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Text(filters.sortBy.rawValue.uppercased())
+                                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                                        .tracking(0.5)
+                                        .foregroundColor(.appTextMain)
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "chevron.down")
+                                        .font(.system(size: 12, weight: .medium))
+                                        .foregroundColor(.appTextMuted)
+                                }
+                                .padding(12)
+                                .background(Color.appSurface)
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.appBorder, lineWidth: 1)
+                                )
+                            }
+                        }
+                        .padding(16)
+                        .background(Color.appSurface)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
                     }
-                    .pickerStyle(MenuPickerStyle())
+                    .padding(20)
                 }
-            }
-            .navigationTitle("Filters")
-            .navigationBarItems(
-                leading: Button("Reset") {
-                    filters = FilterOptions()
-                },
-                trailing: Button("Done") {
+                
+                // Apply Button
+                Button {
                     dismiss()
+                    HapticManager.shared.success()
+                } label: {
+                    Text("APPLY FILTERS")
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
+                        .tracking(1.5)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color.appRed)
                 }
-            )
+                .padding(20)
+            }
         }
     }
 }

@@ -600,41 +600,80 @@ struct CuratedEventCard: View {
 fileprivate struct HomeCompactItemCard: View {
     let item: FashionItem
     @EnvironmentObject var viewModel: FashionViewModel
+    @State private var isLiked = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Image
-            Rectangle()
-                .fill(Color.modaicsSurface2)
-                .aspectRatio(3/4, contentMode: .fit)
-                .frame(width: 140)
-                .overlay(
-                    Group {
-                        if let imageURL = item.imageURLs.first {
-                            PremiumCachedImage(url: imageURL, contentMode: .fill)
-                        }
+        VStack(alignment: .leading, spacing: 0) {
+            // Image with overlay
+            ZStack(alignment: .topTrailing) {
+                if let imageURL = item.imageURLs.first {
+                    PremiumCachedImage(url: imageURL, contentMode: .fill)
+                        .frame(width: 140, height: 180)
+                        .clipped()
+                } else {
+                    Rectangle()
+                        .fill(Color.appBg)
+                        .frame(width: 140, height: 180)
+                        .overlay(
+                            Image(systemName: "photo")
+                                .font(.system(size: 24, weight: .medium))
+                                .foregroundColor(.appTextMuted.opacity(0.3))
+                        )
+                }
+                
+                // Like button overlay
+                Button {
+                    HapticManager.shared.impact(.light)
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        isLiked.toggle()
                     }
-                )
-                .clipShape(Rectangle())
+                    viewModel.toggleLike(for: item)
+                } label: {
+                    Rectangle()
+                        .fill(Color.black.opacity(0.75))
+                        .frame(width: 28, height: 28)
+                        .overlay(
+                            Rectangle()
+                                .stroke(isLiked ? Color.appRed : Color.appBorder, lineWidth: 1)
+                        )
+                        .overlay(
+                            Image(systemName: isLiked ? "heart.fill" : "heart")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(isLiked ? .appRed : .white)
+                        )
+                }
+                .padding(8)
+            }
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.brand)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.modaicsChrome1)
+            // Content section
+            VStack(alignment: .leading, spacing: 6) {
+                Text(item.brand.isEmpty ? "MARKETPLACE" : item.brand.uppercased())
+                    .font(.system(size: 9, weight: .medium, design: .monospaced))
+                    .tracking(0.5)
+                    .foregroundColor(.appTextMuted)
+                    .lineLimit(1)
                 
                 Text(item.name)
-                    .font(.system(size: 14, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .foregroundColor(.appTextMain)
                     .lineLimit(2)
+                    .frame(height: 30, alignment: .top)
                 
                 if item.listingPrice > 0 {
                     Text("$\(Int(item.listingPrice))")
-                        .font(.system(size: 13, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsChrome2)
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appRed)
                 }
             }
+            .padding(10)
+            .frame(width: 140)
+            .background(Color.appSurface)
         }
         .frame(width: 140)
+        .overlay(
+            Rectangle()
+                .stroke(Color.appBorder, lineWidth: 1)
+        )
     }
 }
 

@@ -2,172 +2,348 @@
 //  EnhancedItemCard.swift
 //  ModaicsAppTemp
 //
-//  EnhancedUIComponents.swift
-//  Premium UI components for Modaics that elevate the user experience
-//
+//  Industrial-themed item card - unified design for all platforms
 //  Created by Harvey Houlahan on 6/6/2025.
 //
-
 
 import SwiftUI
 import Foundation
 
-// MARK: - Enhanced Item Card
+// MARK: - Enhanced Item Card (Industrial Design)
 struct EnhancedItemCard: View {
     let item: FashionItem
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var isLiked = false
-    @State private var imageLoaded = false
-    @State private var sustainabilityVisible = false
+    @State private var showDetail = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Enhanced image container
-            imageContainer
-            
-            // Content section
-            contentSection
-        }
-        .background(
-            Rectangle()
-                .fill(.ultraThinMaterial)
+        Button {
+            HapticManager.shared.impact(.light)
+            showDetail = true
+        } label: {
+            VStack(alignment: .leading, spacing: 0) {
+                // Image Section
+                imageContainer
                 
-        )
-        .onAppear {
-            withAnimation(.modaicsSpring.delay(0.2)) {
-                sustainabilityVisible = true
+                // Content Section
+                contentSection
             }
+            .background(Color.appSurface)
+            .overlay(
+                Rectangle()
+                    .stroke(Color.appBorder, lineWidth: 1)
+            )
         }
-    }
-    
-    private var placeholderView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "photo.artframe")
-                .font(.system(size: 32, weight: .ultraLight))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.modaicsChrome1.opacity(0.6), .modaicsChrome2.opacity(0.4)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-            
-            Text("Premium Fashion")
-                .font(.modaicsCaption(12))
-                .foregroundColor(.modaicsCottonLight)
+        .buttonStyle(.plain)
+        .sheet(isPresented: $showDetail) {
+            ItemDetailView(item: item)
+                .environmentObject(viewModel)
         }
     }
     
     private var imageContainer: some View {
-        ZStack {
-            // Main image with sophisticated loading
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [.modaicsSurface2, .modaicsSurface3],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .aspectRatio(3/4, contentMode: .fit)
-                .overlay(
-                    Group {
-                        if let imageURLString = item.imageURLs.first, !imageURLString.isEmpty {
-                            // Use premium cached image loader
-                            PremiumCachedImage(url: imageURLString, contentMode: .fill)
-                        } else {
-                            placeholderView
-                        }
-                    }
-                )
-                .clipShape(Rectangle())
-            
-            // Floating action buttons
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    VStack(spacing: 8) {
-                        // Like button with animation
-                        Button {
-                            withAnimation(.modaicsElastic) {
-                                isLiked.toggle()
-                                viewModel.toggleLike(for: item)
-                            }
-                        } label: {
-                            ZStack {
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .frame(width: 36, height: 36)
+        GeometryReader { geometry in
+            ZStack(alignment: .topTrailing) {
+                // Main image
+                if let imageURL = item.imageURLs.first, !imageURL.isEmpty {
+                    PremiumCachedImage(url: imageURL, contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                } else {
+                    Rectangle()
+                        .fill(Color.appBg)
+                        .overlay(
+                            VStack(spacing: 8) {
+                                Image(systemName: "photo")
+                                    .font(.system(size: 32, weight: .medium, design: .monospaced))
+                                    .foregroundColor(.appTextMuted.opacity(0.3))
                                 
-                                Image(systemName: isLiked ? "heart.fill" : "heart")
-                                    .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(isLiked ? .red : .modaicsChrome1)
-                                    .scaleEffect(isLiked ? 1.2 : 1.0)
+                                Text("NO IMAGE")
+                                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                    .tracking(1)
+                                    .foregroundColor(.appTextMuted.opacity(0.5))
                             }
-                        }
-                        
-                        // Quick view button
-                        Button {
-                            // Quick view action
-                        } label: {
-                            ZStack {
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .frame(width: 36, height: 36)
-                                
-                                Image(systemName: "eye")
-                                    .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.modaicsChrome1)
-                            }
-                        }
-                    }
+                        )
                 }
+                
+                // Overlay badges and actions
+                overlayContent
+            }
+        }
+        .frame(height: 280)
+    }
+    
+    private var overlayContent: some View {
+        VStack(spacing: 0) {
+            // Top row: Like + Platform badge
+            HStack(alignment: .top) {
+                // Platform badge
+                if let externalURL = item.externalURL, !externalURL.isEmpty {
+                    PlatformBadge(url: externalURL)
+                }
+                
                 Spacer()
+                
+                // Like button
+                likeButton
             }
             .padding(12)
             
-            // Sustainability badge
-            if sustainabilityVisible {
-                VStack {
-                    Spacer()
-                    HStack {
-                        SustainabilityBadge(score: item.sustainabilityScore)
-                        Spacer()
-                        
-                        // Platform badge (if from external marketplace)
-                        if let externalURL = item.externalURL, !externalURL.isEmpty {
-                            PlatformBadge(url: externalURL)
-                        }
-                    }
-                }
-                .padding(12)
-            }
+            Spacer()
             
-            // Similarity badge (if AI search result)
-            if let similarity = item.similarity, similarity > 0 {
-                VStack {
-                    HStack {
-                        Spacer()
-                        SimilarityBadge(similarity: similarity)
+            // Bottom row: Sustainability + Similarity
+            HStack(alignment: .bottom) {
+                // Sustainability badge
+                if item.sustainabilityScore.totalScore > 0 {
+                    HStack(spacing: 4) {
+                        Rectangle()
+                            .fill(sustainabilityColor)
+                            .frame(width: 3, height: 16)
+                        
+                        Image(systemName: "leaf.fill")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(.white)
+                        
+                        Text("\(item.sustainabilityScore.totalScore)")
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .foregroundColor(.white)
                     }
-                    Spacer()
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+                    .background(Color.black.opacity(0.75))
                 }
-                .padding(.top, 60)
-                .padding(.trailing, 12)
+                
+                Spacer()
+                
+                // AI Similarity badge
+                if let similarity = item.similarity, similarity > 0 {
+                    HStack(spacing: 4) {
+                        Rectangle()
+                            .fill(Color.appRed)
+                            .frame(width: 3, height: 16)
+                        
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(.appRed)
+                        
+                        Text("\(Int(similarity * 100))%")
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .foregroundColor(.white)
+                        
+                        Text("MATCH")
+                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .tracking(0.5)
+                            .foregroundColor(.appTextMuted)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+                    .background(Color.black.opacity(0.75))
+                }
             }
+            .padding(12)
         }
+    }
+    
+    private var likeButton: some View {
+        Button {
+            HapticManager.shared.impact(.light)
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                isLiked.toggle()
+            }
+            viewModel.toggleLike(for: item)
+        } label: {
+            Rectangle()
+                .fill(Color.black.opacity(0.75))
+                .frame(width: 36, height: 36)
+                .overlay(
+                    Rectangle()
+                        .stroke(isLiked ? Color.appRed : Color.appBorder, lineWidth: 1)
+                )
+                .overlay(
+                    Image(systemName: isLiked ? "heart.fill" : "heart")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(isLiked ? .appRed : .white)
+                        .scaleEffect(isLiked ? 1.1 : 1.0)
+                )
+        }
+        .buttonStyle(.plain)
     }
     
     private var contentSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Brand and category
+            // Brand + Category row
             HStack {
-                Text(item.brand)
-                    .font(.modaicsCaption(12))
-                    .foregroundColor(.modaicsChrome2)
-                    .textCase(.uppercase)
-                    .tracking(0.5)
+                if !item.brand.isEmpty && item.brand != "Unknown" {
+                    Text(item.brand.uppercased())
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .tracking(1)
+                        .foregroundColor(.appTextMuted)
+                        .lineLimit(1)
+                } else {
+                    Text("MARKETPLACE")
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .tracking(1)
+                        .foregroundColor(.appTextMuted)
+                }
+                
+                Spacer()
+                
+                // Category badge
+                if item.category != .other {
+                    Rectangle()
+                        .fill(Color.appSurface)
+                        .frame(height: 16)
+                        .overlay(
+                            Text(item.category.rawValue.uppercased())
+                                .font(.system(size: 8, weight: .medium, design: .monospaced))
+                                .tracking(0.5)
+                                .foregroundColor(.appTextMuted)
+                                .padding(.horizontal, 6)
+                        )
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+                }
+            }
+            
+            // Item name
+            Text(item.name)
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
+                .foregroundColor(.appTextMain)
+                .lineLimit(2)
+                .frame(height: 32, alignment: .top)
+                .multilineTextAlignment(.leading)
+            
+            // Price row with condition
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("$\(Int(max(0, item.listingPrice.isNaN ? 0 : item.listingPrice)))")
+                        .font(.system(size: 17, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appRed)
+                    
+                    // Original price if discounted
+                    if !item.originalPrice.isNaN && !item.listingPrice.isNaN && 
+                       item.originalPrice > item.listingPrice && !item.priceReduction.isNaN && item.priceReduction > 0 {
+                        HStack(spacing: 4) {
+                            Text("$\(Int(item.originalPrice))")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .strikethrough()
+                                .foregroundColor(.appTextMuted)
+                            
+                            Rectangle()
+                                .fill(Color.appRed)
+                                .frame(width: 2, height: 12)
+                            
+                            Text("\(Int(item.priceReduction))% OFF")
+                                .font(.system(size: 9, weight: .medium, design: .monospaced))
+                                .tracking(0.5)
+                                .foregroundColor(.appRed)
+                        }
+                    }
+                }
+                
+                Spacer()
+                
+                // Condition indicator
+                if item.condition != .new {
+                    HStack(spacing: 4) {
+                        Rectangle()
+                            .fill(conditionColor)
+                            .frame(width: 3, height: 14)
+                        
+                        Text(item.condition.rawValue.uppercased())
+                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .tracking(0.5)
+                            .foregroundColor(.appTextMuted)
+                    }
+                }
+            }
+            
+            // Location if available
+            if !item.location.isEmpty && item.location != "Unknown" {
+                HStack(spacing: 4) {
+                    Image(systemName: "location.fill")
+                        .font(.system(size: 8, weight: .medium))
+                        .foregroundColor(.appTextMuted)
+                    
+                    Text(item.location.uppercased())
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .tracking(0.5)
+                        .foregroundColor(.appTextMuted)
+                        .lineLimit(1)
+                }
+            }
+        }
+        .padding(12)
+        .frame(height: 110)
+    }
+    
+    private var sustainabilityColor: Color {
+        let score = item.sustainabilityScore.totalScore
+        if score >= 75 { return Color.green }
+        else if score >= 50 { return Color.yellow }
+        else if score >= 25 { return Color.orange }
+        else { return Color.red }
+    }
+    
+    private var conditionColor: Color {
+        switch item.condition {
+        case .new: return .green
+        case .likeNew: return Color(red: 0.4, green: 0.8, blue: 0.4)
+        case .excellent: return .yellow
+        case .good: return .orange
+        case .fair: return .red
+        }
+    }
+}
+
+// MARK: - Platform Badge
+struct PlatformBadge: View {
+    let url: String
+    
+    var platformInfo: (name: String, color: Color) {
+        if url.contains("depop") {
+            return ("DEPOP", Color(red: 1.0, green: 0.25, blue: 0.25))
+        } else if url.contains("grailed") {
+            return ("GRAILED", Color(red: 0.5, green: 0.5, blue: 0.5))
+        } else if url.contains("vinted") {
+            return ("VINTED", Color(red: 0.2, green: 0.6, blue: 0.9))
+        } else {
+            return ("MARKET", Color.appRed)
+        }
+    }
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Rectangle()
+                .fill(platformInfo.color)
+                .frame(width: 3, height: 14)
+            
+            Text(platformInfo.name)
+                .font(.system(size: 9, weight: .medium, design: .monospaced))
+                .tracking(1)
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 5)
+        .background(Color.black.opacity(0.75))
+    }
+}
+                                .strikethrough()
+                                .foregroundColor(.appTextMuted)
+                            
+                            Rectangle()
+                                .fill(Color.appRed)
+                                .frame(width: 2, height: 12)
+                            
+                            Text("\(Int(item.priceReduction))% OFF")
+                                .font(.system(size: 9, weight: .medium, design: .monospaced))
+                                .tracking(0.5)
+                                .foregroundColor(.appRed)
+                        }
+                    }
+                
                 
                 Spacer()
                 
