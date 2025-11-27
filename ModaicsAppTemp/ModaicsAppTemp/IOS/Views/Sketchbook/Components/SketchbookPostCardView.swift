@@ -94,11 +94,11 @@ struct SketchbookPostCardView: View {
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.7))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .stroke(
                     LinearGradient(
                         colors: [
@@ -174,7 +174,7 @@ struct SketchbookPostCardView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 280, height: 350)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .clipShape(Rectangle())
                                 .onTapGesture {
                                     onImageTap?(mediaAttachment.url)
                                 }
@@ -193,7 +193,7 @@ struct SketchbookPostCardView: View {
     }
     
     private var mediaPlaceholder: some View {
-        RoundedRectangle(cornerRadius: 12)
+        Rectangle()
             .fill(Color.modaicsDarkBlue.opacity(0.3))
             .frame(width: 280, height: 350)
             .overlay(

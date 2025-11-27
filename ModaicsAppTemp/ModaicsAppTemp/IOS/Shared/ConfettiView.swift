@@ -201,7 +201,7 @@ extension View {
                     endPoint: .trailing
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             
             Button("💰 Made a Sale!") {
                 ConfettiManager.shared.celebrate(type: .sale)
@@ -211,7 +211,7 @@ extension View {
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
             .background(Color.green)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             
             Button("✨ First Listing") {
                 ConfettiManager.shared.celebrate(type: .firstListing)
@@ -221,7 +221,7 @@ extension View {
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
             .background(Color.purple)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             
             Button("🏆 Milestone Reached") {
                 ConfettiManager.shared.celebrate(type: .milestone)
@@ -231,7 +231,7 @@ extension View {
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
             .background(Color.yellow)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
         }
     }
     .withConfetti()

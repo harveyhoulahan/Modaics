@@ -129,16 +129,16 @@ struct BrandSketchbookPublicView: View {
                         endPoint: .trailing
                     )
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
             }
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .stroke(
                     LinearGradient(
                         colors: [.modaicsChrome1.opacity(0.5), .modaicsChrome2.opacity(0.5)],
@@ -243,14 +243,14 @@ struct BrandSketchbookPublicView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
                     .background(Color.modaicsChrome1.opacity(0.2))
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 50)
             .background(Color.modaicsSurface2)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
+                Rectangle()
                     .stroke(
                         style: StrokeStyle(lineWidth: 2, dash: [8, 4])
                     )
@@ -356,10 +356,10 @@ struct BrandSketchbookPublicView: View {
                                     
                                     GeometryReader { geometry in
                                         ZStack(alignment: .leading) {
-                                            RoundedRectangle(cornerRadius: 4)
+                                            Rectangle()
                                                 .fill(Color.modaicsSurface2)
                                             
-                                            RoundedRectangle(cornerRadius: 4)
+                                            Rectangle()
                                                 .fill(
                                                     LinearGradient(
                                                         colors: [.modaicsChrome1, .modaicsChrome2],
@@ -422,11 +422,11 @@ struct BrandSketchbookPublicView: View {
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .stroke(
                     LinearGradient(
                         colors: [.modaicsChrome1.opacity(0.3), .modaicsChrome2.opacity(0.3)],

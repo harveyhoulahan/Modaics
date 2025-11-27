@@ -298,7 +298,7 @@ struct ProfileView: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Color.modaicsSurface2)
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
             }
             
             // Impact metrics
@@ -600,7 +600,7 @@ struct SustainabilityMetric: View {
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
                         .background(Color.green.opacity(0.2))
-                        .clipShape(Capsule())
+                        .clipShape(Rectangle())
                 }
                 
                 Text(description)
@@ -636,7 +636,7 @@ struct WardrobeTabButton: View {
                     .background(
                         isSelected ? Color.modaicsChrome1 : Color.modaicsSurface2
                     )
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
             }
             .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
             .padding(.horizontal, 16)
@@ -723,7 +723,7 @@ struct WardrobeItemCard: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color)
-            .clipShape(Capsule())
+            .clipShape(Rectangle())
     }
 }
 

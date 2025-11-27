@@ -271,7 +271,7 @@ struct MosaicLoadingIndicator: View {
     var body: some View {
         HStack(spacing: 8) {
             ForEach(0..<3, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .fill(
                         LinearGradient(
                             colors: [.modaicsChrome1, .modaicsChrome2],

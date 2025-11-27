@@ -53,9 +53,9 @@ struct SketchbookPollView: View {
         }
         .padding(16)
         .background(Color.modaicsDarkBlue.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
         )
     }
@@ -74,7 +74,7 @@ struct SketchbookPollView: View {
                 // Background bar (results)
                 if showResults {
                     GeometryReader { geometry in
-                        RoundedRectangle(cornerRadius: 8)
+                        Rectangle()
                             .fill(
                                 LinearGradient(
                                     colors: [
@@ -118,11 +118,11 @@ struct SketchbookPollView: View {
                 .padding(.vertical, 14)
             }
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                Rectangle()
                     .fill(Color.modaicsDarkBlue.opacity(0.5))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                Rectangle()
                     .stroke(
                         isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.modaicsChrome1.opacity(0.1),
                         lineWidth: 1

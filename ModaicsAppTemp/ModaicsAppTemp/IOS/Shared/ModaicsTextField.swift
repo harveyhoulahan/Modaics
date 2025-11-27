@@ -43,9 +43,9 @@ struct ModaicsTextField: View {
             }
             .padding()
             .background(Color.modaicsDarkBlue.opacity(0.6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
             )
         }
@@ -98,9 +98,9 @@ struct ModaicsPicker<T: Hashable & RawRepresentable>: View where T.RawValue == S
                 }
                 .padding()
                 .background(Color.modaicsDarkBlue.opacity(0.6))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                 )
             }

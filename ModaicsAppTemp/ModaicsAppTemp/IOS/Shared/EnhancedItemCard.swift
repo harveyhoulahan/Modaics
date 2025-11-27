@@ -29,7 +29,7 @@ struct EnhancedItemCard: View {
             contentSection
         }
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
         )
@@ -61,7 +61,7 @@ struct EnhancedItemCard: View {
     private var imageContainer: some View {
         ZStack {
             // Main image with sophisticated loading
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(
                     LinearGradient(
                         colors: [.modaicsSurface2, .modaicsSurface3],
@@ -80,7 +80,7 @@ struct EnhancedItemCard: View {
                         }
                     }
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(Rectangle())
             
             // Floating action buttons
             VStack {
@@ -209,7 +209,7 @@ struct EnhancedItemCard: View {
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(Color.modaicsError.opacity(0.15))
-                                .clipShape(Capsule())
+                                .clipShape(Rectangle())
                         }
                     }
                 }
@@ -541,10 +541,10 @@ struct QuickStatCard: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(color.opacity(0.2), lineWidth: 1)
                 )
         )
@@ -659,10 +659,10 @@ struct CommunityPostCard: View {
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(Color.modaicsChrome1.opacity(0.1), lineWidth: 1)
                 )
         )
@@ -676,7 +676,7 @@ struct EventHighlightCard: View {
     var body: some View {
         HStack(spacing: 16) {
             // Event visual
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(
                     LinearGradient(
                         colors: [.modaicsAccent, Color(red: 0.15, green: 0.5, blue: 0.3)],
@@ -730,7 +730,7 @@ struct EventHighlightCard: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Color.modaicsAccent)
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
                 }
             }
             
@@ -738,10 +738,10 @@ struct EventHighlightCard: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(Color.modaicsAccent.opacity(0.2), lineWidth: 1)
                 )
         )
@@ -802,10 +802,10 @@ struct SustainabilityTipCard: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsAccent.opacity(0.05))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(Color.modaicsAccent.opacity(0.15), lineWidth: 1)
                 )
         )

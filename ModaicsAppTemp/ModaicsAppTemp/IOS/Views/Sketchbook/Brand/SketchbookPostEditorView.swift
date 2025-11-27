@@ -135,9 +135,9 @@ struct SketchbookPostEditorView: View {
                         endPoint: .bottomTrailing
                     )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(
                         selectedPostType == type
                             ? Color.modaicsChrome1.opacity(0.5)
@@ -161,9 +161,9 @@ struct SketchbookPostEditorView: View {
                 .font(.system(size: 15))
                 .padding()
                 .background(Color.modaicsSurface2)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                 )
         }
@@ -194,9 +194,9 @@ struct SketchbookPostEditorView: View {
                     .padding(.vertical, 10)
             }
             .background(Color.modaicsSurface2)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
             )
         }
@@ -239,14 +239,14 @@ struct SketchbookPostEditorView: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(Color.modaicsChrome1.opacity(0.2))
-                            .clipShape(Capsule())
+                            .clipShape(Rectangle())
                     }
                 }
                 .padding(16)
                 .background(Color.modaicsSurface2)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                 )
             }
@@ -271,9 +271,9 @@ struct SketchbookPostEditorView: View {
                     .foregroundColor(.modaicsCotton)
                     .padding()
                     .background(Color.modaicsSurface2)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                     )
             }
@@ -290,9 +290,9 @@ struct SketchbookPostEditorView: View {
                             .foregroundColor(.modaicsCotton)
                             .padding()
                             .background(Color.modaicsSurface2)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(Rectangle())
                             .overlay(
-                                RoundedRectangle(cornerRadius: 12)
+                                Rectangle()
                                     .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                             )
                         
@@ -348,9 +348,9 @@ struct SketchbookPostEditorView: View {
             .tint(.modaicsChrome1)
             .padding()
             .background(Color.modaicsSurface2)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
             )
         }
@@ -389,9 +389,9 @@ struct SketchbookPostEditorView: View {
                                     endPoint: .trailing
                                 )
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
+                            Rectangle()
                                 .stroke(
                                     visibility == vis
                                         ? Color.modaicsChrome1.opacity(0.5)

@@ -79,9 +79,9 @@ struct SketchbookHeaderView: View {
         }
         .padding(20)
         .background(Color.modaicsSurface2)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
         )
     }
@@ -115,7 +115,7 @@ struct SketchbookHeaderView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background(Color.modaicsDarkBlue.opacity(0.5))
-        .clipShape(Capsule())
+        .clipShape(Rectangle())
         .overlay(
             Capsule()
                 .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
@@ -144,9 +144,9 @@ struct SketchbookHeaderView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background(Color.green.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(Color.green.opacity(0.3), lineWidth: 1)
                 )
             } else if !sketchbook.isPublic {

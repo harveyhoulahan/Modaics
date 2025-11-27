@@ -151,9 +151,9 @@ struct BrandSketchbookScreen: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .background(Color.modaicsSurface2)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .stroke(color.opacity(0.3), lineWidth: 1)
         )
     }
@@ -191,9 +191,9 @@ struct BrandSketchbookScreen: View {
                 endPoint: .bottomTrailing
             )
         )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
         )
     }

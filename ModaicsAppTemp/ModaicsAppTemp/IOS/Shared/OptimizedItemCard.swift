@@ -40,7 +40,7 @@ struct OptimizedItemCard: View {
             contentSection
         }
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
         )
@@ -66,12 +66,12 @@ struct OptimizedItemCard: View {
             }
         }
         .frame(height: 240)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
     }
     
     @ViewBuilder
     private var placeholderImage: some View {
-        RoundedRectangle(cornerRadius: 16)
+        Rectangle()
             .fill(
                 LinearGradient(
                     colors: [.modaicsSurface2, .modaicsSurface3],

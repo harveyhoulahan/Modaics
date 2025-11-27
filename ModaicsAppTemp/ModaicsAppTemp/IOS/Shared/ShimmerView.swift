@@ -116,7 +116,7 @@ struct ItemCardSkeleton: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(.ultraThinMaterial)
         )
     }
@@ -159,7 +159,7 @@ struct ListSkeleton: View {
                 }
                 .padding()
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .fill(.ultraThinMaterial)
                 )
             }

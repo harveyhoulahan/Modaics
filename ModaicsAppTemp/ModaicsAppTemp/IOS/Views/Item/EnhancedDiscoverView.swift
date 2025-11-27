@@ -554,7 +554,7 @@ struct TrendingItemCard: View {
                         .background(
                             LinearGradient(colors: [.orange, .red], startPoint: .leading, endPoint: .trailing)
                         )
-                        .clipShape(Capsule())
+                        .clipShape(Rectangle())
                         .padding(8)
                     }
                     Spacer()
@@ -703,7 +703,7 @@ struct CommunityPickCard: View {
                         .background(
                             LinearGradient(colors: [.pink, .red], startPoint: .leading, endPoint: .trailing)
                         )
-                        .clipShape(Capsule())
+                        .clipShape(Rectangle())
                         .padding(8)
                         
                         Spacer()
@@ -756,7 +756,7 @@ struct AIRecommendationCard: View {
                         .background(
                             LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2], startPoint: .leading, endPoint: .trailing)
                         )
-                        .clipShape(Capsule())
+                        .clipShape(Rectangle())
                         .padding(8)
                     }
                     Spacer()

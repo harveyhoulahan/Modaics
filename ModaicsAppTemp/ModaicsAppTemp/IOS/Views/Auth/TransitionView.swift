@@ -81,14 +81,14 @@ struct TransitionView: View {
 
     // ───────── middle shelf helper
     private var middleShelf: some View {
-        RoundedRectangle(cornerRadius: 8)
+        Rectangle()
             .fill(LinearGradient(colors: [.modaicsDenim1, .modaicsDenim2],
                                  startPoint: .top, endPoint: .bottom))
             .frame(width: 45, height: 130)
             .overlay(
                 VStack(spacing: 8) {
                     ForEach(barScales.indices, id: \.self) { i in
-                        RoundedRectangle(cornerRadius: 3)
+                        Rectangle()
                             .fill(
                                 userType == .brand
                                 ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],

@@ -115,11 +115,11 @@ struct ShimmerPlaceholder: View {
             contentMode: .fill
         )
         .frame(width: 200, height: 300)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         
         CachedImageView(url: nil)
             .frame(width: 200, height: 300)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(Rectangle())
     }
     .padding()
     .background(Color.modaicsDarkBlue)

@@ -101,7 +101,7 @@ struct SimplifiedTabBar: View {
                         selectedTab = index
                     }
                 } label: {
-                    VStack(spacing: 4) {
+                    VStack(spacing: 3) {
                         Image(systemName: tabs[index].1)
                             .font(.system(size: 20, weight: .regular))
                             .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
@@ -112,11 +112,11 @@ struct SimplifiedTabBar: View {
                             .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 6)
                 }
             }
         }
-        .padding(.bottom, 8)
+        .padding(.bottom, 4)
         .background(Color.modaicsDarkBlue)
     }
 }

@@ -151,7 +151,7 @@ struct LoginView: View {
             .background(
                 LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
                                startPoint: .leading, endPoint: .trailing))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(Rectangle())
             .shadow(color: .modaicsChrome1.opacity(0.3), radius: 10, y: 5)
         }
         .scaleEffect(btnScale[idx])

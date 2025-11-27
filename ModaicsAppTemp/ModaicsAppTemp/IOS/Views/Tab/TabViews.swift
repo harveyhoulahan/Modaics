@@ -234,7 +234,7 @@ struct DiscoverView: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(Color.modaicsChrome1.opacity(0.2))
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -951,7 +951,7 @@ struct CommunityView: View {
                                             : LinearGradient(colors: [Color.modaicsDarkBlue.opacity(0.4)],
                                                            startPoint: .leading, endPoint: .trailing)
                                     )
-                                    .clipShape(Capsule())
+                                    .clipShape(Rectangle())
                             }
                         }
                     }
@@ -1075,7 +1075,7 @@ struct ItemCard: View {
                         .padding(.vertical, 4)
                         .background(item.sustainabilityScore.sustainabilityColor)
                         .foregroundColor(.white)
-                        .clipShape(Capsule())
+                        .clipShape(Rectangle())
                         .padding(8)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -1255,7 +1255,7 @@ struct ItemDetailView: View {
                         .padding(.horizontal, 8).padding(.vertical, 4)
                         .background(Color.red.opacity(0.15))
                         .foregroundColor(.red)
-                        .clipShape(Capsule())
+                        .clipShape(Rectangle())
                 }
             }
         }
@@ -1328,7 +1328,7 @@ struct ItemDetailView: View {
                             .padding(.horizontal, 8).padding(.vertical, 4)
                             .background(Color.green.opacity(0.15))
                             .foregroundColor(.green)
-                            .clipShape(Capsule())
+                            .clipShape(Rectangle())
                     }
                 }
             }
@@ -1778,7 +1778,7 @@ struct EventMapCard: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(event.type.color)
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
                     
                     Spacer()
                     
@@ -1793,7 +1793,7 @@ struct EventMapCard: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(Color.modaicsChrome1.opacity(0.2))
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
                 }
                 
                 Text(event.title)
@@ -1840,7 +1840,7 @@ struct EventMapCard: View {
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
                                 .background(Color.green.opacity(0.2))
-                                .clipShape(Capsule())
+                                .clipShape(Rectangle())
                         }
                     }
                     .foregroundColor(.modaicsCottonLight)

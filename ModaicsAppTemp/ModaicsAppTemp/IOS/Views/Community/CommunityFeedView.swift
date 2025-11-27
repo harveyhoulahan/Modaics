@@ -529,7 +529,7 @@ struct CommunityEventCard: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(event.type.color)
-                    .clipShape(Capsule())
+                    .clipShape(Rectangle())
                     
                     Spacer()
                     
@@ -595,7 +595,7 @@ struct CommunityEventCard: View {
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
                                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                                    .clipShape(Capsule())
+                                    .clipShape(Rectangle())
                             }
                         }
                     }
@@ -814,7 +814,7 @@ struct EventDetailSheet: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
                             .background(event.type.color)
-                            .clipShape(Capsule())
+                            .clipShape(Rectangle())
                             
                             Spacer()
                         }
@@ -870,7 +870,7 @@ struct EventDetailSheet: View {
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 6)
                                             .background(Color.modaicsDarkBlue.opacity(0.6))
-                                            .clipShape(Capsule())
+                                            .clipShape(Rectangle())
                                     }
                                 }
                             }

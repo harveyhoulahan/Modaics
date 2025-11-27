@@ -247,7 +247,7 @@ struct CommunityIcon: View {
         ZStack {
             // Connection lines
             ForEach(0..<3, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 1)
+                Rectangle()
                     .fill(Color.blue.opacity(0.3))
                     .frame(width: size * 0.6, height: 2)
                     .rotationEffect(.degrees(Double(index) * 60))
@@ -335,6 +335,52 @@ extension Color {
     static let modaicsCottonLight = Color(red: 0.75, green: 0.75, blue: 0.75)   // Grey for secondary text
 }
 
+// MARK: - Industrial Typography
+extension Font {
+    // Heading styles - uppercase, monospaced, tracked
+    static func modaicsTitle() -> Font {
+        .system(size: 24, weight: .semibold, design: .monospaced)
+    }
+    
+    static func modaicsHeadline() -> Font {
+        .system(size: 18, weight: .semibold, design: .monospaced)
+    }
+    
+    static func modaicsSubheadline() -> Font {
+        .system(size: 15, weight: .medium, design: .monospaced)
+    }
+    
+    // Body styles
+    static func modaicsBody() -> Font {
+        .system(size: 14, weight: .regular, design: .monospaced)
+    }
+    
+    static func modaicsBodyBold() -> Font {
+        .system(size: 14, weight: .semibold, design: .monospaced)
+    }
+    
+    // Small text
+    static func modaicsCaption() -> Font {
+        .system(size: 12, weight: .regular, design: .monospaced)
+    }
+    
+    static func modaicsCaptionBold() -> Font {
+        .system(size: 12, weight: .medium, design: .monospaced)
+    }
+    
+    // Tiny labels
+    static func modaicsLabel() -> Font {
+        .system(size: 10, weight: .medium, design: .monospaced)
+    }
+}
+
+extension View {
+    // Helper to apply uppercase + tracking
+    func industrialText(tracking: CGFloat = 1.0) -> some View {
+        self.tracking(tracking)
+    }
+}
+
 // MARK: - Custom Modifiers
 struct ShimmerEffect: ViewModifier {
     @State private var phase: CGFloat = 0
@@ -397,7 +443,7 @@ struct ChromeDoor: View {
     var body: some View {
         ZStack {
             // Main door body with premium gradient
-            RoundedRectangle(cornerRadius: 10)
+            Rectangle()
                 .fill(
                     LinearGradient(
                         colors: isLeft ?

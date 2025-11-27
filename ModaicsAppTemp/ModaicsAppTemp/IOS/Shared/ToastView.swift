@@ -97,7 +97,7 @@ struct ToastView: View {
                 Color.modaicsDarkBlue.opacity(0.95)
                 
                 // Accent border
-                RoundedRectangle(cornerRadius: 16)
+                Rectangle()
                     .stroke(
                         LinearGradient(
                             colors: [toast.type.color.opacity(0.6), toast.type.color.opacity(0.3)],
@@ -108,7 +108,7 @@ struct ToastView: View {
                     )
             }
         )
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         .shadow(
             color: toast.type.color.opacity(0.3),
             radius: 20,

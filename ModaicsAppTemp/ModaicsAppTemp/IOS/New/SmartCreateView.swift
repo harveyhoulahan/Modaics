@@ -274,7 +274,7 @@ struct SmartCreateView: View {
             ProgressView(value: analysisProgress)
                 .tint(.modaicsChrome1)
                 .background(Color.modaicsDarkBlue.opacity(0.3))
-                .clipShape(Capsule())
+                .clipShape(Rectangle())
         }
         .padding(20)
         .background(Color.modaicsDarkBlue.opacity(0.6))
@@ -411,7 +411,7 @@ struct SmartCreateView: View {
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
                                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                                    .clipShape(Capsule())
+                                    .clipShape(Rectangle())
                             }
                         }
                     }
@@ -534,7 +534,7 @@ struct SmartCreateView: View {
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
                                 .background(Color.green.opacity(0.1))
-                                .clipShape(Capsule())
+                                .clipShape(Rectangle())
                             }
                         }
                     }

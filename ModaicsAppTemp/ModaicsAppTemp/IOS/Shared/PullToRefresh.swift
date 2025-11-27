@@ -126,7 +126,7 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     RefreshableScrollView {
         VStack(spacing: 20) {
             ForEach(0..<20, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(
                         LinearGradient(
                             colors: [.modaicsChrome1, .modaicsChrome2],

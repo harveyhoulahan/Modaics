@@ -18,7 +18,7 @@ struct WaterfallItemCard: View {
                 // Image
                 CachedImageView(url: item.imageURLs.first, contentMode: .fill)
                     .aspectRatio(randomAspectRatio, contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .clipShape(Rectangle())
                 
                 VStack(alignment: .leading, spacing: 4) {
                     // Brand

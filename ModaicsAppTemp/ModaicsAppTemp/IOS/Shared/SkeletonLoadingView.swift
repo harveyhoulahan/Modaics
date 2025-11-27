@@ -14,20 +14,20 @@ struct SkeletonItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Image placeholder
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(skeletonGradient)
                 .aspectRatio(0.7, contentMode: .fit)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
             
             // Title placeholder
-            RoundedRectangle(cornerRadius: 4)
+            Rectangle()
                 .fill(skeletonGradient)
                 .frame(height: 16)
                 .frame(maxWidth: .infinity)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
             
             // Price placeholder
-            RoundedRectangle(cornerRadius: 4)
+            Rectangle()
                 .fill(skeletonGradient)
                 .frame(width: 60, height: 14)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
@@ -65,26 +65,26 @@ struct SkeletonEventCard: View {
                 Spacer()
                 
                 // Price placeholder
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .fill(skeletonGradient)
                     .frame(width: 50, height: 20)
                     .modifier(SkeletonAnimation(isAnimating: $isAnimating))
             }
             
             // Title placeholders
-            RoundedRectangle(cornerRadius: 4)
+            Rectangle()
                 .fill(skeletonGradient)
                 .frame(height: 20)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
             
-            RoundedRectangle(cornerRadius: 4)
+            Rectangle()
                 .fill(skeletonGradient)
                 .frame(height: 20)
                 .frame(width: 200)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
             
             // Host placeholder
-            RoundedRectangle(cornerRadius: 4)
+            Rectangle()
                 .fill(skeletonGradient)
                 .frame(width: 120, height: 14)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
@@ -92,7 +92,7 @@ struct SkeletonEventCard: View {
             // Details placeholders
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(0..<3) { _ in
-                    RoundedRectangle(cornerRadius: 4)
+                    Rectangle()
                         .fill(skeletonGradient)
                         .frame(height: 13)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -102,7 +102,7 @@ struct SkeletonEventCard: View {
         }
         .padding(16)
         .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         .onAppear {
             isAnimating = true
         }
@@ -127,26 +127,26 @@ struct SkeletonListItem: View {
     var body: some View {
         HStack(spacing: 12) {
             // Thumbnail
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(skeletonGradient)
                 .frame(width: 80, height: 80)
                 .modifier(SkeletonAnimation(isAnimating: $isAnimating))
             
             VStack(alignment: .leading, spacing: 8) {
                 // Title
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .fill(skeletonGradient)
                     .frame(height: 16)
                     .modifier(SkeletonAnimation(isAnimating: $isAnimating))
                 
                 // Subtitle
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .fill(skeletonGradient)
                     .frame(width: 120, height: 14)
                     .modifier(SkeletonAnimation(isAnimating: $isAnimating))
                 
                 // Price
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .fill(skeletonGradient)
                     .frame(width: 60, height: 14)
                     .modifier(SkeletonAnimation(isAnimating: $isAnimating))
@@ -189,7 +189,7 @@ struct SkeletonAnimation: ViewModifier {
                 )
                 .offset(x: isAnimating ? 300 : -300)
             )
-            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .clipShape(Rectangle())
             .onAppear {
                 withAnimation(
                     .linear(duration: 1.5)

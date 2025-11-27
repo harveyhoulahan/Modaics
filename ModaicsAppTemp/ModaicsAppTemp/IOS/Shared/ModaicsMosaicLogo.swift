@@ -352,7 +352,7 @@ struct MiniMosaicLogo: View {
         ZStack {
             // Simplified mosaic pattern
             ForEach(0..<7, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .fill(
                         LinearGradient(
                             colors: [

@@ -96,9 +96,9 @@ struct SketchbookSettingsView: View {
                     .foregroundColor(.modaicsCotton)
                     .padding()
                     .background(Color.modaicsSurface2)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                     )
             }
@@ -125,9 +125,9 @@ struct SketchbookSettingsView: View {
                         .padding(.vertical, 10)
                 }
                 .background(Color.modaicsSurface2)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
                 )
             }
@@ -175,9 +175,9 @@ struct SketchbookSettingsView: View {
                     ? Color.modaicsChrome1.opacity(0.1)
                     : Color.modaicsSurface2
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(
                         accessPolicy == policy
                             ? Color.modaicsChrome1.opacity(0.5)
@@ -210,7 +210,7 @@ struct SketchbookSettingsView: View {
                     .foregroundColor(.modaicsCottonLight)
                     .padding()
                     .background(Color.modaicsSurface2)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
             }
         }
     }
@@ -242,9 +242,9 @@ struct SketchbookSettingsView: View {
                     ? Color.modaicsChrome1.opacity(0.1)
                     : Color.modaicsSurface2
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(
                         membershipRule == rule
                             ? Color.modaicsChrome1.opacity(0.5)
@@ -273,9 +273,9 @@ struct SketchbookSettingsView: View {
             }
             .padding()
             .background(Color.modaicsSurface2)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
             )
         }

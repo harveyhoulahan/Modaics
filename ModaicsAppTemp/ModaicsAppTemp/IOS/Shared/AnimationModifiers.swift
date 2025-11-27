@@ -214,7 +214,7 @@ extension View {
                 // Card Appear
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(0..<3, id: \.self) { index in
-                        RoundedRectangle(cornerRadius: 16)
+                        Rectangle()
                             .fill(
                                 LinearGradient(
                                     colors: [.modaicsChrome1, .modaicsChrome2],
@@ -234,7 +234,7 @@ extension View {
                 .padding(.horizontal, 20)
                 
                 // Press Animation
-                RoundedRectangle(cornerRadius: 16)
+                Rectangle()
                     .fill(Color.modaicsDenim1)
                     .frame(height: 80)
                     .overlay(

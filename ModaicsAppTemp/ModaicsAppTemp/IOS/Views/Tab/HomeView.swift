@@ -525,7 +525,7 @@ struct CuratedEventCard: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 .background(event.type.color)
-                .clipShape(Capsule())
+                .clipShape(Rectangle())
                 
                 Spacer()
                 
