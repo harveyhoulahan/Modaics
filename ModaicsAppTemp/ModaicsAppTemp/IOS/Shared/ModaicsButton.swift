@@ -32,18 +32,24 @@ struct ModaicsPrimaryButton: View {
                 } else {
                     if let icon = icon {
                         Image(systemName: icon)
-                            .font(.system(size: 15, weight: .medium))
+                            .font(.system(size: 15, weight: .medium, design: .monospaced))
                     }
                     Text(title.uppercased())
-                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .tracking(1.5)
                 }
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(Color.modaicsChrome1)
-            .clipShape(Rectangle())
+            .background(
+                Rectangle()
+                    .fill(Color.appRed)
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(Color.appRed.opacity(0.5), lineWidth: 1)
+            )
         }
         .disabled(!isEnabled || isLoading)
         .opacity(isEnabled ? 1.0 : 0.5)
@@ -72,17 +78,19 @@ struct ModaicsSecondaryButton: View {
                         .font(.system(size: 15, weight: .medium, design: .monospaced))
                 }
                 Text(title.uppercased())
-                    .font(.system(size: 13, weight: .regular, design: .monospaced))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .tracking(1.2)
             }
-            .foregroundColor(.modaicsCottonLight)
+            .foregroundColor(.appTextMain)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(Color.modaicsMidBlue)
-            .clipShape(Rectangle())
+            .background(
+                Rectangle()
+                    .fill(Color.appSurface)
+            )
             .overlay(
                 Rectangle()
-                    .stroke(Color.modaicsDenim1.opacity(0.3), lineWidth: 1)
+                    .stroke(Color.appBorder, lineWidth: 1)
             )
         }
         .disabled(!isEnabled)
@@ -95,21 +103,21 @@ struct ModaicsIconButton: View {
     let icon: String
     let action: () -> Void
     var size: CGFloat = 44
-    var foregroundColor: Color = .modaicsChrome1
+    var foregroundColor: Color = .appTextMain
     
     var body: some View {
         Button(action: action) {
             ZStack {
                 Rectangle()
-                    .fill(Color.modaicsMidBlue)
+                    .fill(Color.appSurface)
                     .frame(width: size, height: size)
                     .overlay(
                         Rectangle()
-                            .stroke(foregroundColor.opacity(0.3), lineWidth: 1)
+                            .stroke(Color.appBorder, lineWidth: 1)
                     )
                 
                 Image(systemName: icon)
-                    .font(.system(size: size * 0.4, weight: .regular))
+                    .font(.system(size: size * 0.4, weight: .medium, design: .monospaced))
                     .foregroundColor(foregroundColor)
             }
         }
@@ -143,13 +151,15 @@ struct ModaicsChip: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
-            .background(isSelected ? Color.modaicsChrome1 : Color.modaicsMidBlue)
-            .foregroundColor(isSelected ? .white : .modaicsCottonLight)
-            .clipShape(Rectangle())
+            .background(
+                Rectangle()
+                    .fill(isSelected ? Color.appRed.opacity(0.2) : Color.appSurface)
+            )
+            .foregroundColor(isSelected ? .white : .appTextMuted)
             .overlay(
                 Rectangle()
                     .stroke(
-                        isSelected ? Color.clear : Color.modaicsDenim1.opacity(0.3),
+                        isSelected ? Color.appRed : Color.appBorder,
                         lineWidth: 1
                     )
             )

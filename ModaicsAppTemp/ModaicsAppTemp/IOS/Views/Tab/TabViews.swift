@@ -1927,7 +1927,7 @@ struct BrandCard: View {
                 Rectangle()
                     .fill(
                         LinearGradient(
-                            colors: [Color.modaicsChrome1.opacity(0.3), Color.modaicsChrome2.opacity(0.3)],
+                            colors: [Color.appSurfaceAlt.opacity(0.6), Color.appSurface],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -1936,21 +1936,25 @@ struct BrandCard: View {
                 
                 Image(systemName: "building.2.fill")
                     .font(.system(size: 32, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.appTextMuted)
                 
-                // Sustainability badge overlay
+                // Sustainability badge overlay - industrial style
                 if brand.hasSustainabilityBadge {
                     VStack {
                         HStack {
                             Spacer()
                             
-                            Image(systemName: "leaf.circle.fill")
-                                .font(.title3)
-                                .foregroundColor(.green)
-                                .background(
-                                    Circle()
-                                        .fill(Color.modaicsDarkBlue)
-                                        .padding(-4)
+                            Rectangle()
+                                .fill(Color.green.opacity(0.1))
+                                .frame(width: 28, height: 28)
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.green, lineWidth: 1)
+                                )
+                                .overlay(
+                                    Image(systemName: "leaf.fill")
+                                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                                        .foregroundColor(.green)
                                 )
                         }
                         Spacer()
@@ -1960,25 +1964,27 @@ struct BrandCard: View {
             }
             
             VStack(alignment: .leading, spacing: 6) {
-                Text(brand.name)
-                    .font(.system(size: 15, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCotton)
+                Text(brand.name.uppercased())
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .tracking(0.5)
+                    .foregroundColor(.appTextMain)
                     .lineLimit(1)
                 
                 Text(brand.tagline)
-                    .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .foregroundColor(.appTextMuted)
                     .lineLimit(2)
                 
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
-                        .font(.caption2)
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
                     Text(String(format: "%.1f", brand.rating))
-                        .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    
-                    Text("(\(brand.itemCount) items)")
                         .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsCottonLight)
+                    
+                    Text("(\(brand.itemCount) ITEMS)")
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .tracking(0.5)
+                        .foregroundColor(.appTextMuted)
                 }
                 .foregroundColor(.yellow)
             }
@@ -1986,13 +1992,13 @@ struct BrandCard: View {
         .padding(12)
         .background(
             Rectangle()
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
-                .overlay(
-                    Rectangle()
-                        .stroke(
-                            brand.hasSustainabilityBadge ? Color.modaicsChrome1.opacity(0.15) : Color.modaicsChrome1.opacity(0.2),
-                            lineWidth: 1
-                        )
+                .fill(Color.appSurface)
+        )
+        .overlay(
+            Rectangle()
+                .stroke(
+                    brand.hasSustainabilityBadge ? Color.green.opacity(0.3) : Color.appBorder,
+                    lineWidth: 1
                 )
         )
     }
@@ -2026,14 +2032,19 @@ struct CategoryChip: View {
     
     var body: some View {
         Button(action: action) {
-            Text(category?.rawValue ?? "All")
-                .font(.system(size: 14, weight: .medium, design: .monospaced))
-                .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCotton)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+            Text((category?.rawValue ?? "All").uppercased())
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .tracking(0.5)
+                .foregroundColor(isSelected ? .white : .appTextMuted)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 7)
                 .background(
-                    Capsule()
-                        .fill(isSelected ? Color.modaicsChrome1 : Color.modaicsSurface2)
+                    Rectangle()
+                        .fill(isSelected ? Color.appRed.opacity(0.2) : Color.appSurface)
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(isSelected ? Color.appRed : Color.appBorder, lineWidth: 1)
                 )
         }
         .buttonStyle(PlainButtonStyle())

@@ -141,21 +141,222 @@ struct TransitionLoadingView: View {
 
 // MARK: Placeholders for Notifs and Settings - need to be implemented
 struct NotificationsView: View {
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         NavigationView {
-            Text("Notifications")
-                .navigationTitle("Notifications")
-                .navigationBarItems(trailing: Button("Done") {})
+            ZStack {
+                Color.appBg.ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Section header
+                        SectionHeader(title: "Recent Activity")
+                        
+                        // Placeholder notification cards
+                        ForEach(0..<5, id: \.self) { index in
+                            NotificationCard(
+                                icon: "bell.fill",
+                                title: "New Event Available",
+                                message: "Check out the latest sustainable fashion workshop near you",
+                                time: "\(index + 1)h ago"
+                            )
+                        }
+                    }
+                    .padding(.vertical)
+                }
+            }
+            .navigationTitle("NOTIFICATIONS")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("DONE")
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appRed)
+                    }
+                }
+            }
         }
     }
 }
 
+struct NotificationCard: View {
+    let icon: String
+    let title: String
+    let message: String
+    let time: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Rectangle()
+                .fill(Color.appRed.opacity(0.1))
+                .frame(width: 40, height: 40)
+                .overlay(
+                    Image(systemName: icon)
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appRed)
+                )
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title.uppercased())
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .tracking(0.5)
+                    .foregroundColor(.appTextMain)
+                
+                Text(message)
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                    .foregroundColor(.appTextMuted)
+                    .lineLimit(2)
+                
+                Text(time.uppercased())
+                    .font(.system(size: 9, weight: .medium, design: .monospaced))
+                    .tracking(0.5)
+                    .foregroundColor(.appTextMuted.opacity(0.7))
+            }
+            
+            Spacer()
+        }
+        .padding(12)
+        .background(
+            Rectangle()
+                .fill(Color.appSurface)
+        )
+        .overlay(
+            Rectangle()
+                .stroke(Color.appBorder, lineWidth: 1)
+        )
+        .padding(.horizontal, 20)
+    }
+}
+
 struct SettingsView: View {
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         NavigationView {
-            Text("Settings")
-                .navigationTitle("Settings")
-                .navigationBarItems(trailing: Button("Done") {})
+            ZStack {
+                Color.appBg.ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        // Profile section
+                        SectionHeader(title: "Profile")
+                        
+                        SettingsRow(icon: "person.fill", title: "Edit Profile", showChevron: true)
+                        SettingsRow(icon: "heart.fill", title: "Saved Items", badge: "12", showChevron: true)
+                        SettingsRow(icon: "clock.fill", title: "History", showChevron: true)
+                        
+                        Divider()
+                            .background(Color.appBorder)
+                            .padding(.vertical, 16)
+                        
+                        // Preferences section
+                        SectionHeader(title: "Preferences")
+                        
+                        SettingsRow(icon: "bell.fill", title: "Notifications", showChevron: true)
+                        SettingsRow(icon: "globe", title: "Language", value: "English", showChevron: true)
+                        SettingsRow(icon: "moon.fill", title: "Dark Mode", showToggle: true)
+                        
+                        Divider()
+                            .background(Color.appBorder)
+                            .padding(.vertical, 16)
+                        
+                        // About section
+                        SectionHeader(title: "About")
+                        
+                        SettingsRow(icon: "info.circle.fill", title: "About Modaics", showChevron: true)
+                        SettingsRow(icon: "doc.text.fill", title: "Terms of Service", showChevron: true)
+                        SettingsRow(icon: "lock.fill", title: "Privacy Policy", showChevron: true)
+                    }
+                    .padding(.vertical)
+                }
+            }
+            .navigationTitle("SETTINGS")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("DONE")
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appRed)
+                    }
+                }
+            }
         }
     }
 }
+
+struct SettingsRow: View {
+    let icon: String
+    let title: String
+    var value: String? = nil
+    var badge: String? = nil
+    var showChevron: Bool = false
+    var showToggle: Bool = false
+    @State private var toggleValue = false
+    
+    var body: some View {
+        Button(action: {}) {
+            HStack(spacing: 12) {
+                Rectangle()
+                    .fill(Color.appSurface)
+                    .frame(width: 32, height: 32)
+                    .overlay(
+                        Image(systemName: icon)
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMain)
+                    )
+                
+                Text(title.uppercased())
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .tracking(0.5)
+                    .foregroundColor(.appTextMain)
+                
+                Spacer()
+                
+                if let badge = badge {
+                    Text(badge)
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appRed)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(
+                            Rectangle()
+                                .fill(Color.appRed.opacity(0.1))
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.appRed, lineWidth: 1)
+                                )
+                        )
+                }
+                
+                if let value = value {
+                    Text(value.uppercased())
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMuted)
+                }
+                
+                if showToggle {
+                    Toggle("", isOn: $toggleValue)
+                        .labelsHidden()
+                        .tint(.appRed)
+                }
+                
+                if showChevron {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMuted)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+

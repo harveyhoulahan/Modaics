@@ -119,30 +119,50 @@ struct HomeView: View {
             Spacer()
 
             HStack(spacing: 16) {
+                // Notification button - industrial style
                 Button {
                     HapticManager.shared.buttonTap()
                     showNotifications = true
                 } label: {
                     ZStack(alignment: .topTrailing) {
-                        Image(systemName: "bell.fill")
-                            .font(.title3)
-                            .foregroundColor(.modaicsChrome1)
+                        Rectangle()
+                            .fill(Color.appSurface)
+                            .frame(width: 40, height: 40)
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.appBorder, lineWidth: 1)
+                            )
+                            .overlay(
+                                Image(systemName: "bell.fill")
+                                    .font(.system(size: 16, weight: .medium, design: .monospaced))
+                                    .foregroundColor(.appTextMain)
+                            )
                         
-                        // Notification badge
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 8, height: 8)
-                            .offset(x: 4, y: -4)
+                        // Notification badge - red dot
+                        Rectangle()
+                            .fill(Color.appRed)
+                            .frame(width: 6, height: 6)
+                            .offset(x: 2, y: -2)
                     }
                 }
                 
+                // Settings/Profile button - industrial style
                 Button {
                     HapticManager.shared.buttonTap()
                     showSettings = true
                 } label: {
-                    Image(systemName: "person.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.modaicsChrome1)
+                    Rectangle()
+                        .fill(Color.appSurface)
+                        .frame(width: 40, height: 40)
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
+                        .overlay(
+                            Image(systemName: "person.circle.fill")
+                                .font(.system(size: 18, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMain)
+                        )
                 }
             }
         }
