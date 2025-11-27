@@ -314,25 +314,25 @@ extension Font {
     }
 }
 
-// MARK: - Industrial Color Theme (Red/Grey/Black - Grailed Inspired)
+// MARK: - Industrial Minimalist Theme (Grey/Red - Above the Clouds/Grailed Inspired)
 extension Color {
-    // Industrial background colors - deep greys and blacks
-    static let modaicsDarkBlue = Color(red: 0.08, green: 0.08, blue: 0.08)      // Almost black
-    static let modaicsMidBlue = Color(red: 0.12, green: 0.12, blue: 0.12)        // Dark charcoal
-    static let modaicsLightBlue = Color(red: 0.18, green: 0.18, blue: 0.18)      // Medium grey
+    // Industrial grey backgrounds - concrete aesthetic
+    static let modaicsDarkBlue = Color(red: 0.22, green: 0.22, blue: 0.22)      // Dark concrete grey
+    static let modaicsMidBlue = Color(red: 0.28, green: 0.28, blue: 0.28)        // Medium concrete
+    static let modaicsLightBlue = Color(red: 0.35, green: 0.35, blue: 0.35)      // Light concrete
     
-    // Industrial red - primary accent (like Grailed's red)
-    static let modaicsChrome1 = Color(red: 0.90, green: 0.15, blue: 0.15)       // Industrial red
-    static let modaicsChrome2 = Color(red: 0.75, green: 0.12, blue: 0.12)       // Darker red
-    static let modaicsChrome3 = Color(red: 0.85, green: 0.14, blue: 0.14)       // Mid red
+    // Pure industrial red - only for active states and highlights
+    static let modaicsChrome1 = Color(red: 0.95, green: 0.15, blue: 0.15)       // Bright red accent
+    static let modaicsChrome2 = Color(red: 0.80, green: 0.12, blue: 0.12)       // Deep red
+    static let modaicsChrome3 = Color(red: 0.90, green: 0.14, blue: 0.14)       // Mid red
     
-    // Steel grey accents - replacing denim
-    static let modaicsDenim1 = Color(red: 0.50, green: 0.50, blue: 0.50)        // Steel grey
-    static let modaicsDenim2 = Color(red: 0.40, green: 0.40, blue: 0.40)        // Darker steel
+    // Neutral greys for inactive states
+    static let modaicsDenim1 = Color(red: 0.60, green: 0.60, blue: 0.60)        // Light grey
+    static let modaicsDenim2 = Color(red: 0.45, green: 0.45, blue: 0.45)        // Medium grey
     
-    // Clean whites with slight grey tint
-    static let modaicsCotton = Color(red: 0.95, green: 0.95, blue: 0.95)        // Off-white
-    static let modaicsCottonLight = Color(red: 0.70, green: 0.70, blue: 0.70)   // Light grey text
+    // Text colors - high contrast
+    static let modaicsCotton = Color.white                                       // Pure white for primary text
+    static let modaicsCottonLight = Color(red: 0.75, green: 0.75, blue: 0.75)   // Grey for secondary text
 }
 
 // MARK: - Custom Modifiers

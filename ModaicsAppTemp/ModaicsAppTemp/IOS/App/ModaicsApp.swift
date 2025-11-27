@@ -103,12 +103,13 @@ struct SimplifiedTabBar: View {
                 } label: {
                     VStack(spacing: 4) {
                         Image(systemName: tabs[index].1)
-                            .font(.system(size: 22))
-                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight.opacity(0.6))
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
                         
-                        Text(tabs[index].0)
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight.opacity(0.6))
+                        Text(tabs[index].0.uppercased())
+                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .tracking(0.5)
+                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)

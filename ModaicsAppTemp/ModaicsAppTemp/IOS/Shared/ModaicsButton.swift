@@ -28,31 +28,22 @@ struct ModaicsPrimaryButton: View {
             HStack(spacing: 8) {
                 if isLoading {
                     ProgressView()
-                        .tint(.modaicsDarkBlue)
+                        .tint(.white)
                 } else {
                     if let icon = icon {
                         Image(systemName: icon)
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(size: 15, weight: .medium))
                     }
-                    Text(title)
-                        .font(.system(size: 18, weight: .semibold))
+                    Text(title.uppercased())
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .tracking(1.5)
                 }
             }
-            .foregroundColor(.modaicsDarkBlue)
+            .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(
-                LinearGradient(
-                    colors: [.modaicsChrome1, .modaicsChrome2],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
-            )
+            .padding(.vertical, 14)
+            .background(Color.modaicsChrome1)
+            .clipShape(Rectangle())
         }
         .disabled(!isEnabled || isLoading)
         .opacity(isEnabled ? 1.0 : 0.5)
@@ -78,19 +69,20 @@ struct ModaicsSecondaryButton: View {
             HStack(spacing: 8) {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.system(size: 15, weight: .regular))
                 }
-                Text(title)
-                    .font(.system(size: 16, weight: .medium))
+                Text(title.uppercased())
+                    .font(.system(size: 13, weight: .regular, design: .monospaced))
+                    .tracking(1.2)
             }
-            .foregroundColor(.modaicsCotton)
+            .foregroundColor(.modaicsCottonLight)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(Color.modaicsDarkBlue.opacity(0.6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.vertical, 12)
+            .background(Color.modaicsMidBlue)
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                Rectangle()
+                    .stroke(Color.modaicsDenim1.opacity(0.3), lineWidth: 1)
             )
         }
         .disabled(!isEnabled)
@@ -108,16 +100,16 @@ struct ModaicsIconButton: View {
     var body: some View {
         Button(action: action) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.modaicsDarkBlue.opacity(0.6))
+                Rectangle()
+                    .fill(Color.modaicsMidBlue)
                     .frame(width: size, height: size)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .stroke(foregroundColor.opacity(0.3), lineWidth: 1)
                     )
                 
                 Image(systemName: icon)
-                    .font(.system(size: size * 0.4, weight: .medium))
+                    .font(.system(size: size * 0.4, weight: .regular))
                     .foregroundColor(foregroundColor)
             }
         }
@@ -143,32 +135,21 @@ struct ModaicsChip: View {
             HStack(spacing: 6) {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .font(.caption)
+                        .font(.system(size: 11, weight: .regular))
                 }
-                Text(title)
-                    .font(.system(size: 14, weight: .medium))
+                Text(title.uppercased())
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                    .tracking(0.8)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(
-                isSelected
-                    ? LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    : LinearGradient(
-                        colors: [Color.modaicsDarkBlue.opacity(0.6)],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-            )
-            .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCottonLight)
-            .clipShape(Capsule())
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(isSelected ? Color.modaicsChrome1 : Color.modaicsMidBlue)
+            .foregroundColor(isSelected ? .white : .modaicsCottonLight)
+            .clipShape(Rectangle())
             .overlay(
-                Capsule()
+                Rectangle()
                     .stroke(
-                        isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.modaicsChrome1.opacity(0.2),
+                        isSelected ? Color.clear : Color.modaicsDenim1.opacity(0.3),
                         lineWidth: 1
                     )
             )
