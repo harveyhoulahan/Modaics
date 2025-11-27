@@ -250,7 +250,7 @@ struct HomeView: View {
                             .fill(Color.modaicsChrome2.opacity(0.2))
                             .overlay(
                                 Capsule()
-                                    .stroke(Color.modaicsChrome2.opacity(0.3), lineWidth: 1)
+                                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                             )
                     )
             }

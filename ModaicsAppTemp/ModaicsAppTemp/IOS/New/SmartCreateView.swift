@@ -316,7 +316,7 @@ struct SmartCreateView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
         )
     }
     

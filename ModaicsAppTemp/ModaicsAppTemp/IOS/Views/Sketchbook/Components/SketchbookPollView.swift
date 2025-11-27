@@ -56,7 +56,7 @@ struct SketchbookPollView: View {
         .clipShape(Rectangle())
         .overlay(
             Rectangle()
-                .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
         )
     }
     

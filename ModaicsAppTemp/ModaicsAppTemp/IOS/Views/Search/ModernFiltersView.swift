@@ -156,7 +156,7 @@ struct ModernFiltersView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                     )
                 }
                 
@@ -177,7 +177,7 @@ struct ModernFiltersView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                     )
                 }
             }

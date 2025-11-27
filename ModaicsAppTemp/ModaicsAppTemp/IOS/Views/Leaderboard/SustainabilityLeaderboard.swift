@@ -217,7 +217,7 @@ struct SustainabilityLeaderboardView: View {
                     .fill(Color.modaicsChrome1.opacity(0.1))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 2)
+                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 2)
                     )
             )
         }
@@ -266,7 +266,7 @@ struct PodiumCard: View {
                     .font(.system(size: isWinner ? 32 : 24, weight: .bold))
                     .foregroundColor(.white)
             }
-            .shadow(color: color.opacity(0.5), radius: 10)
+            
             
             VStack(spacing: 4) {
                 Text(userName)

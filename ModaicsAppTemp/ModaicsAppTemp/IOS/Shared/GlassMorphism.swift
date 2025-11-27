@@ -60,7 +60,7 @@ struct GlassCard<Content: View>: View {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .strokeBorder(borderColor, lineWidth: 1)
             )
-            .shadow(color: .black.opacity(shadowOpacity), radius: shadowRadius, x: 0, y: 10)
+            
     }
 }
 
@@ -130,7 +130,7 @@ struct GlassButton: View {
                 RoundedRectangle(cornerRadius: size.cornerRadius)
                     .strokeBorder(style.borderColor, lineWidth: 1)
             )
-            .shadow(color: style.shadowColor, radius: 15, x: 0, y: 5)
+            
         }
         .buttonStyle(HapticButtonStyle(scaleEffect: 0.97))
     }
@@ -279,7 +279,7 @@ struct GlassBadge: View {
                             .strokeBorder(.white.opacity(0.3), lineWidth: 1)
                     )
             )
-            .shadow(color: color.opacity(0.3), radius: 8, x: 0, y: 4)
+            
     }
 }
 

@@ -99,20 +99,8 @@ struct SketchbookPostCardView: View {
         )
         .overlay(
             Rectangle()
-                .stroke(
-                    LinearGradient(
-                        colors: [
-                            post.postType.gradientColors[0].opacity(0.6),
-                            post.postType.gradientColors[1].opacity(0.5),
-                            post.postType.gradientColors[0].opacity(0.6)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 2
-                )
+                .stroke(Color.modaicsLightBlue.opacity(0.4), lineWidth: 1)
         )
-        .shadow(color: post.postType.accentColor.opacity(0.25), radius: 15, x: 0, y: 8)
     }
     
     // MARK: - Subviews

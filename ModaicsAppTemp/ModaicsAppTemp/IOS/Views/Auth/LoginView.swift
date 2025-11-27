@@ -152,7 +152,7 @@ struct LoginView: View {
                 LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
                                startPoint: .leading, endPoint: .trailing))
             .clipShape(Rectangle())
-            .shadow(color: .modaicsChrome1.opacity(0.3), radius: 10, y: 5)
+            
         }
         .scaleEffect(btnScale[idx])
         .animation(.modaicsSpring, value: btnScale[idx])

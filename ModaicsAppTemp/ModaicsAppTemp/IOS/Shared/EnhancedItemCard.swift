@@ -31,7 +31,7 @@ struct EnhancedItemCard: View {
         .background(
             Rectangle()
                 .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
+                
         )
         .onAppear {
             withAnimation(.modaicsSpring.delay(0.2)) {
@@ -319,7 +319,7 @@ struct CategoryPill: View {
                     .fill(Color.modaicsChrome1.opacity(0.15))
                     .overlay(
                         Capsule()
-                            .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 0.5)
+                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 0.5)
                     )
             )
     }
@@ -663,7 +663,7 @@ struct CommunityPostCard: View {
                 .fill(.ultraThinMaterial)
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsChrome1.opacity(0.1), lineWidth: 1)
+                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                 )
         )
     }

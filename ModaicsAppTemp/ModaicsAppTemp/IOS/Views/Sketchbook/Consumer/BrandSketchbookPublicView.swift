@@ -148,7 +148,7 @@ struct BrandSketchbookPublicView: View {
                     lineWidth: 1.5
                 )
         )
-        .shadow(color: Color.modaicsChrome1.opacity(0.2), radius: 12, x: 0, y: 6)
+        
         .padding(.horizontal)
     }
     
@@ -291,7 +291,7 @@ struct BrandSketchbookPublicView: View {
                                     .font(.system(size: 40, weight: .bold))
                                     .foregroundColor(.modaicsDarkBlue)
                             )
-                            .shadow(color: Color.modaicsChrome1.opacity(0.3), radius: 20, x: 0, y: 10)
+                            
                         
                         // Title
                         Text("Subscribe to \(brandName)")

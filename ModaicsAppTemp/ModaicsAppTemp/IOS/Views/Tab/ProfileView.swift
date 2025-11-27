@@ -894,7 +894,7 @@ struct PremiumFeature: View {
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                 )
         )
     }

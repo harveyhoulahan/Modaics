@@ -260,50 +260,27 @@ struct MosaicTabItem: View {
     let scale: CGFloat
     
     @State private var tileRotation: Double = 0
-    @State private var glowIntensity: Double = 0
     
     var body: some View {
         VStack(spacing: 4) {
             ZStack {
-                // Hexagonal background
+                // Hexagonal background - flat industrial
                 HexagonShape()
-                    .fill(
-                        LinearGradient(
-                            colors: isSelected ?
-                                [Color.modaicsChrome1, Color.modaicsChrome2] :
-                                [Color.modaicsChrome2.opacity(0.3), Color.modaicsChrome3.opacity(0.3)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .fill(isSelected ? Color.modaicsChrome1 : Color.modaicsMidBlue)
                     .frame(width: 44, height: 44)
-                    .shadow(
-                        color: isSelected ? Color.modaicsChrome1.opacity(0.5) : .clear,
-                        radius: isSelected ? 8 : 0,
-                        y: 2
-                    )
                     .scaleEffect(scale)
                     .rotationEffect(.degrees(tileRotation))
                 
-                // Glow effect for selected state
-                if isSelected {
+                // Subtle border for unselected state
+                if !isSelected {
                     HexagonShape()
-                        .stroke(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.5), Color.modaicsChrome1.opacity(0.3)],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ),
-                            lineWidth: 1
-                        )
+                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                         .frame(width: 44, height: 44)
-                        .scaleEffect(scale * (1 + glowIntensity * 0.1))
-                        .blur(radius: 1)
                 }
                 
                 Image(systemName: icon)
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCotton.opacity(0.7))
+                    .foregroundColor(isSelected ? .white : .modaicsCotton.opacity(0.7))
                     .scaleEffect(scale)
             }
             
@@ -328,10 +305,6 @@ struct MosaicTabItem: View {
     private func animateSelection() {
         withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
             tileRotation = 360
-        }
-        
-        withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) {
-            glowIntensity = 1
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -482,7 +455,7 @@ struct PremiumWelcomeCard: View {
                         )
                 )
         )
-        .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
+        
     }
 }
 
@@ -549,7 +522,7 @@ struct PremiumFeatureTile: View {
                         )
                 )
         )
-        .shadow(color: .black.opacity(0.3), radius: 15, y: 8)
+        
         .scaleEffect(isPressed ? 0.95 : (isVisible ? 1.0 : 0.8))
         .opacity(isVisible ? 1.0 : 0)
         .onTapGesture {

@@ -46,7 +46,7 @@ struct ModaicsTextField: View {
             .clipShape(Rectangle())
             .overlay(
                 Rectangle()
-                    .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
             )
         }
     }
@@ -101,7 +101,7 @@ struct ModaicsPicker<T: Hashable & RawRepresentable>: View where T.RawValue == S
                 .clipShape(Rectangle())
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
                 )
             }
         }

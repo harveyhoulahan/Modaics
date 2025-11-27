@@ -1487,7 +1487,7 @@ struct EventCard: View {
         }
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 2)
+        
     }
 }
 
@@ -1535,7 +1535,7 @@ struct SwapRequestCard: View {
         .padding()
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 2)
+        
     }
 }
 

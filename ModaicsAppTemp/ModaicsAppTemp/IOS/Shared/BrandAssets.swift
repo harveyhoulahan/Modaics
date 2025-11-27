@@ -321,10 +321,10 @@ extension Color {
     static let modaicsMidBlue = Color(red: 0.28, green: 0.28, blue: 0.28)        // Medium concrete
     static let modaicsLightBlue = Color(red: 0.35, green: 0.35, blue: 0.35)      // Light concrete
     
-    // Pure industrial red - only for active states and highlights
-    static let modaicsChrome1 = Color(red: 0.95, green: 0.15, blue: 0.15)       // Bright red accent
-    static let modaicsChrome2 = Color(red: 0.80, green: 0.12, blue: 0.12)       // Deep red
-    static let modaicsChrome3 = Color(red: 0.90, green: 0.14, blue: 0.14)       // Mid red
+    // Deep industrial red - subtle undertones only
+    static let modaicsChrome1 = Color(red: 0.65, green: 0.15, blue: 0.15)       // Deep maroon red
+    static let modaicsChrome2 = Color(red: 0.55, green: 0.12, blue: 0.12)       // Deeper maroon
+    static let modaicsChrome3 = Color(red: 0.60, green: 0.14, blue: 0.14)       // Mid maroon
     
     // Neutral greys for inactive states
     static let modaicsDenim1 = Color(red: 0.60, green: 0.60, blue: 0.60)        // Light grey
@@ -489,7 +489,7 @@ struct ChromeDoor: View {
                     )
                 )
                 .frame(width: 10, height: 10)
-                .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
+                
                 .overlay(
                     Circle()
                         .stroke(Color.white.opacity(0.8), lineWidth: 0.5)

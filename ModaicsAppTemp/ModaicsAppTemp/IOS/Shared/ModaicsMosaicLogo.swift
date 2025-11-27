@@ -234,7 +234,7 @@ struct MosaicTile<S: ShapeStyle>: View {
         }
         .rotationEffect(.degrees(rotation))
         .scaleEffect(scale)
-        .shadow(color: .black.opacity(0.2), radius: 2, x: 1, y: 1)
+        
         .overlay(
             // Glossy effect
             Group {
