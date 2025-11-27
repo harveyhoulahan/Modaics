@@ -314,25 +314,34 @@ extension Font {
     }
 }
 
-// MARK: - Industrial Minimalist Theme (Grey/Red - Above the Clouds/Grailed Inspired)
+// MARK: - Industrial Design System Color Palette
 extension Color {
-    // Industrial grey backgrounds - concrete aesthetic
-    static let modaicsDarkBlue = Color(red: 0.22, green: 0.22, blue: 0.22)      // Dark concrete grey - main background
-    static let modaicsMidBlue = Color(red: 0.35, green: 0.35, blue: 0.35)        // Medium concrete - floating boxes
-    static let modaicsLightBlue = Color(red: 0.45, green: 0.45, blue: 0.45)      // Light concrete - borders
+    // Backgrounds - darker base for better card float
+    static let appBg = Color(red: 0.12, green: 0.12, blue: 0.12)           // Very dark grey (almost black)
+    static let appSurface = Color(red: 0.18, green: 0.18, blue: 0.18)      // Slightly lighter grey for cards
+    static let appSurfaceAlt = Color(red: 0.22, green: 0.22, blue: 0.22)   // Secondary panel grey
+    static let appBorder = Color(red: 0.35, green: 0.35, blue: 0.35)       // Medium grey for 1pt borders
     
-    // Deep industrial red - subtle glow only
-    static let modaicsChrome1 = Color(red: 0.65, green: 0.15, blue: 0.15)       // Deep maroon red
-    static let modaicsChrome2 = Color(red: 0.55, green: 0.12, blue: 0.12)       // Deeper maroon
-    static let modaicsChrome3 = Color(red: 0.60, green: 0.14, blue: 0.14)       // Mid maroon
+    // Text
+    static let appTextMain = Color(red: 0.95, green: 0.95, blue: 0.95)     // Near-white for primary text
+    static let appTextMuted = Color(red: 0.60, green: 0.60, blue: 0.60)    // Mid-grey for secondary labels
     
-    // Neutral greys for inactive states
-    static let modaicsDenim1 = Color(red: 0.60, green: 0.60, blue: 0.60)        // Light grey
-    static let modaicsDenim2 = Color(red: 0.45, green: 0.45, blue: 0.45)        // Medium grey
+    // Accent
+    static let appRed = Color(red: 0.85, green: 0.15, blue: 0.15)          // Primary red (brand color)
+    static let appRedSoft = Color(red: 0.65, green: 0.12, blue: 0.12)      // Darker red (pressed state)
+    static let ecoGreen = Color(red: 0.20, green: 0.75, blue: 0.45)        // ONLY for Eco Score
     
-    // Text colors - high contrast
-    static let modaicsCotton = Color.white                                       // Pure white for primary text
-    static let modaicsCottonLight = Color(red: 0.75, green: 0.75, blue: 0.75)   // Grey for secondary text
+    // Legacy compatibility (map old colors to new system)
+    static let modaicsDarkBlue = appBg
+    static let modaicsMidBlue = appSurface
+    static let modaicsLightBlue = appBorder
+    static let modaicsChrome1 = appRed
+    static let modaicsChrome2 = appRedSoft
+    static let modaicsChrome3 = appRedSoft
+    static let modaicsDenim1 = appTextMuted
+    static let modaicsDenim2 = appBorder
+    static let modaicsCotton = appTextMain
+    static let modaicsCottonLight = appTextMuted
 }
 
 // MARK: - Industrial Typography

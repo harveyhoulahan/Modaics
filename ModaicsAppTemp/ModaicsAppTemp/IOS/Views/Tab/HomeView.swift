@@ -498,10 +498,10 @@ struct StatCard: View {
         .padding(.vertical, 16)
         .background(
             Rectangle()
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
+                .fill(Color.modaicsMidBlue)
                 .overlay(
                     Rectangle()
-                        .stroke(color.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
     }

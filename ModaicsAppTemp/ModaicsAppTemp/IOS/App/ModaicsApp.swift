@@ -97,27 +97,56 @@ struct SimplifiedTabBar: View {
         HStack(spacing: 0) {
             ForEach(0..<tabs.count, id: \.self) { index in
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         selectedTab = index
                     }
                 } label: {
-                    VStack(spacing: 3) {
-                        Image(systemName: tabs[index].1)
-                            .font(.system(size: 20, weight: .medium, design: .monospaced))
-                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
+                    VStack(spacing: 2) {
+                        // Icon with subtle red glow on selection
+                        ZStack {
+                            if selectedTab == index {
+                                Rectangle()
+                                    .fill(Color.appRed.opacity(0.1))
+                                    .frame(width: 44, height: 44)
+                                    .overlay(
+                                        Rectangle()
+                                            .stroke(Color.appRed.opacity(0.3), lineWidth: 1)
+                                    )
+                            }
+                            
+                            Image(systemName: tabs[index].1)
+                                .font(.system(size: 18, weight: .medium, design: .monospaced))
+                                .foregroundColor(selectedTab == index ? .appRed : .appTextMuted)
+                        }
+                        .frame(height: 44)
                         
                         Text(tabs[index].0.uppercased())
-                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .font(.system(size: 8, weight: .medium, design: .monospaced))
                             .tracking(0.5)
-                            .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
+                            .foregroundColor(selectedTab == index ? .appRed : .appTextMuted)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
+                    .padding(.vertical, 4)
                 }
             }
         }
-        .padding(.bottom, 4)
-        .background(Color.modaicsDarkBlue)
+        .padding(.bottom, 2)
+        .background(
+            Rectangle()
+                .fill(Color.appBg)
+                .overlay(
+                    Rectangle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.appRed.opacity(0.05), Color.clear],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .frame(height: 1),
+                    alignment: .top
+                )
+        )
     }
 }
 
