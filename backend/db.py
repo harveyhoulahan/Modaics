@@ -64,6 +64,70 @@ async def execute(query: str, params: Optional[List[Any]] = None) -> str:
         return await conn.execute(query, *(params or []))
 
 
+async def insert_item(item_data: Dict[str, Any]) -> int:
+    """
+    Insert a new item with CLIP embeddings into the database.
+    
+    Args:
+        item_data: Dictionary containing:
+            - title: str
+            - description: str
+            - price: float
+            - brand: str (optional)
+            - category: str (optional)
+            - size: str (optional)
+            - condition: str (optional)
+            - owner_id: str (optional)
+            - source: str (default: "modaics")
+            - image_url: str (optional)
+            - embedding: List[float] (768-dim CLIP embedding)
+    
+    Returns:
+        int: ID of the newly inserted item
+    """
+    query = """
+        INSERT INTO fashion_items (
+            title,
+            description,
+            price,
+            image_url,
+            item_url,
+            platform,
+            brand,
+            size,
+            condition,
+            location,
+            seller_username,
+            embedding
+        ) VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+        )
+        RETURNING id
+    """
+    
+    # Use owner_id as seller_username for Modaics items
+    owner_id = item_data.get('owner_id', 'modaics_user')
+    
+    params = [
+        item_data.get("title"),
+        item_data.get("description"),
+        item_data.get("price"),
+        item_data.get("image_url", ""),
+        "",  # item_url - not needed for Modaics items
+        "modaics",  # platform - using custom value, not constrained to depop/grailed/vinted
+        item_data.get("brand", ""),
+        item_data.get("size", ""),
+        item_data.get("condition", ""),
+        "",  # location - can be added later
+        owner_id,  # seller_username
+        item_data.get("embedding"),
+    ]
+    
+    async with get_connection() as conn:
+        row = await conn.fetchrow(query, *params)
+        return row["id"]
+
+
 # Legacy sync functions for ingestion scripts
 def get_connection_sync():
     """Synchronous connection for scraping/embedding scripts."""

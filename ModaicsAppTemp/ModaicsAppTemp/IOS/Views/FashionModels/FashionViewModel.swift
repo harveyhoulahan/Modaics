@@ -100,9 +100,9 @@ class FashionViewModel: ObservableObject {
     func loadInitialData() {
         isLoading = true
         
-        // Simulate loading data (replace with actual API calls)
+        // Load REAL listings to bring the app to life! 🔥
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.allItems = FashionItem.sampleItems
+            self?.allItems = FashionItem.realListings
             self?.filterItems()
             self?.loadUserData()
             self?.isLoading = false
@@ -112,8 +112,8 @@ class FashionViewModel: ObservableObject {
     private func loadUserData() {
         // Create sample user
         currentUser = User(
-            username: "fashion_lover",
-            email: "user@example.com",
+            username: "harvey",
+            email: "harvey@modaics.com",
             bio: "Sustainable fashion enthusiast",
             location: "Melbourne, VIC",
             userType: .consumer,
@@ -122,6 +122,18 @@ class FashionViewModel: ObservableObject {
         
         // Load user's wardrobe
         loadUserWardrobe()
+    }
+    
+    // Setup brand user when brand login is selected
+    func setupBrandUser(brandName: String = "nike") {
+        currentUser = User(
+            username: brandName,
+            email: "\(brandName)@brand.com",
+            bio: "Official brand account",
+            location: "Brand HQ",
+            userType: .brand,
+            sustainabilityPoints: 0
+        )
     }
     
     func loadUserWardrobe() {
@@ -236,17 +248,66 @@ class FashionViewModel: ObservableObject {
     }
     
     func createListing(item: FashionItem, images: [UIImage]) {
+        guard !images.isEmpty else {
+            errorMessage = "At least one image is required"
+            return
+        }
+        
         isLoading = true
+        errorMessage = nil
         
-        // Create item with user ID
-        var newItem = item
-        newItem.ownerId = currentUser?.id.uuidString ?? ""
-        
-        // Add to items (embeddings will be generated automatically when needed)
-        allItems.append(newItem)
-        filterItems()
-        
-        isLoading = false
+        Task {
+            do {
+                // Upload the first image with CLIP embeddings to backend
+                let itemId = try await searchClient.addItem(
+                    image: images.first!,
+                    title: item.name,
+                    description: item.description,
+                    price: item.listingPrice,
+                    brand: item.brand,
+                    category: item.category.rawValue,
+                    size: item.size,
+                    condition: item.condition.rawValue,
+                    ownerId: item.ownerId,
+                    imageUrl: nil  // TODO: Upload image to storage and provide URL
+                )
+                
+                print("✅ Item created with backend ID: \(itemId)")
+                
+                // Also add to local items for immediate display
+                var newItem = item
+                newItem.ownerId = currentUser?.id.uuidString ?? ""
+                allItems.append(newItem)
+                filterItems()
+                
+                isLoading = false
+                
+                // Success message
+                errorMessage = nil
+                
+            } catch let error as SearchAPIError {
+                print("❌ Failed to create listing: \(error.localizedDescription)")
+                errorMessage = "Failed to create listing: \(error.localizedDescription)"
+                isLoading = false
+                
+                // Fallback: Add to local items only
+                var newItem = item
+                newItem.ownerId = currentUser?.id.uuidString ?? ""
+                allItems.append(newItem)
+                filterItems()
+                
+            } catch {
+                print("❌ Failed to create listing: \(error.localizedDescription)")
+                errorMessage = "Failed to create listing. Item saved locally only."
+                isLoading = false
+                
+                // Fallback: Add to local items only
+                var newItem = item
+                newItem.ownerId = currentUser?.id.uuidString ?? ""
+                allItems.append(newItem)
+                filterItems()
+            }
+        }
     }
     
     // MARK: - AI-Powered Search
@@ -438,6 +499,11 @@ class FashionViewModel: ObservableObject {
 extension FashionViewModel {
     /// Legacy support for TabViews.swift
     var items: [FashionItem] { allItems }   // or whatever your master array is
+    
+    // MARK: - AI Image Analysis
+    func analyzeItemImage(_ image: UIImage) async throws -> AIAnalysisResult {
+        return try await searchClient.analyzeImage(image)
+    }
 }
 
 // MARK: - Filter Options

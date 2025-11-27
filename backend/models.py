@@ -9,7 +9,7 @@ class SearchRequest(BaseModel):
 
 class DepopItem(BaseModel):
     id: int
-    external_id: str
+    external_id: Optional[str] = None
     title: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
@@ -17,6 +17,7 @@ class DepopItem(BaseModel):
     image_url: Optional[str] = None
     distance: Optional[float] = None
     redirect_url: Optional[str] = None
+    source: Optional[str] = None
 
 
 class SearchResponse(BaseModel):

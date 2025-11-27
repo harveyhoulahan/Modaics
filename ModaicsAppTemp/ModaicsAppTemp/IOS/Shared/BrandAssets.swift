@@ -338,28 +338,47 @@ extension Color {
 // MARK: - Custom Modifiers
 struct ShimmerEffect: ViewModifier {
     @State private var phase: CGFloat = 0
+    let speed: Double
+    let angle: Double
+    let intensity: Double
+    
+    init(speed: Double = 2.0, angle: Double = 30, intensity: Double = 0.6) {
+        self.speed = speed
+        self.angle = angle
+        self.intensity = intensity
+    }
     
     func body(content: Content) -> some View {
         content
             .overlay(
-                LinearGradient(
-                    colors: [
-                        Color.white.opacity(0),
-                        Color.white.opacity(0.3),
-                        Color.white.opacity(0)
-                    ],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .rotationEffect(.degrees(30))
-                .offset(x: phase * 200 - 100)
-                .mask(content)
+                GeometryReader { geometry in
+                    LinearGradient(
+                        colors: [
+                            Color.clear,
+                            Color.modaicsChrome1.opacity(intensity * 0.3),
+                            Color.modaicsChrome2.opacity(intensity * 0.5),
+                            Color.modaicsChrome1.opacity(intensity * 0.3),
+                            Color.clear
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .rotationEffect(.degrees(angle))
+                    .offset(x: phase * (geometry.size.width + 200) - 200)
+                    .mask(content)
+                }
             )
             .onAppear {
-                withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
+                withAnimation(.linear(duration: speed).repeatForever(autoreverses: false)) {
                     phase = 1
                 }
             }
+    }
+}
+
+extension View {
+    func shimmer(speed: Double = 2.0, angle: Double = 30, intensity: Double = 0.6) -> some View {
+        self.modifier(ShimmerEffect(speed: speed, angle: angle, intensity: intensity))
     }
 }
 

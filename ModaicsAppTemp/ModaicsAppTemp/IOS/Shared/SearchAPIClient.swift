@@ -91,6 +91,27 @@ struct SearchResponse: Codable {
     }
 }
 
+// MARK: - AI Analysis Models
+
+struct AIAnalysisResult: Codable {
+    let detectedItem: String
+    let likelyBrand: String
+    let category: String
+    let estimatedSize: String
+    let estimatedCondition: String
+    let description: String
+    let colors: [String]
+    let materials: [String]
+    let estimatedPrice: Double?
+    let confidence: Double
+}
+
+struct AIDescriptionResult: Codable {
+    let description: String
+    let method: String
+    let confidence: Double
+}
+
 // MARK: - Network Error
 
 enum SearchAPIError: Error, LocalizedError {
@@ -129,7 +150,7 @@ class SearchAPIClient: ObservableObject {
     @Published var isLoading = false
     @Published var lastError: SearchAPIError?
     
-    init(baseURL: String = "http://localhost:8000") {
+    init(baseURL: String = "http://10.20.99.164:8000") {
         self.baseURL = baseURL
         
         let config = URLSessionConfiguration.default
@@ -233,6 +254,105 @@ class SearchAPIClient: ObservableObject {
         }
     }
     
+    // MARK: - AI Analysis Methods
+    
+    /// Analyze an image using the backend AI to detect item details
+    func analyzeImage(_ image: UIImage) async throws -> AIAnalysisResult {
+        isLoading = true
+        defer { isLoading = false }
+        
+        let endpoint = "\(baseURL)/analyze_image"
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            throw SearchAPIError.invalidResponse
+        }
+        
+        let base64String = imageData.base64EncodedString()
+        let payload: [String: Any] = ["image": base64String]
+        
+        guard let url = URL(string: endpoint) else {
+            throw SearchAPIError.invalidURL
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: payload)
+        
+        let (data, response) = try await session.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw SearchAPIError.invalidResponse
+        }
+        
+        guard httpResponse.statusCode == 200 else {
+            throw SearchAPIError.serverError("Analysis error: \(httpResponse.statusCode)")
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode(AIAnalysisResult.self, from: data)
+        } catch {
+            throw SearchAPIError.decodingError(error)
+        }
+    }
+    
+    /// Generate a professional description using AI
+    func generateDescription(
+        image: UIImage,
+        category: String? = nil,
+        brand: String? = nil,
+        colors: [String]? = nil,
+        condition: String? = nil,
+        materials: [String]? = nil,
+        size: String? = nil
+    ) async throws -> AIDescriptionResult {
+        isLoading = true
+        defer { isLoading = false }
+        
+        let endpoint = "\(baseURL)/generate_description"
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            throw SearchAPIError.invalidResponse
+        }
+        
+        let base64String = imageData.base64EncodedString()
+        
+        var payload: [String: Any] = ["image": base64String]
+        if let category = category { payload["category"] = category }
+        if let brand = brand { payload["brand"] = brand }
+        if let colors = colors { payload["colors"] = colors }
+        if let condition = condition { payload["condition"] = condition }
+        if let materials = materials { payload["materials"] = materials }
+        if let size = size { payload["size"] = size }
+        
+        guard let url = URL(string: endpoint) else {
+            throw SearchAPIError.invalidURL
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: payload)
+        
+        let (data, response) = try await session.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw SearchAPIError.invalidResponse
+        }
+        
+        guard httpResponse.statusCode == 200 else {
+            throw SearchAPIError.serverError("Description generation error: \(httpResponse.statusCode)")
+        }
+        
+        do {
+            return try JSONDecoder().decode(AIDescriptionResult.self, from: data)
+        } catch {
+            throw SearchAPIError.decodingError(error)
+        }
+    }
+    
     // MARK: - Health Check
     
     func checkHealth() async -> Bool {
@@ -257,6 +377,79 @@ class SearchAPIClient: ObservableObject {
             return false
         } catch {
             return false
+        }
+    }
+    
+    // MARK: - Add Item
+    
+    /// Add a new item to the database with CLIP embeddings
+    func addItem(
+        image: UIImage,
+        title: String,
+        description: String,
+        price: Double,
+        brand: String? = nil,
+        category: String? = nil,
+        size: String? = nil,
+        condition: String? = nil,
+        ownerId: String? = nil,
+        imageUrl: String? = nil
+    ) async throws -> Int {
+        isLoading = true
+        defer { isLoading = false }
+        
+        let endpoint = "\(baseURL)/add_item"
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            throw SearchAPIError.invalidResponse
+        }
+        
+        let base64String = imageData.base64EncodedString()
+        
+        var payload: [String: Any] = [
+            "image_base64": base64String,
+            "title": title,
+            "description": description,
+            "price": price,
+            "source": "modaics"
+        ]
+        
+        if let brand = brand { payload["brand"] = brand }
+        if let category = category { payload["category"] = category }
+        if let size = size { payload["size"] = size }
+        if let condition = condition { payload["condition"] = condition }
+        if let ownerId = ownerId { payload["owner_id"] = ownerId }
+        if let imageUrl = imageUrl { payload["image_url"] = imageUrl }
+        
+        guard let url = URL(string: endpoint) else {
+            throw SearchAPIError.invalidURL
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: payload)
+        
+        let (data, response) = try await session.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw SearchAPIError.invalidResponse
+        }
+        
+        guard httpResponse.statusCode == 200 else {
+            throw SearchAPIError.serverError("Add item error: \(httpResponse.statusCode)")
+        }
+        
+        do {
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let itemId = json["item_id"] as? Int {
+                print("✅ Item added successfully with ID: \(itemId)")
+                return itemId
+            } else {
+                throw SearchAPIError.decodingError(NSError(domain: "SearchAPIClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format"]))
+            }
+        } catch {
+            throw SearchAPIError.decodingError(error)
         }
     }
 }
@@ -354,7 +547,7 @@ extension SearchAPIClient {
 
 #if DEBUG
 extension SearchAPIClient {
-    static let mock = SearchAPIClient(baseURL: "http://localhost:8000")
+    static let mock = SearchAPIClient(baseURL: "http://10.20.99.164:8000")
     
     static let sampleResults: [SearchResult] = [
         SearchResult(

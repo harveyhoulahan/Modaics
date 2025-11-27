@@ -106,6 +106,8 @@ struct RefreshableGrid<Item: Identifiable, ItemView: View>: View {
     var spacing: CGFloat = 16
     var horizontalPadding: CGFloat = 20
     
+    @State private var isRefreshing = false
+    
     init(
         items: [Item],
         columns: Int = 2,
@@ -123,24 +125,28 @@ struct RefreshableGrid<Item: Identifiable, ItemView: View>: View {
     }
     
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible(), spacing: spacing), count: columns),
-                alignment: .leading,
+                alignment: .center,
                 spacing: spacing
             ) {
                 ForEach(items) { item in
                     itemView(item)
                         .id(item.id)
-                        .frame(maxWidth: .infinity)
                 }
             }
             .padding(.horizontal, horizontalPadding)
+            .padding(.top, 8)
+            .padding(.bottom, 20)
         }
         .refreshable {
+            guard !isRefreshing else { return }
+            isRefreshing = true
             HapticManager.shared.impact(.light)
             await onRefresh()
             HapticManager.shared.success()
+            isRefreshing = false
         }
     }
 }

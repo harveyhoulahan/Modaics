@@ -4,15 +4,15 @@
 -- Enable pgvector extension for vector similarity search
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- Fashion items table (from FindThisFit)
--- This will store all 25,677 scraped items with CLIP embeddings
+-- Fashion items table (from FindThisFit + Modaics)
+-- This will store all scraped items + user-created listings with CLIP embeddings
 CREATE TABLE IF NOT EXISTS fashion_items (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     price NUMERIC(10, 2),
     image_url TEXT,
-    item_url TEXT NOT NULL,
-    platform VARCHAR(20) CHECK (platform IN ('depop', 'grailed', 'vinted')),
+    item_url TEXT,  -- Can be empty for Modaics user listings
+    platform VARCHAR(20) CHECK (platform IN ('depop', 'grailed', 'vinted', 'modaics')),
     brand VARCHAR(100),
     size VARCHAR(20),
     condition VARCHAR(50),
@@ -339,9 +339,177 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
 CREATE TRIGGER update_events_updated_at BEFORE UPDATE ON events
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+-- ============================================================================
+-- SKETCHBOOK FEATURE TABLES
+-- Brand-facing workspace for WIPs, drops, collaborations, events, and polls
+-- ============================================================================
+
+-- Sketchbooks (one per brand)
+CREATE TABLE IF NOT EXISTS sketchbooks (
+    id SERIAL PRIMARY KEY,
+    brand_id VARCHAR(100) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    
+    -- Basic info
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    
+    -- Access control
+    access_policy VARCHAR(20) DEFAULT 'publicRead' CHECK (access_policy IN ('publicRead', 'membersOnly')),
+    membership_rule VARCHAR(50) DEFAULT 'free' CHECK (membership_rule IN ('free', 'inviteOnly', 'minSpend')),
+    
+    -- Membership rule parameters (for minSpend)
+    min_spend_amount NUMERIC(10, 2),
+    min_spend_window_months INTEGER,
+    
+    -- Stats
+    members_count INTEGER DEFAULT 0,
+    posts_count INTEGER DEFAULT 0,
+    
+    -- Metadata
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    
+    UNIQUE(brand_id)  -- One sketchbook per brand
+);
+
+CREATE INDEX IF NOT EXISTS idx_sketchbooks_brand ON sketchbooks(brand_id);
+CREATE INDEX IF NOT EXISTS idx_sketchbooks_access ON sketchbooks(access_policy);
+
+-- Sketchbook posts (updates, events, drops, polls, moodboards)
+CREATE TABLE IF NOT EXISTS sketchbook_posts (
+    id SERIAL PRIMARY KEY,
+    sketchbook_id INTEGER NOT NULL REFERENCES sketchbooks(id) ON DELETE CASCADE,
+    author_user_id VARCHAR(100) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    
+    -- Post content
+    post_type VARCHAR(20) NOT NULL CHECK (post_type IN ('update', 'event', 'drop', 'poll', 'moodboard')),
+    title VARCHAR(200) NOT NULL,
+    body TEXT,
+    
+    -- Media (JSON array of URLs)
+    media JSONB DEFAULT '[]',
+    
+    -- Tags
+    tags TEXT[],
+    
+    -- Visibility
+    visibility VARCHAR(20) DEFAULT 'public' CHECK (visibility IN ('public', 'membersOnly')),
+    
+    -- Poll data (only for poll posts)
+    poll_question TEXT,
+    poll_options JSONB,  -- [{"id": "opt1", "label": "Option 1", "votes": 0}]
+    poll_closes_at TIMESTAMP,
+    
+    -- Event data (only for event posts)
+    event_id INTEGER REFERENCES events(id) ON DELETE SET NULL,
+    event_highlight TEXT,
+    
+    -- Engagement
+    views_count INTEGER DEFAULT 0,
+    reactions_count INTEGER DEFAULT 0,
+    comments_count INTEGER DEFAULT 0,
+    
+    -- Metadata
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_sketchbook_posts_sketchbook ON sketchbook_posts(sketchbook_id);
+CREATE INDEX IF NOT EXISTS idx_sketchbook_posts_author ON sketchbook_posts(author_user_id);
+CREATE INDEX IF NOT EXISTS idx_sketchbook_posts_type ON sketchbook_posts(post_type);
+CREATE INDEX IF NOT EXISTS idx_sketchbook_posts_created ON sketchbook_posts(created_at DESC);
+
+-- Sketchbook memberships (tracks who has access to members-only sketchbooks)
+CREATE TABLE IF NOT EXISTS sketchbook_memberships (
+    id SERIAL PRIMARY KEY,
+    sketchbook_id INTEGER NOT NULL REFERENCES sketchbooks(id) ON DELETE CASCADE,
+    user_id VARCHAR(100) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    
+    -- Status
+    status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('pending', 'active', 'revoked')),
+    
+    -- How did they get access?
+    join_source VARCHAR(30) CHECK (join_source IN ('autoFromSpend', 'manualInvite', 'requestApproved', 'free')),
+    
+    -- Metadata
+    joined_at TIMESTAMP DEFAULT NOW(),
+    
+    UNIQUE(sketchbook_id, user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_memberships_sketchbook ON sketchbook_memberships(sketchbook_id);
+CREATE INDEX IF NOT EXISTS idx_memberships_user ON sketchbook_memberships(user_id);
+CREATE INDEX IF NOT EXISTS idx_memberships_status ON sketchbook_memberships(status);
+
+-- Sketchbook poll votes (tracks individual votes on poll posts)
+CREATE TABLE IF NOT EXISTS sketchbook_poll_votes (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL REFERENCES sketchbook_posts(id) ON DELETE CASCADE,
+    user_id VARCHAR(100) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    option_id VARCHAR(50) NOT NULL,  -- Matches the "id" in poll_options JSONB
+    
+    -- Metadata
+    voted_at TIMESTAMP DEFAULT NOW(),
+    
+    UNIQUE(post_id, user_id)  -- One vote per user per poll
+);
+
+CREATE INDEX IF NOT EXISTS idx_poll_votes_post ON sketchbook_poll_votes(post_id);
+CREATE INDEX IF NOT EXISTS idx_poll_votes_user ON sketchbook_poll_votes(user_id);
+
+-- Sketchbook post reactions (likes, etc.)
+CREATE TABLE IF NOT EXISTS sketchbook_reactions (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL REFERENCES sketchbook_posts(id) ON DELETE CASCADE,
+    user_id VARCHAR(100) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    reaction_type VARCHAR(20) DEFAULT 'like' CHECK (reaction_type IN ('like', 'love', 'fire', 'eyes')),
+    
+    -- Metadata
+    created_at TIMESTAMP DEFAULT NOW(),
+    
+    UNIQUE(post_id, user_id, reaction_type)
+);
+
+CREATE INDEX IF NOT EXISTS idx_reactions_post ON sketchbook_reactions(post_id);
+CREATE INDEX IF NOT EXISTS idx_reactions_user ON sketchbook_reactions(user_id);
+
+-- Sketchbook post comments
+CREATE TABLE IF NOT EXISTS sketchbook_comments (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL REFERENCES sketchbook_posts(id) ON DELETE CASCADE,
+    user_id VARCHAR(100) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    
+    -- Content
+    body TEXT NOT NULL,
+    
+    -- Engagement
+    likes_count INTEGER DEFAULT 0,
+    
+    -- Metadata
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_comments_post ON sketchbook_comments(post_id);
+CREATE INDEX IF NOT EXISTS idx_comments_user ON sketchbook_comments(user_id);
+CREATE INDEX IF NOT EXISTS idx_comments_created ON sketchbook_comments(created_at DESC);
+
+-- Triggers for Sketchbook tables
+CREATE TRIGGER update_sketchbooks_updated_at BEFORE UPDATE ON sketchbooks
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_sketchbook_posts_updated_at BEFORE UPDATE ON sketchbook_posts
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_sketchbook_comments_updated_at BEFORE UPDATE ON sketchbook_comments
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- Sample sustainability scoring for known sustainable brands
 -- (Will be populated after data import)
 COMMENT ON TABLE fashion_items IS 'Marketplace items scraped from Depop, Grailed, Vinted with CLIP embeddings';
 COMMENT ON TABLE user_wardrobe IS 'User-owned items in digital wardrobe, searchable with same CLIP embeddings';
 COMMENT ON COLUMN fashion_items.embedding IS '768-dimensional CLIP embeddings from sentence-transformers/clip-ViT-B-32';
 COMMENT ON COLUMN user_wardrobe.embedding IS 'Same CLIP embeddings used for marketplace search';
+COMMENT ON TABLE sketchbooks IS 'Brand workspaces for sharing WIPs, drops, events, and polls with their community';
+COMMENT ON TABLE sketchbook_posts IS 'Posts within sketchbooks - updates, events, drops, polls, moodboards';
+COMMENT ON TABLE sketchbook_memberships IS 'Tracks user access to members-only sketchbooks';

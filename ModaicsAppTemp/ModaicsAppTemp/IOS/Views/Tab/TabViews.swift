@@ -17,6 +17,22 @@ struct DiscoverView: View {
     @State private var showImageSourcePicker = false
     @State private var imageSourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showAISearchInfo = false
+    @State private var discoverMode: DiscoverMode = .items
+    @State private var selectedEvent: CommunityEvent?
+    
+    enum DiscoverMode: String, CaseIterable {
+        case items = "Items"
+        case events = "Events"
+        case brands = "Brands"
+        
+        var icon: String {
+            switch self {
+            case .items: return "tshirt.fill"
+            case .events: return "calendar.badge.clock"
+            case .brands: return "building.2.fill"
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -27,31 +43,21 @@ struct DiscoverView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // AI Search Toggle & Status
-                    if viewModel.isAISearchEnabled || viewModel.selectedSearchImage != nil {
-                        aiSearchHeader
-                            .padding(.horizontal, 20)
-                            .padding(.top, 12)
-                    }
-                    
-                    // Search Bar
-                    searchBar
+                    // Mode Switcher - MOVED TO TOP
+                    modeSwitcher
                         .padding(.horizontal, 20)
-                        .padding(.top, 12)
+                        .padding(.top, 16)
+                        .padding(.bottom, 12)
+                        .background(Color.modaicsDarkBlue.opacity(0.6))
                     
-                    // Category Scroll
-                    categoryScroll
-                        .padding(.top, 12)
-                    
-                    // Items Grid
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .tint(.modaicsChrome1)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if viewModel.currentSearchResults.isEmpty {
-                        emptyState
-                    } else {
-                        itemsGrid
+                    // Content based on mode
+                    switch discoverMode {
+                    case .items:
+                        itemsContent
+                    case .events:
+                        eventsContent
+                    case .brands:
+                        brandsContent
                     }
                 }
             }
@@ -71,6 +77,9 @@ struct DiscoverView: View {
         .sheet(item: $selectedItem) { item in
             ItemDetailView(item: item)
                 .environmentObject(viewModel)
+        }
+        .sheet(item: $selectedEvent) { event in
+            EventDetailSheet(event: event)
         }
         .sheet(isPresented: $showImagePicker) {
             CameraImagePicker(
@@ -106,6 +115,254 @@ struct DiscoverView: View {
                 ? "AI search is active. Upload an image or enter text to find similar items across Depop, Grailed, and Vinted."
                 : "AI search is unavailable. Make sure the backend server is running on http://localhost:8000")
         }
+    }
+    
+    // MARK: - Mode Switcher
+    private var modeSwitcher: some View {
+        HStack(spacing: 12) {
+            ForEach(DiscoverMode.allCases, id: \.self) { mode in
+                Button {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        discoverMode = mode
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: mode.icon)
+                            .font(.system(size: 14))
+                        
+                        Text(mode.rawValue)
+                            .font(.system(size: 15, weight: .semibold))
+                    }
+                    .foregroundColor(discoverMode == mode ? .modaicsCotton : .modaicsCottonLight)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(discoverMode == mode ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(
+                                        discoverMode == mode ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
+                                        lineWidth: 1.5
+                                    )
+                            )
+                    )
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+    }
+    
+    // MARK: - Items Content
+    private var itemsContent: some View {
+        VStack(spacing: 0) {
+            // Items Header (matching Events/Brands style)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Discover Items")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.modaicsCotton)
+                    
+                    Text("AI-powered search across platforms")
+                        .font(.system(size: 14))
+                        .foregroundColor(.modaicsCottonLight)
+                }
+                
+                Spacer()
+                
+                // Filter button
+                Button {
+                    showFilters = true
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                        .font(.title3)
+                        .foregroundColor(.modaicsChrome1)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 8)
+            
+            // Search Bar (with AI status inside)
+            searchBar
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+            
+            // Category Scroll
+            categoryScroll
+                .padding(.top, 12)
+            
+            // Items Grid
+            if viewModel.isLoading {
+                ProgressView()
+                    .tint(.modaicsChrome1)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if viewModel.currentSearchResults.isEmpty {
+                emptyState
+            } else {
+                itemsGrid
+            }
+        }
+    }
+    
+    // MARK: - Events Content
+    private var eventsContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Event Map Header
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Events Near You")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.modaicsCotton)
+                        
+                        Text("Swaps, pop-ups & workshops")
+                            .font(.system(size: 14))
+                            .foregroundColor(.modaicsCottonLight)
+                    }
+                    
+                    Spacer()
+                    
+                    // Location badge
+                    HStack(spacing: 4) {
+                        Image(systemName: "location.fill")
+                            .font(.caption)
+                        Text("Sydney")
+                            .font(.system(size: 13, weight: .medium))
+                    }
+                    .foregroundColor(.modaicsChrome1)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.modaicsChrome1.opacity(0.2))
+                    .clipShape(Capsule())
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                
+                // Event type filters
+                eventTypeFilters
+                    .padding(.horizontal, 20)
+                
+                // Events list
+                ForEach(nearbyEvents) { event in
+                    EventMapCard(event: event) {
+                        selectedEvent = event
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            .padding(.bottom, 100)
+        }
+    }
+    
+    // MARK: - Brands Content
+    private var brandsContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // Brands Header
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Sustainable Brands")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.modaicsCotton)
+                        
+                        Text("Verified ethical & local producers")
+                            .font(.system(size: 14))
+                            .foregroundColor(.modaicsCottonLight)
+                    }
+                    
+                    Spacer()
+                    
+                    // Filter button
+                    Button {
+                        showFilters = true
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .font(.title3)
+                            .foregroundColor(.modaicsChrome1)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                
+                // Sustainability badge filter
+                sustainabilityBadgeFilter
+                    .padding(.horizontal, 20)
+                
+                // Brands grid
+                LazyVGrid(
+                    columns: [
+                        GridItem(.flexible(), spacing: 16),
+                        GridItem(.flexible(), spacing: 16)
+                    ],
+                    spacing: 16
+                ) {
+                    ForEach(sustainableBrands) { brand in
+                        BrandCard(brand: brand)
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
+            .padding(.bottom, 100)
+        }
+    }
+    
+    // MARK: - Event Type Filters
+    private var eventTypeFilters: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                EventTypeFilterChip(type: .all, isSelected: true)
+                EventTypeFilterChip(type: .swap, isSelected: false)
+                EventTypeFilterChip(type: .popUp, isSelected: false)
+                EventTypeFilterChip(type: .workshop, isSelected: false)
+                EventTypeFilterChip(type: .marketplace, isSelected: false)
+            }
+        }
+    }
+    
+    // MARK: - Sustainability Badge Filter
+    private var sustainabilityBadgeFilter: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "leaf.circle.fill")
+                .font(.title3)
+                .foregroundColor(.green)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Sustainability Verified")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.modaicsCotton)
+                
+                Text("FibreTrace certified brands")
+                    .font(.system(size: 11))
+                    .foregroundColor(.modaicsCottonLight)
+            }
+            
+            Spacer()
+            
+            Toggle("", isOn: .constant(true))
+                .labelsHidden()
+                .tint(.green)
+        }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.modaicsDarkBlue.opacity(0.6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.green.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+    
+    // MARK: - Computed Properties
+    private var nearbyEvents: [CommunityEvent] {
+        CommunityEvent.mockEvents
+            .filter { $0.date > Date() }
+            .sorted { $0.date < $1.date }
+    }
+    
+    private var sustainableBrands: [BrandInfo] {
+        BrandInfo.mockBrands.filter { $0.hasSustainabilityBadge }
     }
     
     private var aiSearchHeader: some View {
@@ -146,6 +403,13 @@ struct DiscoverView: View {
     
     private var searchBar: some View {
         HStack(spacing: 12) {
+            // AI Status Indicator (green dot inside search bar)
+            if viewModel.isAISearchEnabled {
+                Circle()
+                    .fill(Color.green)
+                    .frame(width: 8, height: 8)
+            }
+            
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.modaicsChrome1)
                 .font(.title3)
@@ -777,238 +1041,6 @@ struct CommunityView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 100)
-        }
-    }
-}
-
-// MARK: - Profile View
-struct ProfileView: View {
-    let userType: ContentView.UserType
-    @EnvironmentObject var viewModel: FashionViewModel
-    @State private var selectedTab = 0
-    
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                // Match gradient background
-                LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                               startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Settings button
-                        HStack {
-                            Spacer()
-                            Button {
-                                // Settings action
-                            } label: {
-                                Image(systemName: "gearshape")
-                                    .font(.title2)
-                                    .foregroundColor(.modaicsChrome1)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 12)
-                        
-                        // Profile Header
-                        profileHeader
-                        
-                        // Stats
-                        statsSection
-                        
-                        // Tab Selection
-                        HStack(spacing: 12) {
-                            ForEach([("Wardrobe", 0), ("Liked", 1), ("Reviews", 2)], id: \.1) { title, tag in
-                                Button {
-                                    selectedTab = tag
-                                } label: {
-                                    Text(title)
-                                        .font(.system(size: 14, weight: .medium))
-                                        .foregroundColor(selectedTab == tag ? .modaicsDarkBlue : .modaicsCottonLight)
-                                        .padding(.horizontal, 20)
-                                        .padding(.vertical, 10)
-                                        .background(
-                                            selectedTab == tag
-                                                ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                                               startPoint: .leading, endPoint: .trailing)
-                                                : LinearGradient(colors: [Color.modaicsDarkBlue.opacity(0.4)],
-                                                               startPoint: .leading, endPoint: .trailing)
-                                        )
-                                        .clipShape(Capsule())
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        
-                        // Content based on selection
-                        contentSection
-                    }
-                }
-            }
-            .toolbar(.hidden, for: .navigationBar)
-        }
-    }
-    
-    private var profileHeader: some View {
-        VStack(spacing: 16) {
-            Circle()
-                .fill(LinearGradient(
-                    colors: [.modaicsChrome1, .modaicsChrome2],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
-                .frame(width: 100, height: 100)
-                .overlay(
-                    Text(viewModel.currentUser?.username.prefix(1).uppercased() ?? "U")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.modaicsDarkBlue)
-                )
-            
-            VStack(spacing: 8) {
-                HStack {
-                    Text(viewModel.currentUser?.username ?? "Username")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.modaicsCotton)
-                    
-                    if viewModel.currentUser?.isVerified == true {
-                        Image(systemName: "checkmark.seal.fill")
-                            .foregroundColor(.modaicsChrome1)
-                    }
-                }
-                
-                Text(viewModel.currentUser?.bio ?? "No bio yet")
-                    .font(.subheadline)
-                    .foregroundColor(.modaicsCottonLight)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
-                
-                HStack {
-                    Image(systemName: "location.fill")
-                        .font(.caption)
-                    Text(viewModel.currentUser?.location ?? "Location")
-                        .font(.caption)
-                }
-                .foregroundColor(.modaicsCottonLight)
-            }
-            
-            HStack(spacing: 12) {
-                Button("Edit Profile") {
-                    // Edit action
-                }
-                .font(.system(size: 15, weight: .medium))
-                .foregroundColor(.modaicsCotton)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(Color.modaicsDarkBlue.opacity(0.6))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                
-                Button("Share") {
-                    // Share action
-                }
-                .font(.system(size: 15, weight: .medium))
-                .foregroundColor(.modaicsDarkBlue)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(
-                    LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                 startPoint: .leading, endPoint: .trailing)
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-        }
-        .padding()
-    }
-    
-    private var statsSection: some View {
-        HStack(spacing: 20) {
-            StatItem(value: "\(viewModel.userWardrobe.count)", label: "Items")
-            StatItem(value: "\(viewModel.currentUser?.followers.count ?? 0)", label: "Followers")
-            StatItem(value: "\(viewModel.currentUser?.following.count ?? 0)", label: "Following")
-            StatItem(value: "\(viewModel.calculateUserSustainabilityScore())", label: "Eco Score")
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
-        .background(Color.modaicsDarkBlue.opacity(0.4))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .padding(.horizontal, 20)
-    }
-    
-    private var contentSection: some View {
-        Group {
-            switch selectedTab {
-            case 0:
-                // Wardrobe items
-                LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 16),
-                    GridItem(.flexible(), spacing: 16)
-                ], spacing: 16) {
-                    ForEach(viewModel.userWardrobe) { item in
-                        ItemCard(item: item)
-                    }
-                }
-                .padding()
-            case 1:
-                // Liked items
-                VStack(spacing: 20) {
-                    Image(systemName: "heart")
-                        .font(.system(size: 60))
-                        .foregroundColor(.modaicsChrome1.opacity(0.3))
-                    
-                    Text("No liked items yet")
-                        .font(.system(size: 18, weight: .light, design: .serif))
-                        .foregroundColor(.modaicsCotton)
-                    
-                    Text("Start exploring to find items you love")
-                        .font(.subheadline)
-                        .foregroundColor(.modaicsCottonLight)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 60)
-            case 2:
-                // Reviews
-                VStack(spacing: 16) {
-                    ForEach(0..<3) { _ in
-                        ReviewCard()
-                    }
-                }
-                .padding()
-            default:
-                EmptyView()
-            }
-        }
-    }
-}
-
-// MARK: - Supporting Components
-struct CategoryChip: View {
-    let category: Category?
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                if let category = category {
-                    Image(systemName: category.icon)
-                        .font(.caption)
-                }
-                Text(category?.rawValue ?? "All")
-                    .font(.system(size: 14, weight: .medium))
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(
-                isSelected
-                    ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                   startPoint: .leading, endPoint: .trailing)
-                    : LinearGradient(colors: [Color.modaicsDarkBlue.opacity(0.6)],
-                                   startPoint: .leading, endPoint: .trailing)
-            )
-            .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCottonLight)
-            .clipShape(Capsule())
         }
     }
 }
@@ -1723,5 +1755,287 @@ struct CameraImagePicker: UIViewControllerRepresentable {
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             parent.dismiss()
         }
+    }
+}
+
+// MARK: - Event Map Card
+struct EventMapCard: View {
+    let event: CommunityEvent
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    // Event type badge
+                    HStack(spacing: 6) {
+                        Image(systemName: event.type.icon)
+                            .font(.system(size: 11))
+                        Text(event.type.rawValue)
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(event.type.color)
+                    .clipShape(Capsule())
+                    
+                    Spacer()
+                    
+                    // Distance badge
+                    HStack(spacing: 4) {
+                        Image(systemName: "location.fill")
+                            .font(.caption2)
+                        Text("2.3 km")
+                            .font(.system(size: 11, weight: .medium))
+                    }
+                    .foregroundColor(.modaicsChrome1)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.modaicsChrome1.opacity(0.2))
+                    .clipShape(Capsule())
+                }
+                
+                Text(event.title)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.modaicsCotton)
+                    .lineLimit(2)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "calendar")
+                            .font(.caption)
+                        Text(event.date, style: .date)
+                            .font(.system(size: 13))
+                        
+                        Text("•")
+                            .foregroundColor(.modaicsCottonLight.opacity(0.5))
+                        
+                        Text(event.date, style: .time)
+                            .font(.system(size: 13))
+                    }
+                    .foregroundColor(.modaicsCottonLight)
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "mappin.circle.fill")
+                            .font(.caption)
+                        Text(event.location)
+                            .font(.system(size: 13))
+                            .lineLimit(1)
+                    }
+                    .foregroundColor(.modaicsCottonLight)
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "person.2.fill")
+                            .font(.caption)
+                        Text("\(event.attendees) attending")
+                            .font(.system(size: 13))
+                        
+                        Spacer()
+                        
+                        if event.isFree {
+                            Text("Free")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.green)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.green.opacity(0.2))
+                                .clipShape(Capsule())
+                        }
+                    }
+                    .foregroundColor(.modaicsCottonLight)
+                }
+                
+                if !event.description.isEmpty {
+                    Text(event.description)
+                        .font(.system(size: 13))
+                        .foregroundColor(.modaicsCottonLight)
+                        .lineLimit(2)
+                        .padding(.top, 4)
+                }
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.modaicsDarkBlue.opacity(0.6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(event.type.color.opacity(0.3), lineWidth: 1.5)
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Event Type Filter Chip
+struct EventTypeFilterChip: View {
+    let type: EventFilterType
+    let isSelected: Bool
+    
+    enum EventFilterType: String {
+        case all = "All Events"
+        case swap = "Swaps"
+        case popUp = "Pop-Ups"
+        case workshop = "Workshops"
+        case marketplace = "Markets"
+        
+        var icon: String {
+            switch self {
+            case .all: return "square.grid.2x2.fill"
+            case .swap: return "arrow.triangle.swap"
+            case .popUp: return "storefront.fill"
+            case .workshop: return "hammer.fill"
+            case .marketplace: return "cart.fill"
+            }
+        }
+    }
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: type.icon)
+                .font(.system(size: 12))
+            
+            Text(type.rawValue)
+                .font(.system(size: 13, weight: .semibold))
+        }
+        .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(
+                            isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
+                            lineWidth: 1
+                        )
+                )
+        )
+    }
+}
+
+// MARK: - Brand Card
+struct BrandCard: View {
+    let brand: BrandInfo
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Brand logo/image placeholder
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.modaicsChrome1.opacity(0.3), Color.modaicsChrome2.opacity(0.3)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .aspectRatio(1, contentMode: .fit)
+                
+                Image(systemName: "building.2.fill")
+                    .font(.system(size: 32))
+                    .foregroundColor(.modaicsChrome1)
+                
+                // Sustainability badge overlay
+                if brand.hasSustainabilityBadge {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            Image(systemName: "leaf.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(.green)
+                                .background(
+                                    Circle()
+                                        .fill(Color.modaicsDarkBlue)
+                                        .padding(-4)
+                                )
+                        }
+                        Spacer()
+                    }
+                    .padding(8)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text(brand.name)
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(.modaicsCotton)
+                    .lineLimit(1)
+                
+                Text(brand.tagline)
+                    .font(.system(size: 12))
+                    .foregroundColor(.modaicsCottonLight)
+                    .lineLimit(2)
+                
+                HStack(spacing: 4) {
+                    Image(systemName: "star.fill")
+                        .font(.caption2)
+                    Text(String(format: "%.1f", brand.rating))
+                        .font(.system(size: 12, weight: .semibold))
+                    
+                    Text("(\(brand.itemCount) items)")
+                        .font(.system(size: 11))
+                        .foregroundColor(.modaicsCottonLight)
+                }
+                .foregroundColor(.yellow)
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.modaicsDarkBlue.opacity(0.6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(
+                            brand.hasSustainabilityBadge ? Color.green.opacity(0.3) : Color.modaicsChrome1.opacity(0.2),
+                            lineWidth: 1
+                        )
+                )
+        )
+    }
+}
+
+// MARK: - Brand Info Model
+struct BrandInfo: Identifiable {
+    let id = UUID()
+    let name: String
+    let tagline: String
+    let hasSustainabilityBadge: Bool
+    let rating: Double
+    let itemCount: Int
+    let location: String
+    
+    static let mockBrands: [BrandInfo] = [
+        BrandInfo(name: "Earth Threads", tagline: "100% organic cotton from local farms", hasSustainabilityBadge: true, rating: 4.8, itemCount: 127, location: "Sydney"),
+        BrandInfo(name: "Revive Collective", tagline: "Upcycled fashion from rescued materials", hasSustainabilityBadge: true, rating: 4.9, itemCount: 89, location: "Melbourne"),
+        BrandInfo(name: "Ocean Wear", tagline: "Made from recycled ocean plastic", hasSustainabilityBadge: true, rating: 4.7, itemCount: 156, location: "Brisbane"),
+        BrandInfo(name: "Local Makers Co", tagline: "Supporting Australian artisans", hasSustainabilityBadge: true, rating: 4.6, itemCount: 73, location: "Perth"),
+        BrandInfo(name: "Zero Waste Studio", tagline: "Circular fashion at its finest", hasSustainabilityBadge: true, rating: 4.9, itemCount: 201, location: "Sydney"),
+        BrandInfo(name: "Heritage Textiles", tagline: "Traditional techniques, modern style", hasSustainabilityBadge: true, rating: 4.5, itemCount: 45, location: "Adelaide")
+    ]
+}
+
+// MARK: - Category Chip
+struct CategoryChip: View {
+    let category: Category?
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(category?.rawValue ?? "All")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCotton)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule()
+                        .fill(isSelected ? Color.modaicsChrome1 : Color.modaicsSurface2)
+                )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }

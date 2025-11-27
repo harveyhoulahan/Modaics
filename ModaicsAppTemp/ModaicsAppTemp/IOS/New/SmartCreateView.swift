@@ -112,7 +112,9 @@ struct SmartCreateView: View {
             ImagePicker(images: $selectedImages)
         }
         .onChange(of: selectedImages) { oldValue, newValue in
-            if !newValue.isEmpty && !hasAnalyzed {
+            // Only auto-analyze when first image is added
+            // Don't re-analyze when user adds more images (they can manually re-analyze)
+            if oldValue.isEmpty && !newValue.isEmpty && !hasAnalyzed {
                 Task {
                     await performAIAnalysis()
                 }
@@ -476,34 +478,27 @@ struct SmartCreateView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.modaicsCotton)
                 
-                Spacer()
+                Text("(Optional)")
+                    .font(.system(size: 12))
+                    .foregroundColor(.modaicsCottonLight)
                 
-                Button {
-                    // Enhance description with AI
-                    Task {
-                        await enhanceDescription()
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "sparkles")
-                            .font(.caption)
-                        Text("Enhance")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .foregroundColor(.modaicsChrome1)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(Capsule())
-                }
+                Spacer()
             }
             
             ModaicsTextField(
                 label: "",
-                placeholder: "Describe your item...",
+                placeholder: "AI suggested description (edit as you like or write your own)",
                 text: $description,
                 isMultiline: true
             )
+            
+            // Show AI suggestion hint if description is populated
+            if !description.isEmpty && hasAnalyzed {
+                Text("💡 AI-generated. Feel free to edit or replace with your own description.")
+                    .font(.system(size: 12))
+                    .foregroundColor(.modaicsCottonLight.opacity(0.8))
+                    .padding(.top, 4)
+            }
         }
     }
     
@@ -570,8 +565,16 @@ struct SmartCreateView: View {
     private func performAIAnalysis() async {
         guard !selectedImages.isEmpty else { return }
         
+        // Prevent duplicate analysis if already running
+        guard !isAnalyzing else {
+            print("⚠️ Analysis already in progress, skipping duplicate call")
+            return
+        }
+        
         isAnalyzing = true
         hasAnalyzed = false
+        
+        print("🤖 Starting AI analysis for \(selectedImages.count) image(s) - will analyze first image only")
         
         // Simulate progress
         for progress in stride(from: 0.0, through: 0.9, by: 0.1) {

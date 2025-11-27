@@ -1,6 +1,6 @@
 fastapi==0.110.0
 uvicorn[standard]==0.29.0
-openai==1.23.2
+openai>=1.30.0
 asyncpg==0.29.0
 psycopg2-binary==2.9.9
 pillow==10.3.0

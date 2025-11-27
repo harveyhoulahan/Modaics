@@ -39,31 +39,23 @@ struct OptimizedItemCard: View {
             // Streamlined content
             contentSection
         }
-        .frame(maxWidth: .infinity)
-        .fixedSize(horizontal: false, vertical: true)
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(.ultraThinMaterial)
                 .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
         )
         .clipped()
-        .layoutPriority(1)
     }
     
     @ViewBuilder
     private var imageSection: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topTrailing) {
-                // Cached async image
+                // Cached async image with fixed height
                 if let imageURL = item.imageURLs.first {
-                    CachedAsyncImage(url: imageURL) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                    } placeholder: {
-                        SkeletonRectangle(height: geometry.size.height, cornerRadius: 16)
-                    }
+                    PremiumCachedImage(url: imageURL, contentMode: .fill, showProgress: true)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
                 } else {
                     placeholderImage
                         .frame(width: geometry.size.width, height: geometry.size.height)
@@ -72,11 +64,9 @@ struct OptimizedItemCard: View {
                 // Overlay badges and buttons
                 overlayContent
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .frame(height: 240)
-        .clipped()
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
     
     @ViewBuilder
@@ -124,7 +114,7 @@ struct OptimizedItemCard: View {
             HStack {
                 if item.sustainabilityScore.totalScore > 60 {
                     GlassBadge(
-                        text: "🌱 \(item.sustainabilityScore.totalScore)",
+                        text: "\(item.sustainabilityScore.totalScore)",
                         color: .green,
                         size: .small
                     )
@@ -180,6 +170,12 @@ struct OptimizedItemCard: View {
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(.modaicsChrome1)
                     .tracking(0.5)
+                    .lineLimit(1)
+            } else {
+                // Spacer to maintain consistent height
+                Text(" ")
+                    .font(.system(size: 10, weight: .semibold))
+                    .opacity(0)
             }
             
             // Title
@@ -187,6 +183,8 @@ struct OptimizedItemCard: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.modaicsCotton)
                 .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(height: 36, alignment: .top)
                 .multilineTextAlignment(.leading)
             
             // Price and category
@@ -207,6 +205,7 @@ struct OptimizedItemCard: View {
                     Text(item.category.rawValue)
                         .font(.caption2)
                         .foregroundColor(.modaicsCottonLight)
+                        .lineLimit(1)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(
@@ -216,9 +215,9 @@ struct OptimizedItemCard: View {
                 }
             }
             
-            // Condition indicator
-            if item.condition != .new {
-                HStack(spacing: 4) {
+            // Condition indicator - fixed height
+            HStack(spacing: 4) {
+                if item.condition != .new {
                     Circle()
                         .fill(conditionColor)
                         .frame(width: 6, height: 6)
@@ -226,9 +225,21 @@ struct OptimizedItemCard: View {
                     Text(item.condition.rawValue)
                         .font(.caption2)
                         .foregroundColor(.modaicsCottonLight)
+                        .lineLimit(1)
+                } else {
+                    // Maintain height even when hidden
+                    Circle()
+                        .fill(.clear)
+                        .frame(width: 6, height: 6)
+                    
+                    Text(item.condition.rawValue)
+                        .font(.caption2)
+                        .foregroundColor(.modaicsCottonLight)
+                        .lineLimit(1)
                 }
             }
         }
+        .frame(height: 100)
         .padding(12)
     }
     

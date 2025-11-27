@@ -35,6 +35,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@modaics-db:5432/modaics
       - MODEL_PATH=/app/models
       - CLIP_MODEL=sentence-transformers/clip-ViT-B-32
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - EMBEDDING_PROVIDER=clip
     depends_on:
       modaics-db:
         condition: service_healthy

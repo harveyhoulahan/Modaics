@@ -198,7 +198,7 @@ firebase init
 // users
 {
   uid: "user123",
-  username: "fashion_lover",
+  username: "harvey",
   email: "user@example.com",
   profileImageURL: "https://...",
   bio: "Sustainable fashion enthusiast",

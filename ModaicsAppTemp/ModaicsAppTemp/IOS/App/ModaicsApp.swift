@@ -43,10 +43,10 @@ struct MosaicMainAppView: View {
                     DiscoverView()
                         .environmentObject(viewModel)
                 case 2:
-                    SmartCreateView(userType: userType)
+                    UnifiedCreateView(userType: userType)
                         .environmentObject(viewModel)
                 case 3:
-                    CommunityView()
+                    CommunityFeedView()
                         .environmentObject(viewModel)
                 case 4:
                     ProfileView(userType: userType)
@@ -75,6 +75,8 @@ struct MosaicMainAppView: View {
                     )
             )
         }
+        .withToast()
+        .withConfetti()
     }
 }
 

@@ -73,44 +73,8 @@ struct EnhancedItemCard: View {
                 .overlay(
                     Group {
                         if let imageURLString = item.imageURLs.first, !imageURLString.isEmpty {
-                            // Check if it's a local image name or a URL
-                            if imageURLString.hasPrefix("http://") || imageURLString.hasPrefix("https://") {
-                                // Load from URL using AsyncImage
-                                AsyncImage(url: URL(string: imageURLString)) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                            .tint(.modaicsChrome1)
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .opacity(imageLoaded ? 1 : 0)
-                                            .onAppear {
-                                                withAnimation(.easeInOut(duration: 0.6)) {
-                                                    imageLoaded = true
-                                                }
-                                            }
-                                    case .failure:
-                                        placeholderView
-                                    @unknown default:
-                                        placeholderView
-                                    }
-                                }
-                            } else if let uiImage = UIImage(named: imageURLString) {
-                                // Load local image
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .opacity(imageLoaded ? 1 : 0)
-                                    .onAppear {
-                                        withAnimation(.easeInOut(duration: 0.6)) {
-                                            imageLoaded = true
-                                        }
-                                    }
-                            } else {
-                                placeholderView
-                            }
+                            // Use premium cached image loader
+                            PremiumCachedImage(url: imageURLString, contentMode: .fill)
                         } else {
                             placeholderView
                         }
@@ -845,18 +809,6 @@ struct SustainabilityTipCard: View {
                         .stroke(Color.modaicsAccent.opacity(0.15), lineWidth: 1)
                 )
         )
-    }
-}
-
-struct SustainabilityMetric: View {
-    let icon: String; let value: String; let label: String; let color: Color
-    var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .foregroundColor(color)
-            Text(value).font(.headline).foregroundColor(.modaicsCotton)
-            Text(label).font(.caption).foregroundColor(.modaicsCottonLight)
-        }
     }
 }
 

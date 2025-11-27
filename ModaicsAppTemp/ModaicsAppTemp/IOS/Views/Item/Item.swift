@@ -31,6 +31,9 @@ struct FashionItem: Identifiable, Codable {
     var viewCount: Int
     var likeCount: Int
     var isAvailable: Bool
+    var isSold: Bool
+    var isSwapped: Bool
+    var isRented: Bool
     var embeddingVector: [Float]? // For ML recommendations
     var externalURL: String? // Link to external marketplace (Depop, Grailed, Vinted)
     var similarity: Double? // Similarity score from AI search (0-1)
@@ -71,6 +74,9 @@ struct FashionItem: Identifiable, Codable {
         viewCount: Int = 0,
         likeCount: Int = 0,
         isAvailable: Bool = true,
+        isSold: Bool = false,
+        isSwapped: Bool = false,
+        isRented: Bool = false,
         embeddingVector: [Float]? = nil,
         externalURL: String? = nil,
         similarity: Double? = nil
@@ -96,6 +102,9 @@ struct FashionItem: Identifiable, Codable {
         self.viewCount = viewCount
         self.likeCount = likeCount
         self.isAvailable = isAvailable
+        self.isSold = isSold
+        self.isSwapped = isSwapped
+        self.isRented = isRented
         self.embeddingVector = embeddingVector
         self.externalURL = externalURL
         self.similarity = similarity
@@ -222,6 +231,8 @@ struct User: Identifiable, Codable {
     var isVerified: Bool
     var userType: UserType
     var sustainabilityPoints: Int
+    var ecoPoints: Int
+    var membershipTier: MembershipTier
     var following: [String]
     var followers: [String]
     var likedItems: [String]
@@ -231,6 +242,11 @@ struct User: Identifiable, Codable {
         case consumer = "Consumer"
         case brand = "Brand"
         case both = "Both"
+    }
+    
+    enum MembershipTier: String, Codable {
+        case basic = "Basic"
+        case premium = "Premium"
     }
     
     init(
@@ -244,6 +260,8 @@ struct User: Identifiable, Codable {
         isVerified: Bool = false,
         userType: UserType = .consumer,
         sustainabilityPoints: Int = 0,
+        ecoPoints: Int = 0,
+        membershipTier: MembershipTier = .basic,
         following: [String] = [],
         followers: [String] = [],
         likedItems: [String] = [],
@@ -259,6 +277,8 @@ struct User: Identifiable, Codable {
         self.isVerified = isVerified
         self.userType = userType
         self.sustainabilityPoints = sustainabilityPoints
+        self.ecoPoints = ecoPoints
+        self.membershipTier = membershipTier
         self.following = following
         self.followers = followers
         self.likedItems = likedItems

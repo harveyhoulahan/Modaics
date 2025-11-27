@@ -70,7 +70,7 @@ struct ContentView: View {
                         
                         // Update user type in view model
                         if type == .brand {
-                            viewModel.currentUser?.userType = .brand
+                            viewModel.setupBrandUser(brandName: "nike")
                         }
                         
                         // Preload data for smooth transition

@@ -19,6 +19,7 @@ class VisionAnalysisService: ObservableObject {
     @Published var error: String?
     
     private let backendURL: String = "http://10.20.99.164:8000"
+    private lazy var searchClient = SearchAPIClient(baseURL: backendURL)
     
     // Core ML Models
     private var categoryModel: FashionCategoryClassifier?
@@ -60,13 +61,23 @@ class VisionAnalysisService: ObservableObject {
         isAnalyzing = true
         error = nil
         
+        // Try backend AI first (uses CLIP + 39,809 item database)
+        if let backendResult = await analyzeWithBackendAI(image: images.first!) {
+            print("✅ Using backend AI analysis")
+            isAnalyzing = false
+            analysisResult = backendResult
+            return backendResult
+        }
+        
+        print("⚠️ Backend AI unavailable, falling back to local ML")
+        
+        // Fallback to local ML models
         // Run all analyses in parallel
         async let mlCategory = classifyWithML(image: images.first!)
         async let mlColor = classifyColorWithML(image: images.first!)
         async let mlBrand = classifyBrandWithML(image: images.first!)
         async let visionColor = detectColors(in: images.first!) // Fallback for ML
         async let textAnalysis = detectText(in: images.first!)
-        async let clipAnalysis = analyzeWithCLIP(image: images.first!)
         
         // Wait for all results
         let category = await mlCategory
@@ -74,7 +85,6 @@ class VisionAnalysisService: ObservableObject {
         let brand = await mlBrand
         let visionColors = await visionColor
         let texts = await textAnalysis
-        let clipResult = await clipAnalysis
         
         // Combine all analyses
         let result = combineAnalyses(
@@ -83,12 +93,84 @@ class VisionAnalysisService: ObservableObject {
             mlBrand: brand,
             visionColors: visionColors,
             texts: texts,
-            clipResult: clipResult
+            clipResult: nil
         )
         
         isAnalyzing = false
         analysisResult = result
         return result
+    }
+    
+    // MARK: - Backend AI Analysis
+    
+    /// Analyze using backend CLIP AI (uses 39,809 item database)
+    private func analyzeWithBackendAI(image: UIImage) async -> ItemAnalysisResult? {
+        print("🔍 Attempting backend AI analysis at \(backendURL)...")
+        do {
+            let analysis = try await searchClient.analyzeImage(image)
+            
+            print("✅ Backend returned: \(analysis.detectedItem) - \(analysis.likelyBrand) - \(Int(analysis.confidence * 100))%")
+            
+            // Map to CategoryEnum
+            let categoryEnum = mapCategoryStringToEnum(analysis.category)
+            
+            // Map condition
+            let conditionEnum = mapConditionString(analysis.estimatedCondition)
+            
+            // Build a suggested name from the analysis
+            let primaryColor = analysis.colors.first ?? "Unknown"
+            let suggestedName = "\(primaryColor) \(categoryEnum.rawValue.capitalized)"
+            
+            return ItemAnalysisResult(
+                suggestedName: suggestedName,
+                suggestedBrand: analysis.likelyBrand,
+                suggestedCategory: categoryEnum,
+                suggestedCondition: conditionEnum,
+                suggestedSize: analysis.estimatedSize,
+                suggestedDescription: analysis.description,
+                detectedColors: analysis.colors,
+                detectedMaterials: analysis.materials,
+                suggestedPrice: analysis.estimatedPrice,
+                confidence: analysis.confidence
+            )
+        } catch {
+            print("❌ Backend AI analysis failed: \(error)")
+            print("❌ Error details: \(error.localizedDescription)")
+            if let urlError = error as? URLError {
+                print("❌ URL Error code: \(urlError.code)")
+                print("❌ URL: \(urlError.failureURLString ?? "unknown")")
+            }
+            return nil
+        }
+    }
+    
+    // Helper to map category strings to enum
+    private func mapCategoryStringToEnum(_ category: String) -> Category {
+        let lowercased = category.lowercased()
+        switch lowercased {
+        case "tops", "top", "shirt", "tshirt", "blouse": return .tops
+        case "bottoms", "pants", "jeans", "shorts": return .bottoms
+        case "dresses", "dress": return .dresses
+        case "outerwear", "jacket", "coat": return .outerwear
+        case "shoes", "shoe", "sneakers": return .shoes
+        case "accessories", "accessory": return .accessories
+        case "bags", "bag": return .bags
+        case "jewelry": return .jewelry
+        default: return .other
+        }
+    }
+    
+    // Helper to map condition strings to enum
+    private func mapConditionString(_ condition: String) -> Condition {
+        let lowercased = condition.lowercased()
+        switch lowercased {
+        case "new", "new with tags": return .new
+        case "like new", "likenew": return .likeNew
+        case "excellent": return .excellent
+        case "good": return .good
+        case "fair": return .fair
+        default: return .good
+        }
     }
     
     // MARK: - Create ML Classification
@@ -156,7 +238,7 @@ class VisionAnalysisService: ObservableObject {
     
     /// Detect dominant colors using Vision framework with nuanced color detection (FALLBACK)
     private func detectColors(in image: UIImage) async -> [String] {
-        guard let cgImage = image.cgImage else { return [] }
+        guard image.cgImage != nil else { return [] }
         
         return await withCheckedContinuation { continuation in
             var detectedColors: [String] = []
@@ -240,12 +322,6 @@ class VisionAnalysisService: ObservableObject {
                         print("🎨 Using brightest color: \(brightestColor.color) (B:\(brightestColor.brightness))")
                     }
                 }
-            }
-            
-            // Fallback if no colors detected
-            if detectedColors.isEmpty {
-                detectedColors.append("Cream")
-                print("🎨 Fallback to Cream")
             }
             
             print("🎨 Final detected colors: \(detectedColors)")

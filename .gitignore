@@ -50,3 +50,5 @@ export_progress.log
 # Firebase secrets
 GoogleService-Info.plist
 firebase-debug.log
+.env
+start_backend.sh
