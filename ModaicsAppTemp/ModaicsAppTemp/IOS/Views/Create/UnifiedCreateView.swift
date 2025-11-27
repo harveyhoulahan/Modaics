@@ -208,30 +208,69 @@ struct CreateItemView: View {
                 Button {
                     performAIAnalysis()
                 } label: {
-                    HStack {
+                    HStack(spacing: 8) {
                         if isAnalyzing {
                             ProgressView()
-                                .tint(.modaicsDarkBlue)
-                            Text("Analyzing...")
+                                .tint(.white)
+                            Text("ANALYZING...") 
+                                .font(.system(size: 13, weight: .medium, design: .monospaced))
+                                .tracking(1.2)
                         } else {
                             Image(systemName: "wand.and.stars")
-                            Text("Analyze with AI")
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                            Text("ANALYZE WITH AI")
+                                .font(.system(size: 13, weight: .medium, design: .monospaced))
+                                .tracking(1.2)
                         }
                     }
-                    .font(.system(size: 16, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsDarkBlue)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
-                    .padding()
+                    .padding(.vertical, 14)
                     .background(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
+                        Rectangle()
+                            .fill(Color.appRed)
                     )
-                    .clipShape(Rectangle())
+                    .overlay(
+                        Rectangle()
+                            .stroke(Color.appRed.opacity(0.5), lineWidth: 1)
+                    )
                 }
                 .disabled(isAnalyzing)
+                
+                // AI Info Card
+                HStack(alignment: .top, spacing: 10) {
+                    Rectangle()
+                        .fill(Color.appRed.opacity(0.1))
+                        .frame(width: 32, height: 32)
+                        .overlay(
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appRed)
+                        )
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("AI AUTO-FILL")
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .tracking(0.8)
+                            .foregroundColor(.appTextMain)
+                        
+                        Text("Our AI will detect brand, category, color, and condition from your photos")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMuted)
+                            .lineLimit(2)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(12)
+                .background(
+                    Rectangle()
+                        .fill(Color.appSurface)
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.appBorder, lineWidth: 1)
+                )
             }
             
             // Form Fields
@@ -244,22 +283,24 @@ struct CreateItemView: View {
                 Button {
                     createListing()
                 } label: {
-                    HStack {
+                    HStack(spacing: 8) {
                         Image(systemName: "checkmark.circle.fill")
-                        Text("List Item")
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                        Text("LIST ITEM")
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .tracking(1.5)
                     }
-                    .font(.system(size: 18, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsDarkBlue)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
-                    .padding()
+                    .padding(.vertical, 16)
                     .background(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
+                        Rectangle()
+                            .fill(Color.appRed)
                     )
-                    .clipShape(Rectangle())
+                    .overlay(
+                        Rectangle()
+                            .stroke(Color.appRed.opacity(0.5), lineWidth: 1)
+                    )
                 }
             }
         }
@@ -271,21 +312,23 @@ struct CreateItemView: View {
     private var imageSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
-                Text("Photos")
-                    .font(.system(size: 16, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCotton)
+                Text("PHOTOS")
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .tracking(1.2)
+                    .foregroundColor(.appTextMain)
                 
                 Spacer()
                 
-                // AI Status Indicator (like on Discover page)
+                // AI Status Indicator - industrial
                 HStack(spacing: 6) {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 8, height: 8)
+                    Rectangle()
+                        .fill(hasAnalyzed ? Color.green : Color.appRed)
+                        .frame(width: 6, height: 6)
                     
-                    Text(hasAnalyzed ? "Analyzed" : "AI Detection")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                    Text(hasAnalyzed ? "ANALYZED" : "AI DETECTION")
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .tracking(0.5)
+                        .foregroundColor(.appTextMuted)
                 }
             }
             
@@ -294,27 +337,37 @@ struct CreateItemView: View {
                     showImagePicker = true
                 } label: {
                     VStack(spacing: 16) {
-                        Image(systemName: "camera.fill")
-                            .font(.system(size: 40, weight: .medium, design: .monospaced))
-                            .foregroundColor(.modaicsChrome1)
+                        Rectangle()
+                            .fill(Color.appRed.opacity(0.1))
+                            .frame(width: 60, height: 60)
+                            .overlay(
+                                Image(systemName: "camera.fill")
+                                    .font(.system(size: 28, weight: .medium, design: .monospaced))
+                                    .foregroundColor(.appRed)
+                            )
                         
-                        Text("Add Photos")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.modaicsCotton)
-                        
-                        Text("AI will detect brand, color, and condition")
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .foregroundColor(.modaicsCottonLight)
+                        VStack(spacing: 6) {
+                            Text("ADD PHOTOS")
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                                .tracking(1.2)
+                                .foregroundColor(.appTextMain)
+                            
+                            Text("AI will detect brand, color, and condition automatically")
+                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMuted)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
+                        }
                     }
                     .frame(maxWidth: .infinity, minHeight: 200)
                     .background(
                         Rectangle()
-                            .fill(Color.modaicsDarkBlue.opacity(0.6))
-                            .overlay(
-                                Rectangle()
-                                    .stroke(style: StrokeStyle(lineWidth: 2, dash: [8]))
-                                    .foregroundColor(.modaicsChrome1.opacity(0.3))
-                            )
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(style: StrokeStyle(lineWidth: 2, dash: [8]))
+                            .foregroundColor(.appBorder)
                     )
                 }
             } else {
@@ -326,18 +379,27 @@ struct CreateItemView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 120, height: 160)
-                                    .clipShape(Rectangle())
+                                    .clipped()
                                 
+                                // Remove button - industrial
                                 Button {
                                     selectedImages.remove(at: index)
                                 } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.white)
-                                        .background(Circle().fill(Color.black.opacity(0.6)))
-                                        .font(.title3)
+                                    Rectangle()
+                                        .fill(Color.appRed)
+                                        .frame(width: 24, height: 24)
+                                        .overlay(
+                                            Image(systemName: "xmark")
+                                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                                .foregroundColor(.white)
+                                        )
                                 }
-                                .padding(8)
+                                .padding(6)
                             }
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.appBorder, lineWidth: 1)
+                            )
                         }
                         
                         Button {
@@ -345,17 +407,17 @@ struct CreateItemView: View {
                         } label: {
                             VStack {
                                 Image(systemName: "plus")
-                                    .font(.title2)
-                                    .foregroundColor(.modaicsChrome1)
+                                    .font(.system(size: 20, weight: .medium, design: .monospaced))
+                                    .foregroundColor(.appTextMuted)
                             }
                             .frame(width: 120, height: 160)
                             .background(
                                 Rectangle()
-                                    .fill(Color.modaicsDarkBlue.opacity(0.6))
-                                    .overlay(
-                                        Rectangle()
-                                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 2)
-                                    )
+                                    .fill(Color.appSurface)
+                            )
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.appBorder, lineWidth: 1)
                             )
                         }
                     }
@@ -366,18 +428,92 @@ struct CreateItemView: View {
     
     private var formFields: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Item Name
-            FormField(title: "Item Name", text: $itemName, placeholder: "e.g. Vintage Levi's 501")
+            // Section divider
+            HStack {
+                Rectangle()
+                    .fill(Color.appBorder)
+                    .frame(height: 1)
+                
+                Text("DETAILS")
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .tracking(1.2)
+                    .foregroundColor(.appTextMuted)
+                    .padding(.horizontal, 8)
+                
+                Rectangle()
+                    .fill(Color.appBorder)
+                    .frame(height: 1)
+            }
+            .padding(.vertical, 8)
             
-            // Brand
-            FormField(title: "Brand", text: $brand, placeholder: "e.g. Levi's")
+            // Item Name with counter
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("ITEM NAME")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(.appTextMuted)
+                    
+                    Spacer()
+                    
+                    Text("\(itemName.count)/50")
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMuted.opacity(0.6))
+                }
+                
+                TextField("e.g. Vintage Levi's 501 Jeans", text: $itemName)
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .foregroundColor(.appTextMain)
+                    .padding(14)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(itemName.isEmpty ? Color.appBorder : Color.appRed.opacity(0.3), lineWidth: 1)
+                    )
+            }
+            
+            // Brand with icon
+            VStack(alignment: .leading, spacing: 8) {
+                Text("BRAND")
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                    .tracking(0.8)
+                    .foregroundColor(.appTextMuted)
+                
+                HStack(spacing: 10) {
+                    Rectangle()
+                        .fill(Color.appSurface)
+                        .frame(width: 32, height: 32)
+                        .overlay(
+                            Image(systemName: "building.2.fill")
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMuted)
+                        )
+                    
+                    TextField("e.g. Levi's, Nike, Patagonia", text: $brand)
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMain)
+                }
+                .padding(10)
+                .background(
+                    Rectangle()
+                        .fill(Color.appSurface)
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(brand.isEmpty ? Color.appBorder : Color.appRed.opacity(0.3), lineWidth: 1)
+                )
+            }
             
             // Category & Size
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Category")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                    Text("CATEGORY")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(.appTextMuted)
                     
                     Menu {
                         ForEach(Category.allCases, id: \.self) { cat in
@@ -387,23 +523,31 @@ struct CreateItemView: View {
                         }
                     } label: {
                         HStack {
-                            Text(category.rawValue)
-                                .foregroundColor(.modaicsCotton)
+                            Text(category.rawValue.uppercased())
+                                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMain)
                             Spacer()
                             Image(systemName: "chevron.down")
-                                .font(.caption)
-                                .foregroundColor(.modaicsCottonLight)
+                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMuted)
                         }
-                        .padding()
-                        .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(Rectangle())
+                        .padding(12)
+                        .background(
+                            Rectangle()
+                                .fill(Color.appSurface)
+                        )
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
                     }
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Size")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                    Text("SIZE")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(.appTextMuted)
                     
                     Menu {
                         ForEach(["XS", "S", "M", "L", "XL", "XXL"], id: \.self) { s in
@@ -414,24 +558,32 @@ struct CreateItemView: View {
                     } label: {
                         HStack {
                             Text(size)
-                                .foregroundColor(.modaicsCotton)
+                                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMain)
                             Spacer()
                             Image(systemName: "chevron.down")
-                                .font(.caption)
-                                .foregroundColor(.modaicsCottonLight)
+                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMuted)
                         }
-                        .padding()
-                        .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(Rectangle())
+                        .padding(12)
+                        .background(
+                            Rectangle()
+                                .fill(Color.appSurface)
+                        )
+                        .overlay(
+                            Rectangle()
+                                .stroke(Color.appBorder, lineWidth: 1)
+                        )
                     }
                 }
             }
             
-            // Condition
+            // Condition with visual indicator
             VStack(alignment: .leading, spacing: 8) {
-                Text("Condition")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCottonLight)
+                Text("CONDITION")
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                    .tracking(0.8)
+                    .foregroundColor(.appTextMuted)
                 
                 Menu {
                     ForEach(Condition.allCases, id: \.self) { cond in
@@ -440,51 +592,144 @@ struct CreateItemView: View {
                         }
                     }
                 } label: {
-                    HStack {
-                        Text(condition.rawValue)
-                            .foregroundColor(.modaicsCotton)
+                    HStack(spacing: 10) {
+                        // Condition quality indicator
+                        Rectangle()
+                            .fill(conditionColor(condition))
+                            .frame(width: 4, height: 32)
+                        
+                        Text(condition.rawValue.uppercased())
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMain)
+                        
                         Spacer()
+                        
                         Image(systemName: "chevron.down")
-                            .font(.caption)
-                            .foregroundColor(.modaicsCottonLight)
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMuted)
                     }
-                    .padding()
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(Rectangle())
+                    .padding(12)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(Color.appBorder, lineWidth: 1)
+                    )
                 }
             }
             
-            // Pricing
+            // Pricing with calculator icon
             HStack(spacing: 12) {
-                FormField(title: "Original Price", text: $originalPrice, placeholder: "$0")
-                    .keyboardType(.decimalPad)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("ORIGINAL PRICE")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(.appTextMuted)
+                    
+                    HStack(spacing: 8) {
+                        Text("$")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMuted)
+                        
+                        TextField("0", text: $originalPrice)
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMain)
+                            .keyboardType(.decimalPad)
+                    }
+                    .padding(12)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(Color.appBorder, lineWidth: 1)
+                    )
+                }
                 
-                FormField(title: "List Price", text: $listingPrice, placeholder: "$0")
-                    .keyboardType(.decimalPad)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("LIST PRICE")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(.appTextMuted)
+                    
+                    HStack(spacing: 8) {
+                        Text("$")
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appRed)
+                        
+                        TextField("0", text: $listingPrice)
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMain)
+                            .keyboardType(.decimalPad)
+                    }
+                    .padding(12)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(listingPrice.isEmpty ? Color.appBorder : Color.appRed.opacity(0.3), lineWidth: 1)
+                    )
+                }
             }
             
             // Description
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Description")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                    Text("DESCRIPTION")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundColor(.appTextMuted)
                     
                     Spacer()
                     
-                    Text("Optional")
-                        .font(.caption)
-                        .foregroundColor(.modaicsCottonLight.opacity(0.6))
+                    Text("OPTIONAL")
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .tracking(0.5)
+                        .foregroundColor(.appTextMuted.opacity(0.6))
                 }
                 
-                TextEditor(text: $description)
-                    .frame(minHeight: 100)
-                    .padding(12)
-                    .foregroundColor(.modaicsCotton)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(Rectangle())
+                ZStack(alignment: .topLeading) {
+                    if description.isEmpty {
+                        Text("Describe the item's features, flaws, and story...")
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMuted.opacity(0.5))
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 12)
+                    }
+                    
+                    TextEditor(text: $description)
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMain)
+                        .frame(minHeight: 100)
+                        .padding(10)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+                }
+                .background(
+                    Rectangle()
+                        .fill(Color.appSurface)
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.appBorder, lineWidth: 1)
+                )
             }
+        }
+    }
+    
+    private func conditionColor(_ condition: Condition) -> Color {
+        switch condition {
+        case .new, .likeNew:
+            return Color.green
+        case .excellent, .good:
+            return Color.yellow
+        case .fair, .worn:
+            return Color.orange
         }
     }
     
@@ -566,20 +811,22 @@ struct FormField: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(.modaicsCottonLight)
+            Text(title.uppercased())
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .tracking(0.8)
+                .foregroundColor(.appTextMuted)
             
             TextField(placeholder, text: $text)
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
+                .foregroundColor(.appTextMain)
                 .padding(14)
-                .foregroundColor(.modaicsCotton)
                 .background(
                     Rectangle()
-                        .fill(Color.modaicsDarkBlue.opacity(0.6))
-                        .overlay(
-                            Rectangle()
-                                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
-                        )
+                        .fill(Color.appSurface)
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(text.isEmpty ? Color.appBorder : Color.appRed.opacity(0.3), lineWidth: 1)
                 )
         }
     }
@@ -598,31 +845,46 @@ struct CreateEventView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Section Header
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Image(systemName: "calendar.badge.plus")
-                        .font(.system(size: 16, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsChrome1)
-                    
-                    Text("Event Details")
-                        .font(.system(size: 18, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsCotton)
-                }
+            // Section Header - industrial
+            HStack(alignment: .top, spacing: 12) {
+                Rectangle()
+                    .fill(Color.appRed.opacity(0.1))
+                    .frame(width: 44, height: 44)
+                    .overlay(
+                        Image(systemName: "calendar.badge.plus")
+                            .font(.system(size: 18, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appRed)
+                    )
                 
-                Text("Create an event for the community to join")
-                    .font(.system(size: 13, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCottonLight)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("EVENT DETAILS")
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .tracking(1.2)
+                        .foregroundColor(.appTextMain)
+                    
+                    Text("Create an event for the community to join")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMuted)
+                }
             }
-            .padding(.bottom, 4)
+            .padding(16)
+            .background(
+                Rectangle()
+                    .fill(Color.appSurface)
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(Color.appBorder, lineWidth: 1)
+            )
             
             FormField(title: "Event Name", text: $eventName, placeholder: "e.g. Fitzroy Vintage Market")
             
-            // Event Type
+            // Event Type - industrial style
             VStack(alignment: .leading, spacing: 8) {
-                Text("Event Type")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCottonLight)
+                Text("EVENT TYPE")
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                    .tracking(0.8)
+                    .foregroundColor(.appTextMuted)
                 
                 Menu {
                     ForEach(EventType.allCases, id: \.self) { type in
@@ -636,19 +898,35 @@ struct CreateEventView: View {
                         }
                     }
                 } label: {
-                    HStack {
-                        Image(systemName: eventType.icon)
-                            .foregroundColor(.modaicsChrome1)
-                        Text(eventType.rawValue)
-                            .foregroundColor(.modaicsCotton)
+                    HStack(spacing: 12) {
+                        Rectangle()
+                            .fill(Color.appRed.opacity(0.1))
+                            .frame(width: 36, height: 36)
+                            .overlay(
+                                Image(systemName: eventType.icon)
+                                    .font(.system(size: 14, weight: .medium, design: .monospaced))
+                                    .foregroundColor(.appRed)
+                            )
+                        
+                        Text(eventType.rawValue.uppercased())
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMain)
+                        
                         Spacer()
+                        
                         Image(systemName: "chevron.down")
-                            .font(.caption)
-                            .foregroundColor(.modaicsCottonLight)
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMuted)
                     }
-                    .padding()
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(Rectangle())
+                    .padding(12)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(Color.appBorder, lineWidth: 1)
+                    )
                 }
             }
             
@@ -685,26 +963,28 @@ struct CreateEventView: View {
                     .clipShape(Rectangle())
             }
             
-            // Submit
+            // Submit - industrial button
             Button {
                 createEvent()
             } label: {
-                HStack {
+                HStack(spacing: 8) {
                     Image(systemName: "calendar.badge.plus")
-                    Text("Create Event")
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
+                    Text("CREATE EVENT")
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .tracking(1.5)
                 }
-                .font(.system(size: 18, weight: .medium, design: .monospaced))
-                .foregroundColor(.modaicsDarkBlue)
+                .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding()
+                .padding(.vertical, 16)
                 .background(
-                    LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
+                    Rectangle()
+                        .fill(Color.appRed)
                 )
-                .clipShape(Rectangle())
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.appRed.opacity(0.5), lineWidth: 1)
+                )
             }
             .disabled(eventName.isEmpty || location.isEmpty)
             .opacity(eventName.isEmpty || location.isEmpty ? 0.5 : 1)
@@ -730,23 +1010,37 @@ struct CreateWorkshopView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Section Header
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Image(systemName: "hammer.fill")
-                        .font(.system(size: 16, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsChrome1)
-                    
-                    Text("Workshop Details")
-                        .font(.system(size: 18, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsCotton)
-                }
+            // Section Header - industrial
+            HStack(alignment: .top, spacing: 12) {
+                Rectangle()
+                    .fill(Color.appRed.opacity(0.1))
+                    .frame(width: 44, height: 44)
+                    .overlay(
+                        Image(systemName: "hammer.fill")
+                            .font(.system(size: 18, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appRed)
+                    )
                 
-                Text("Share your skills with the community")
-                    .font(.system(size: 13, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCottonLight)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("WORKSHOP DETAILS")
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .tracking(1.2)
+                        .foregroundColor(.appTextMain)
+                    
+                    Text("Share your skills with the community")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMuted)
+                }
             }
-            .padding(.bottom, 4)
+            .padding(16)
+            .background(
+                Rectangle()
+                    .fill(Color.appSurface)
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(Color.appBorder, lineWidth: 1)
+            )
             
             FormField(title: "Workshop Name", text: $workshopName, placeholder: "e.g. Visible Mending Basics")
             FormField(title: "Instructor", text: $instructor, placeholder: "Your name")
@@ -799,26 +1093,28 @@ struct CreateWorkshopView: View {
                     .clipShape(Rectangle())
             }
             
-            // Submit
+            // Submit - industrial
             Button {
                 createWorkshop()
             } label: {
-                HStack {
+                HStack(spacing: 8) {
                     Image(systemName: "hammer.fill")
-                    Text("Create Workshop")
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
+                    Text("CREATE WORKSHOP")
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .tracking(1.5)
                 }
-                .font(.system(size: 18, weight: .medium, design: .monospaced))
-                .foregroundColor(.modaicsDarkBlue)
+                .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding()
+                .padding(.vertical, 16)
                 .background(
-                    LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
+                    Rectangle()
+                        .fill(Color.appRed)
                 )
-                .clipShape(Rectangle())
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.appRed.opacity(0.5), lineWidth: 1)
+                )
             }
             .disabled(workshopName.isEmpty || instructor.isEmpty)
             .opacity(workshopName.isEmpty || instructor.isEmpty ? 0.5 : 1)
@@ -841,54 +1137,108 @@ struct CreatePostView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Section Header
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Image(systemName: "square.and.pencil")
-                        .font(.system(size: 16, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsChrome1)
-                    
-                    Text("Community Post")
-                        .font(.system(size: 18, weight: .medium, design: .monospaced))
-                        .foregroundColor(.modaicsCotton)
-                }
+            // Section Header - industrial
+            HStack(alignment: .top, spacing: 12) {
+                Rectangle()
+                    .fill(Color.appRed.opacity(0.1))
+                    .frame(width: 44, height: 44)
+                    .overlay(
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 18, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appRed)
+                    )
                 
-                Text("Share tips, finds, or inspiration")
-                    .font(.system(size: 13, weight: .medium, design: .monospaced))
-                    .foregroundColor(.modaicsCottonLight)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("COMMUNITY POST")
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .tracking(1.2)
+                        .foregroundColor(.appTextMain)
+                    
+                    Text("Share tips, finds, or inspiration")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMuted)
+                }
             }
-            .padding(.bottom, 4)
+            .padding(16)
+            .background(
+                Rectangle()
+                    .fill(Color.appSurface)
+            )
+            .overlay(
+                Rectangle()
+                    .stroke(Color.appBorder, lineWidth: 1)
+            )
             
             // Post Content
             VStack(alignment: .leading, spacing: 8) {
-                Text("What's on your mind?")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCottonLight)
+                Text("WHAT'S ON YOUR MIND?")
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                    .tracking(0.8)
+                    .foregroundColor(.appTextMuted)
                 
-                TextEditor(text: $postContent)
-                    .frame(minHeight: 150)
-                    .padding(12)
-                    .foregroundColor(.modaicsCotton)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(Rectangle())
+                ZStack(alignment: .topLeading) {
+                    if postContent.isEmpty {
+                        Text("Share your thoughts, tips, or recent finds...")
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(.appTextMuted.opacity(0.5))
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 12)
+                    }
+                    
+                    TextEditor(text: $postContent)
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundColor(.appTextMain)
+                        .frame(minHeight: 150)
+                        .padding(10)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+                }
+                .background(
+                    Rectangle()
+                        .fill(Color.appSurface)
+                )
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.appBorder, lineWidth: 1)
+                )
             }
             
-            // Add Images
+            // Add Images - industrial
             if selectedImages.isEmpty {
                 Button {
                     showImagePicker = true
                 } label: {
-                    HStack {
-                        Image(systemName: "photo.on.rectangle.angled")
-                        Text("Add Photos (Optional)")
+                    HStack(spacing: 10) {
+                        Rectangle()
+                            .fill(Color.appSurface)
+                            .frame(width: 36, height: 36)
+                            .overlay(
+                                Image(systemName: "photo.on.rectangle.angled")
+                                    .font(.system(size: 14, weight: .medium, design: .monospaced))
+                                    .foregroundColor(.appTextMuted)
+                            )
+                        
+                        Text("ADD PHOTOS")
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .tracking(1.0)
+                            .foregroundColor(.appTextMain)
+                        
+                        Spacer()
+                        
+                        Text("OPTIONAL")
+                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .tracking(0.5)
+                            .foregroundColor(.appTextMuted.opacity(0.6))
                     }
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(.modaicsChrome1)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(Rectangle())
+                    .padding(14)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appSurface)
+                    )
+                    .overlay(
+                        Rectangle()
+                            .stroke(Color.appBorder, lineWidth: 1)
+                    )
                 }
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -899,52 +1249,70 @@ struct CreatePostView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 100, height: 100)
-                                    .clipShape(Rectangle())
+                                    .clipped()
                                 
                                 Button {
                                     selectedImages.remove(at: index)
                                 } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.white)
-                                        .background(Circle().fill(Color.black.opacity(0.6)))
+                                    Rectangle()
+                                        .fill(Color.appRed)
+                                        .frame(width: 24, height: 24)
+                                        .overlay(
+                                            Image(systemName: "xmark")
+                                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                                .foregroundColor(.white)
+                                        )
                                 }
                                 .padding(4)
                             }
+                            .overlay(
+                                Rectangle()
+                                    .stroke(Color.appBorder, lineWidth: 1)
+                            )
                         }
                         
                         Button {
                             showImagePicker = true
                         } label: {
                             Image(systemName: "plus")
-                                .foregroundColor(.modaicsChrome1)
+                                .font(.system(size: 16, weight: .medium, design: .monospaced))
+                                .foregroundColor(.appTextMuted)
                                 .frame(width: 100, height: 100)
-                                .background(Color.modaicsDarkBlue.opacity(0.6))
-                                .clipShape(Rectangle())
+                                .background(
+                                    Rectangle()
+                                        .fill(Color.appSurface)
+                                )
+                                .overlay(
+                                    Rectangle()
+                                        .stroke(Color.appBorder, lineWidth: 1)
+                                )
                         }
                     }
                 }
             }
             
-            // Submit
+            // Submit - industrial
             Button {
                 createPost()
             } label: {
-                HStack {
+                HStack(spacing: 8) {
                     Image(systemName: "paperplane.fill")
-                    Text("Share Post")
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
+                    Text("SHARE POST")
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .tracking(1.5)
                 }
-                .font(.system(size: 18, weight: .medium, design: .monospaced))
-                .foregroundColor(.modaicsDarkBlue)
+                .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding()
+                .padding(.vertical, 16)
                 .background(
-                    LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
+                    Rectangle()
+                        .fill(Color.appRed)
                 )
-                .clipShape(Rectangle())
+                .overlay(
+                    Rectangle()
+                        .stroke(Color.appRed.opacity(0.5), lineWidth: 1)
+                )
             }
             .disabled(postContent.isEmpty)
             .opacity(postContent.isEmpty ? 0.5 : 1)

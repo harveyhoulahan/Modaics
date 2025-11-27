@@ -171,9 +171,10 @@ struct HomeView: View {
     // MARK: - Hero Section
     private var heroSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(userType == .user ? "Your Wardrobe" : "Dashboard")
-                .font(.system(size: 32, weight: .bold, design: .rounded))
-                .foregroundColor(.modaicsCotton)
+            Text((userType == .user ? "Your Wardrobe" : "Dashboard").uppercased())
+                .font(.system(size: 28, weight: .medium, design: .monospaced))
+                .tracking(1.5)
+                .foregroundColor(.appTextMain)
             
             HStack(spacing: 16) {
                 // Stats cards
