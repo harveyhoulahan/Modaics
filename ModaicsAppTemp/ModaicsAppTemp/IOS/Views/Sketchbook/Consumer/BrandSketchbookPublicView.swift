@@ -45,7 +45,7 @@ struct BrandSketchbookPublicView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(brandName)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 17, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
         }
@@ -86,7 +86,7 @@ struct BrandSketchbookPublicView: View {
         VStack(spacing: 16) {
             HStack(spacing: 12) {
                 Image(systemName: "star.circle.fill")
-                    .font(.system(size: 32))
+                    .font(.system(size: 32, weight: .medium, design: .monospaced))
                     .foregroundStyle(
                         LinearGradient(
                             colors: [.modaicsChrome1, .modaicsChrome2],
@@ -97,11 +97,11 @@ struct BrandSketchbookPublicView: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(viewModel.lockedPostsCount) Exclusive Posts")
-                        .font(.system(size: 17, weight: .bold))
+                        .font(.system(size: 17, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text(viewModel.unlockDescription)
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                         .lineLimit(2)
                 }
@@ -114,10 +114,10 @@ struct BrandSketchbookPublicView: View {
             }) {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                     
                     Text(viewModel.unlockCallToAction.replacingOccurrences(of: "Join", with: "Subscribe").replacingOccurrences(of: "Unlock", with: "Subscribe"))
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                 }
                 .foregroundColor(.modaicsDarkBlue)
                 .frame(maxWidth: .infinity)
@@ -158,7 +158,7 @@ struct BrandSketchbookPublicView: View {
         VStack(spacing: 16) {
             HStack {
                 Text("Posts")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Spacer()
@@ -169,7 +169,7 @@ struct BrandSketchbookPublicView: View {
                             .font(.caption)
                         Text("\(viewModel.visiblePosts.count) of \(viewModel.posts.count)")
                     }
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 }
             }
@@ -212,15 +212,15 @@ struct BrandSketchbookPublicView: View {
     private var emptyPostsView: some View {
         VStack(spacing: 16) {
             Image(systemName: "pencil.and.scribble")
-                .font(.system(size: 50))
+                .font(.system(size: 50, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1.opacity(0.5))
             
             Text("No posts yet")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text("This Sketchbook is just getting started")
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
         .padding(.vertical, 60)
@@ -230,11 +230,11 @@ struct BrandSketchbookPublicView: View {
         Button(action: { viewModel.showUnlockSheet = true }) {
             VStack(spacing: 16) {
                 Image(systemName: "lock.fill")
-                    .font(.system(size: 40))
+                    .font(.system(size: 40, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1.opacity(0.7))
                 
                 Text("+\(viewModel.lockedPostsCount) More Exclusive Posts")
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.system(size: 17, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text(viewModel.unlockCallToAction)
@@ -288,18 +288,18 @@ struct BrandSketchbookPublicView: View {
                             .frame(width: 100, height: 100)
                             .overlay(
                                 Image(systemName: "star.fill")
-                                    .font(.system(size: 40, weight: .bold))
+                                    .font(.system(size: 40, weight: .medium, design: .monospaced))
                                     .foregroundColor(.modaicsDarkBlue)
                             )
                             
                         
                         // Title
                         Text("Subscribe to \(brandName)")
-                            .font(.system(size: 26, weight: .bold))
+                            .font(.system(size: 26, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCotton)
                         
                         Text(viewModel.unlockDescription)
-                            .font(.system(size: 15))
+                            .font(.system(size: 15, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
@@ -317,7 +317,7 @@ struct BrandSketchbookPublicView: View {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(.green)
                                     Text("You're subscribed!")
-                                        .font(.system(size: 16, weight: .semibold))
+                                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                                         .foregroundColor(.modaicsCotton)
                                 }
                                 
@@ -346,11 +346,11 @@ struct BrandSketchbookPublicView: View {
                                 VStack(spacing: 8) {
                                     HStack {
                                         Text("Progress")
-                                            .font(.system(size: 14))
+                                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                                             .foregroundColor(.modaicsCottonLight)
                                         Spacer()
                                         Text("\(Int(eligibility.progressPercentage))%")
-                                            .font(.system(size: 14, weight: .semibold))
+                                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                                             .foregroundColor(.modaicsChrome1)
                                     }
                                     
@@ -397,13 +397,13 @@ struct BrandSketchbookPublicView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Subscribe")
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.system(size: 17, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { viewModel.showUnlockSheet = false }) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 24))
+                            .font(.system(size: 24, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                 }
@@ -441,12 +441,12 @@ struct BrandSketchbookPublicView: View {
     private func benefitRow(icon: String, text: String) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 16))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1)
                 .frame(width: 24)
             
             Text(text)
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Spacer()
@@ -460,7 +460,7 @@ struct BrandSketchbookPublicView: View {
             ProgressView()
                 .tint(.modaicsChrome1)
             Text("Loading Sketchbook...")
-                .font(.system(size: 15))
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
     }
@@ -472,11 +472,11 @@ struct BrandSketchbookPublicView: View {
                 .foregroundColor(.red)
             
             Text("Error")
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 20, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text(message)
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
             

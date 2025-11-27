@@ -109,7 +109,7 @@ struct ProfileView: View {
                     .frame(width: 80, height: 80)
                     .overlay(
                         Image(systemName: userType == .brand ? "building.2.fill" : "person.fill")
-                            .font(.system(size: 32))
+                            .font(.system(size: 32, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsDarkBlue)
                     )
                 
@@ -119,18 +119,18 @@ struct ProfileView: View {
                     .frame(width: 24, height: 24)
                     .overlay(
                         Image(systemName: viewModel.currentUser?.membershipTier == .premium ? "star.fill" : "star")
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundColor(.white)
                     )
             }
             
             VStack(alignment: .leading, spacing: 6) {
                 Text(viewModel.currentUser?.username ?? "User")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text(viewType == .brand ? "Brand Account" : membershipText)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                 
                 HStack(spacing: 16) {
@@ -138,14 +138,14 @@ struct ProfileView: View {
                         Image(systemName: "tshirt.fill")
                             .font(.caption)
                         Text("\(wardrobeItems.count)")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                     }
                     
                     HStack(spacing: 4) {
                         Image(systemName: "heart.fill")
                             .font(.caption)
                         Text("\(viewModel.likedIDs.count)")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                     }
                 }
                 .foregroundColor(.modaicsCottonLight)
@@ -181,11 +181,11 @@ struct ProfileView: View {
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Eco Points")
-                            .font(.system(size: 18, weight: .semibold))
+                            .font(.system(size: 18, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCotton)
                         
                         Text("Earned from sustainable actions")
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                 }
@@ -193,7 +193,7 @@ struct ProfileView: View {
                 Spacer()
                 
                 Text("\(viewModel.currentUser?.ecoPoints ?? 0)")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.system(size: 32, weight: .medium, design: .monospaced))
                     .foregroundStyle(
                         LinearGradient(
                             colors: [.green, Color(red: 0.2, green: 0.8, blue: 0.4)],
@@ -245,7 +245,7 @@ struct ProfileView: View {
                         Text("Upgrade to Premium")
                         Image(systemName: "arrow.right")
                     }
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 15, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsDarkBlue)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
@@ -256,19 +256,19 @@ struct ProfileView: View {
                             endPoint: .trailing
                         )
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
             }
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
-                                colors: [Color.green.opacity(0.3), Color.blue.opacity(0.3)],
+                                colors: [Color.modaicsChrome1.opacity(0.15), Color.blue.opacity(0.3)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -287,13 +287,13 @@ struct ProfileView: View {
                     .foregroundColor(.green)
                 
                 Text("Your Impact")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: 20, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Spacer()
                 
                 Text("This Month")
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
@@ -342,13 +342,13 @@ struct ProfileView: View {
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
-                                colors: [Color.green.opacity(0.3), Color.blue.opacity(0.3)],
+                                colors: [Color.modaicsChrome1.opacity(0.15), Color.blue.opacity(0.3)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -376,17 +376,17 @@ struct ProfileView: View {
                     .frame(width: 60, height: 60)
                     .overlay(
                         Image(systemName: "pencil.and.scribble")
-                            .font(.system(size: 28, weight: .bold))
+                            .font(.system(size: 28, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsDarkBlue)
                     )
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("My Sketchbook")
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 20, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("Share WIPs, drops, and behind-the-scenes with your community")
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                         .lineLimit(2)
                 }
@@ -394,15 +394,15 @@ struct ProfileView: View {
                 Spacer()
                 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
             }
             .padding(20)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                Rectangle()
                     .fill(Color.modaicsDarkBlue.opacity(0.6))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
+                        Rectangle()
                             .stroke(
                                 LinearGradient(
                                     colors: [.modaicsChrome1, .modaicsChrome2],
@@ -421,13 +421,13 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Digital Wardrobe")
-                    .font(.system(size: 22, weight: .semibold))
+                    .font(.system(size: 22, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Spacer()
                 
                 Text("\(wardrobeItems.count) items")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             .padding(.horizontal, 20)
@@ -454,15 +454,15 @@ struct ProfileView: View {
             if filteredWardrobeItems.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: selectedTab.icon)
-                        .font(.system(size: 48))
+                        .font(.system(size: 48, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight.opacity(0.5))
                     
                     Text("No \(selectedTab.rawValue) Items")
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("Items you \(selectedTab.rawValue.lowercased()) will appear here")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 .frame(maxWidth: .infinity)
@@ -552,18 +552,18 @@ struct EcoPointRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 16))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(color)
                 .frame(width: 32)
             
             Text(action)
-                .font(.system(size: 13))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
             
             Spacer()
             
             Text(points)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
                 .foregroundColor(.green)
         }
     }
@@ -586,25 +586,25 @@ struct SustainabilityMetric: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 HStack(spacing: 8) {
                     Text(value)
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.system(size: 22, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text(change)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.green)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(Color.green.opacity(0.2))
+                        .background(Color.modaicsChrome1.opacity(0.15))
                         .clipShape(Rectangle())
                 }
                 
                 Text(description)
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight.opacity(0.7))
             }
             
@@ -623,13 +623,13 @@ struct WardrobeTabButton: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 Image(systemName: tab.icon)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                 
                 Text(tab.rawValue)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                 
                 Text("\(count)")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCottonLight)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
@@ -642,10 +642,10 @@ struct WardrobeTabButton: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .stroke(
                                 isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
                                 lineWidth: 1.5
@@ -665,7 +665,7 @@ struct WardrobeItemCard: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 8) {
                 // Image
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(Color.modaicsSurface2)
                     .aspectRatio(3/4, contentMode: .fit)
                     .overlay(
@@ -675,7 +675,7 @@ struct WardrobeItemCard: View {
                             }
                         }
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                     .overlay(
                         // Status badge
                         VStack {
@@ -701,13 +701,13 @@ struct WardrobeItemCard: View {
                         .foregroundColor(.modaicsChrome1)
                     
                     Text(item.name)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                         .lineLimit(2)
                     
                     if item.listingPrice > 0 {
                         Text("$\(Int(item.listingPrice))")
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome2)
                     }
                 }
@@ -718,7 +718,7 @@ struct WardrobeItemCard: View {
     
     private func statusBadge(text: String, color: Color) -> some View {
         Text(text)
-            .font(.system(size: 10, weight: .bold))
+            .font(.system(size: 10, weight: .medium, design: .monospaced))
             .foregroundColor(.white)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -746,7 +746,7 @@ struct MembershipUpgradeView: View {
                         // Header
                         VStack(spacing: 12) {
                             Image(systemName: "star.circle.fill")
-                                .font(.system(size: 64))
+                                .font(.system(size: 64, weight: .medium, design: .monospaced))
                                 .foregroundStyle(
                                     LinearGradient(
                                         colors: [.yellow, .orange],
@@ -756,11 +756,11 @@ struct MembershipUpgradeView: View {
                                 )
                             
                             Text("Upgrade to Premium")
-                                .font(.system(size: 32, weight: .bold))
+                                .font(.system(size: 32, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCotton)
                             
                             Text("Unlock unlimited potential")
-                                .font(.system(size: 16))
+                                .font(.system(size: 16, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCottonLight)
                         }
                         .padding(.top, 40)
@@ -768,7 +768,7 @@ struct MembershipUpgradeView: View {
                         // Pricing
                         VStack(spacing: 8) {
                             Text("$10")
-                                .font(.system(size: 56, weight: .bold))
+                                .font(.system(size: 56, weight: .medium, design: .monospaced))
                                 .foregroundStyle(
                                     LinearGradient(
                                         colors: [.modaicsChrome1, .modaicsChrome2],
@@ -778,7 +778,7 @@ struct MembershipUpgradeView: View {
                                 )
                             
                             Text("per month")
-                                .font(.system(size: 16))
+                                .font(.system(size: 16, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCottonLight)
                         }
                         
@@ -822,7 +822,7 @@ struct MembershipUpgradeView: View {
                             HapticManager.shared.success()
                         } label: {
                             Text("Start Free Trial")
-                                .font(.system(size: 18, weight: .bold))
+                                .font(.system(size: 18, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsDarkBlue)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
@@ -833,12 +833,12 @@ struct MembershipUpgradeView: View {
                                         endPoint: .trailing
                                     )
                                 )
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .clipShape(Rectangle())
                         }
                         .padding(.horizontal, 20)
                         
                         Text("7 days free, then $10/month. Cancel anytime.")
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 20)
@@ -874,11 +874,11 @@ struct PremiumFeature: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text(description)
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             
@@ -890,11 +890,11 @@ struct PremiumFeature: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    Rectangle()
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
     }

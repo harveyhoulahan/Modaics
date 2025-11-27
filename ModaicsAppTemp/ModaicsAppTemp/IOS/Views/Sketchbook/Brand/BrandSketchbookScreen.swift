@@ -106,7 +106,7 @@ struct BrandSketchbookScreen: View {
     private var analyticsSection: some View {
         VStack(spacing: 16) {
             Text("Analytics")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -140,12 +140,12 @@ struct BrandSketchbookScreen: View {
                     .font(.caption)
                     .foregroundColor(color)
                 Text(title)
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             
             Text(value)
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 24, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -164,12 +164,12 @@ struct BrandSketchbookScreen: View {
                 Image(systemName: "trophy.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Top Performing Post")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
             Text(post.title)
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .lineLimit(2)
             
@@ -194,7 +194,7 @@ struct BrandSketchbookScreen: View {
         .clipShape(Rectangle())
         .overlay(
             Rectangle()
-                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -214,13 +214,13 @@ struct BrandSketchbookScreen: View {
         VStack(spacing: 16) {
             HStack {
                 Text("Posts")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Spacer()
                 
                 Text("\(viewModel.posts.count) total")
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             .padding(.horizontal)
@@ -257,15 +257,15 @@ struct BrandSketchbookScreen: View {
     private var emptyPostsView: some View {
         VStack(spacing: 16) {
             Image(systemName: "pencil.and.scribble")
-                .font(.system(size: 50))
+                .font(.system(size: 50, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1.opacity(0.5))
             
             Text("No posts yet")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text("Share your first update with your community")
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
             
@@ -288,7 +288,7 @@ struct BrandSketchbookScreen: View {
             ProgressView()
                 .tint(.modaicsChrome1)
             Text("Loading Sketchbook...")
-                .font(.system(size: 15))
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
     }
@@ -300,11 +300,11 @@ struct BrandSketchbookScreen: View {
                 .foregroundColor(.red)
             
             Text("Error")
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 20, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text(message)
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
             

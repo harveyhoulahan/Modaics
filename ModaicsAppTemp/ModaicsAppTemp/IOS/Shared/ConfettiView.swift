@@ -184,13 +184,13 @@ extension View {
         
         VStack(spacing: 30) {
             Text("Confetti Celebrations")
-                .font(.system(size: 32, weight: .bold))
+                .font(.system(size: 32, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Button("🎉 Regular Celebration") {
                 ConfettiManager.shared.celebrate(type: .regular)
             }
-            .font(.system(size: 16, weight: .semibold))
+            .font(.system(size: 16, weight: .medium, design: .monospaced))
             .foregroundColor(.modaicsDarkBlue)
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
@@ -206,7 +206,7 @@ extension View {
             Button("💰 Made a Sale!") {
                 ConfettiManager.shared.celebrate(type: .sale)
             }
-            .font(.system(size: 16, weight: .semibold))
+            .font(.system(size: 16, weight: .medium, design: .monospaced))
             .foregroundColor(.white)
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
@@ -216,7 +216,7 @@ extension View {
             Button("✨ First Listing") {
                 ConfettiManager.shared.celebrate(type: .firstListing)
             }
-            .font(.system(size: 16, weight: .semibold))
+            .font(.system(size: 16, weight: .medium, design: .monospaced))
             .foregroundColor(.white)
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
@@ -226,7 +226,7 @@ extension View {
             Button("🏆 Milestone Reached") {
                 ConfettiManager.shared.celebrate(type: .milestone)
             }
-            .font(.system(size: 16, weight: .semibold))
+            .font(.system(size: 16, weight: .medium, design: .monospaced))
             .foregroundColor(.modaicsDarkBlue)
             .padding(.horizontal, 24)
             .padding(.vertical, 12)

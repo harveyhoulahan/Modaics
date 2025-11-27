@@ -80,7 +80,7 @@ struct ToastView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: toast.type.icon)
-                .font(.system(size: 20))
+                .font(.system(size: 20, weight: .medium, design: .monospaced))
                 .foregroundColor(toast.type.color)
             
             Text(toast.message)

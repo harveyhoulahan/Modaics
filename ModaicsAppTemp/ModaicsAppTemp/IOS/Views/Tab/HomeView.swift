@@ -102,7 +102,7 @@ struct HomeView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("modaics")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24, weight: .medium, design: .monospaced))
                     .foregroundStyle(
                         LinearGradient(
                             colors: [.modaicsChrome1, .modaicsChrome2],
@@ -112,7 +112,7 @@ struct HomeView: View {
                     )
                 
                 Text(greetingText)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
 
@@ -187,11 +187,11 @@ struct HomeView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Happening Near You")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("Events worth checking out")
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -224,7 +224,7 @@ struct HomeView: View {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "sparkles")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [.modaicsChrome1, .modaicsChrome2],
@@ -234,7 +234,7 @@ struct HomeView: View {
                         )
                     
                     Text("Picked for You")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
@@ -250,7 +250,7 @@ struct HomeView: View {
                             .fill(Color.modaicsChrome2.opacity(0.2))
                             .overlay(
                                 Capsule()
-                                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                             )
                     )
             }
@@ -274,11 +274,11 @@ struct HomeView: View {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "flame.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.orange)
                     
                     Text("Trending Now")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
@@ -310,11 +310,11 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
                 Image(systemName: "leaf.circle.fill")
-                    .font(.system(size: 16))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.green)
                 
                 Text("Impact This Month")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -345,13 +345,13 @@ struct HomeView: View {
             }
             .padding(20)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                Rectangle()
                     .fill(Color.modaicsDarkBlue.opacity(0.6))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
+                        Rectangle()
                             .stroke(
                                 LinearGradient(
-                                    colors: [Color.green.opacity(0.3), Color.blue.opacity(0.3)],
+                                    colors: [Color.modaicsChrome1.opacity(0.15), Color.blue.opacity(0.3)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
@@ -366,7 +366,7 @@ struct HomeView: View {
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Quick Actions")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             LazyVGrid(columns: [
@@ -487,20 +487,20 @@ struct StatCard: View {
                 .foregroundColor(color)
             
             Text(value)
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 20, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text(label)
-                .font(.system(size: 12))
+                .font(.system(size: 12, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(color.opacity(0.3), lineWidth: 1)
                 )
         )
@@ -517,9 +517,9 @@ struct CuratedEventCard: View {
                 // Event type badge
                 HStack {
                     Image(systemName: event.type.icon)
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                     Text(event.type.rawValue)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                 }
                 .foregroundColor(.white)
                 .padding(.horizontal, 10)
@@ -531,7 +531,7 @@ struct CuratedEventCard: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(event.title)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                         .lineLimit(2)
                     
@@ -539,7 +539,7 @@ struct CuratedEventCard: View {
                         Image(systemName: "calendar")
                             .font(.caption)
                         Text(event.date, style: .date)
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.modaicsCottonLight)
                     
@@ -547,7 +547,7 @@ struct CuratedEventCard: View {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                         Text("\(event.attendees) attending")
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.modaicsCottonLight)
                 }
@@ -555,20 +555,20 @@ struct CuratedEventCard: View {
             .padding(16)
             .frame(width: 220, height: 200)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                Rectangle()
                     .fill(
                         LinearGradient(
                             colors: [
                                 Color.modaicsDarkBlue.opacity(0.8),
-                                event.type.color.opacity(0.2)
+                                Color.modaicsChrome1.opacity(0.15)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(event.type.color.opacity(0.4), lineWidth: 1.5)
+                        Rectangle()
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1.5)
                     )
             )
         }
@@ -583,7 +583,7 @@ fileprivate struct HomeCompactItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Image
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(Color.modaicsSurface2)
                 .aspectRatio(3/4, contentMode: .fit)
                 .frame(width: 140)
@@ -594,7 +594,7 @@ fileprivate struct HomeCompactItemCard: View {
                         }
                     }
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.brand)
@@ -602,13 +602,13 @@ fileprivate struct HomeCompactItemCard: View {
                     .foregroundColor(.modaicsChrome1)
                 
                 Text(item.name)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                     .lineLimit(2)
                 
                 if item.listingPrice > 0 {
                     Text("$\(Int(item.listingPrice))")
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome2)
                 }
             }
@@ -633,15 +633,15 @@ struct ImpactRow: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 Text(value)
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: 20, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text(description)
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight.opacity(0.7))
             }
             
@@ -670,21 +670,21 @@ struct QuickActionCard: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text(subtitle)
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
                                 colors: gradient.map { $0.opacity(0.4) },

@@ -69,7 +69,7 @@ struct ModaicsSecondaryButton: View {
             HStack(spacing: 8) {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .font(.system(size: 15, weight: .regular))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                 }
                 Text(title.uppercased())
                     .font(.system(size: 13, weight: .regular, design: .monospaced))
@@ -135,7 +135,7 @@ struct ModaicsChip: View {
             HStack(spacing: 6) {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .font(.system(size: 11, weight: .regular))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                 }
                 Text(title.uppercased())
                     .font(.system(size: 11, weight: .medium, design: .monospaced))

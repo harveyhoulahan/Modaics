@@ -22,11 +22,11 @@ struct SketchbookPollView: View {
             // Question
             HStack(spacing: 8) {
                 Image(systemName: "chart.bar.doc.horizontal")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                 
                 Text(question)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -40,7 +40,7 @@ struct SketchbookPollView: View {
             // Footer
             HStack {
                 Text("\(totalVotes) vote\(totalVotes == 1 ? "" : "s")")
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 if isPollClosed {
@@ -56,7 +56,7 @@ struct SketchbookPollView: View {
         .clipShape(Rectangle())
         .overlay(
             Rectangle()
-                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -94,23 +94,23 @@ struct SketchbookPollView: View {
                     // Radio/Checkmark
                     if showResults {
                         Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                            .font(.system(size: 20))
+                            .font(.system(size: 20, weight: .medium, design: .monospaced))
                             .foregroundColor(isSelected ? .modaicsChrome1 : .modaicsCottonLight)
                     } else {
                         Image(systemName: "circle")
-                            .font(.system(size: 20))
+                            .font(.system(size: 20, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     
                     Text(option.label)
-                        .font(.system(size: 15))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Spacer()
                     
                     if showResults {
                         Text("\(Int(percentage * 100))%")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                     }
                 }

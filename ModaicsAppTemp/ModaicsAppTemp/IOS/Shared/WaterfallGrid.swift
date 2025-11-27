@@ -31,18 +31,18 @@ struct WaterfallItemCard: View {
                     
                     // Name
                     Text(item.name)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                         .lineLimit(2)
                     
                     // Price & condition
                     HStack(spacing: 8) {
                         Text("$\(Int(item.listingPrice))")
-                            .font(.system(size: 15, weight: .bold))
+                            .font(.system(size: 15, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                         
                         Text(item.condition.rawValue)
-                            .font(.system(size: 11))
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     
@@ -50,7 +50,7 @@ struct WaterfallItemCard: View {
                     if item.sustainabilityScore.totalScore >= 70 {
                         HStack(spacing: 4) {
                             Image(systemName: "leaf.fill")
-                                .font(.system(size: 10))
+                                .font(.system(size: 10, weight: .medium, design: .monospaced))
                             Text("Sustainable")
                                 .font(.system(size: 11, weight: .medium))
                         }

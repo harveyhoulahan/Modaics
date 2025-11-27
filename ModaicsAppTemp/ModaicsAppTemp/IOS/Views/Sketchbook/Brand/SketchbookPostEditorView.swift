@@ -97,7 +97,7 @@ struct SketchbookPostEditorView: View {
     private var postTypeSelector: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Post Type")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -114,7 +114,7 @@ struct SketchbookPostEditorView: View {
         Button(action: { selectedPostType = type }) {
             VStack(spacing: 8) {
                 Image(systemName: type.icon)
-                    .font(.system(size: 24))
+                    .font(.system(size: 24, weight: .medium, design: .monospaced))
                     .foregroundColor(selectedPostType == type ? .modaicsDarkBlue : .modaicsChrome1)
                 
                 Text(type.displayName)
@@ -153,18 +153,18 @@ struct SketchbookPostEditorView: View {
     private var titleSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Title")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             TextField("Give your post a title...", text: $title)
                 .foregroundColor(.modaicsCotton)
-                .font(.system(size: 15))
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
                 .padding()
                 .background(Color.modaicsSurface2)
                 .clipShape(Rectangle())
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         }
     }
@@ -174,7 +174,7 @@ struct SketchbookPostEditorView: View {
     private var captionSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Description")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             ZStack(alignment: .topLeading) {
@@ -187,7 +187,7 @@ struct SketchbookPostEditorView: View {
                 
                 TextEditor(text: $caption)
                     .foregroundColor(.modaicsCotton)
-                    .font(.system(size: 15))
+                    .font(.system(size: 15, weight: .medium, design: .monospaced))
                     .scrollContentBackground(.hidden)
                     .frame(minHeight: 120)
                     .padding(.horizontal, 12)
@@ -197,7 +197,7 @@ struct SketchbookPostEditorView: View {
             .clipShape(Rectangle())
             .overlay(
                 Rectangle()
-                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
             )
         }
     }
@@ -207,7 +207,7 @@ struct SketchbookPostEditorView: View {
     private var mediaSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Media")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             PhotosPicker(
@@ -217,7 +217,7 @@ struct SketchbookPostEditorView: View {
             ) {
                 HStack(spacing: 12) {
                     Image(systemName: "photo.on.rectangle.angled")
-                        .font(.system(size: 24))
+                        .font(.system(size: 24, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     VStack(alignment: .leading, spacing: 4) {
@@ -234,7 +234,7 @@ struct SketchbookPostEditorView: View {
                     
                     if !selectedPhotos.isEmpty {
                         Text("\(selectedPhotos.count)")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
@@ -247,7 +247,7 @@ struct SketchbookPostEditorView: View {
                 .clipShape(Rectangle())
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
             }
         }
@@ -258,13 +258,13 @@ struct SketchbookPostEditorView: View {
     private var pollSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Poll Details")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             // Poll Question
             VStack(alignment: .leading, spacing: 8) {
                 Text("Question")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 TextField("What should we decide?", text: $pollQuestion)
@@ -274,14 +274,14 @@ struct SketchbookPostEditorView: View {
                     .clipShape(Rectangle())
                     .overlay(
                         Rectangle()
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                     )
             }
             
             // Poll Options
             VStack(alignment: .leading, spacing: 8) {
                 Text("Options")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 ForEach(0..<pollOptions.count, id: \.self) { index in
@@ -293,7 +293,7 @@ struct SketchbookPostEditorView: View {
                             .clipShape(Rectangle())
                             .overlay(
                                 Rectangle()
-                                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                             )
                         
                         if pollOptions.count > 2 {
@@ -321,7 +321,7 @@ struct SketchbookPostEditorView: View {
             // Poll Duration
             VStack(alignment: .leading, spacing: 8) {
                 Text("Duration: \(Int(pollDuration)) days")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 Slider(value: $pollDuration, in: 1...30, step: 1)
@@ -335,7 +335,7 @@ struct SketchbookPostEditorView: View {
     private var eventSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(selectedPostType == .event ? "Event Date" : "Drop Date")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             DatePicker(
@@ -351,7 +351,7 @@ struct SketchbookPostEditorView: View {
             .clipShape(Rectangle())
             .overlay(
                 Rectangle()
-                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
             )
         }
     }
@@ -361,7 +361,7 @@ struct SketchbookPostEditorView: View {
     private var visibilitySection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Visibility")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             HStack(spacing: 12) {

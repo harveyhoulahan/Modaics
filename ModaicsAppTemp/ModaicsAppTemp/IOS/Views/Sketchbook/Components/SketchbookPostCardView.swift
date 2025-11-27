@@ -49,7 +49,7 @@ struct SketchbookPostCardView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 8) {
                         Text(post.postType.displayName)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 15, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCotton)
                         
                         if !post.isPublic {
@@ -60,7 +60,7 @@ struct SketchbookPostCardView: View {
                     }
                     
                     Text(timeAgoString(from: post.createdAt))
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -73,7 +73,7 @@ struct SketchbookPostCardView: View {
                             .font(.caption2)
                             .foregroundColor(.modaicsCottonLight)
                         Text(eventHighlight)
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                             .lineLimit(1)
                     }
@@ -95,11 +95,11 @@ struct SketchbookPostCardView: View {
         .padding(20)
         .background(
             Rectangle()
-                .fill(Color.modaicsDarkBlue.opacity(0.7))
+                .fill(Color.modaicsMidBlue)
         )
         .overlay(
             Rectangle()
-                .stroke(Color.modaicsLightBlue.opacity(0.4), lineWidth: 1)
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -115,7 +115,7 @@ struct SketchbookPostCardView: View {
             .frame(width: 40, height: 40)
             .overlay(
                 Image(systemName: post.postType.icon)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.white)
             )
     }
@@ -124,7 +124,7 @@ struct SketchbookPostCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Title
             Text(post.title)
-                .font(.system(size: 17, weight: .semibold))
+                .font(.system(size: 17, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             // Media
@@ -194,7 +194,7 @@ struct SketchbookPostCardView: View {
     private func captionView(_ caption: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(caption)
-                .font(.system(size: 15))
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
                 .lineLimit(showFullCaption ? nil : 3)
             
@@ -215,11 +215,11 @@ struct SketchbookPostCardView: View {
                 .foregroundColor(.modaicsChrome1.opacity(0.5))
             
             Text("Members-Only Content")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text("Join the Sketchbook to view this exclusive post")
-                .font(.system(size: 13))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
         }
@@ -244,7 +244,7 @@ struct SketchbookPostCardView: View {
             }) {
                 HStack(spacing: 6) {
                     Image(systemName: hasLiked ? "heart.fill" : "heart")
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(hasLiked ? .pink : .modaicsCottonLight)
                         .scaleEffect(hasLiked ? 1.1 : 1.0)
                     Text("\(likeCount)")
@@ -257,7 +257,7 @@ struct SketchbookPostCardView: View {
             Button(action: onComment) {
                 HStack(spacing: 6) {
                     Image(systemName: "bubble.right.fill")
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1.opacity(0.8))
                     Text("\(post.commentsCount)")
                         .font(.system(size: 14, weight: .medium))
@@ -268,7 +268,7 @@ struct SketchbookPostCardView: View {
             // View count
             HStack(spacing: 6) {
                 Image(systemName: "eye.fill")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome2.opacity(0.8))
                 Text("\(post.viewsCount)")
                     .font(.system(size: 14, weight: .medium))

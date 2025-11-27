@@ -134,7 +134,7 @@ struct ModernFiltersView: View {
                 Image(systemName: "dollarsign.circle.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Price Range")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -153,10 +153,10 @@ struct ModernFiltersView: View {
                     }
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        Rectangle()
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                     )
                 }
                 
@@ -174,10 +174,10 @@ struct ModernFiltersView: View {
                     }
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        Rectangle()
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                     )
                 }
             }
@@ -214,7 +214,7 @@ struct ModernFiltersView: View {
                 Image(systemName: "tshirt.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Category")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -243,7 +243,7 @@ struct ModernFiltersView: View {
                 Image(systemName: "star.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Condition")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -268,9 +268,9 @@ struct ModernFiltersView: View {
                                 ? Color.modaicsChrome1.opacity(0.15)
                                 : Color.modaicsDarkBlue.opacity(0.6)
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
+                            Rectangle()
                                 .stroke(
                                     tempFilters.selectedConditions.contains(condition)
                                         ? Color.modaicsChrome1.opacity(0.4)
@@ -292,7 +292,7 @@ struct ModernFiltersView: View {
                 Image(systemName: "ruler.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Size")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -319,20 +319,20 @@ struct ModernFiltersView: View {
                 Image(systemName: "leaf.fill")
                     .foregroundColor(.green)
                 Text("Sustainability")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
             VStack(spacing: 12) {
                 HStack {
                     Text("Minimum Score")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                     
                     Spacer()
                     
                     Text("\(Int(tempFilters.minSustainabilityScore))")
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                 }
                 
@@ -350,12 +350,12 @@ struct ModernFiltersView: View {
                         .font(.caption)
                         .foregroundColor(.green)
                     Text("All items are secondhand and help reduce fashion waste")
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 .padding(12)
-                .background(Color.green.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(Color.modaicsChrome1.opacity(0.15))
+                .clipShape(Rectangle())
             }
         }
     }
@@ -368,7 +368,7 @@ struct ModernFiltersView: View {
                 Image(systemName: "cart.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Marketplace")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             

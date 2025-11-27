@@ -84,11 +84,11 @@ struct CommunityFeedView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Community")
-                        .font(.system(size: 24, weight: .bold))
+                        .font(.system(size: 24, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("Melbourne's sustainable fashion hub")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -124,11 +124,11 @@ struct CommunityFeedView: View {
             }
             .padding(12)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(Color.modaicsDarkBlue.opacity(0.6))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        Rectangle()
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                     )
             )
             .padding(.horizontal, 20)
@@ -187,7 +187,7 @@ struct CommunityFeedView: View {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "trophy.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [.yellow, .orange],
@@ -197,34 +197,34 @@ struct CommunityFeedView: View {
                         )
                     
                     Text("This Week's Challenge")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
                 Spacer()
                 
                 Text("3 days left")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.orange)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(
                         Capsule()
-                            .fill(Color.orange.opacity(0.2))
+                            .fill(Color.modaicsChrome1.opacity(0.15))
                             .overlay(
                                 Capsule()
-                                    .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                             )
                     )
             }
             
             VStack(alignment: .leading, spacing: 12) {
                 Text("Zero-Waste Outfit Challenge")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text("Create an outfit using only thrifted, swapped, or upcycled items. Share your look and inspire others!")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                     .lineLimit(3)
                 
@@ -233,7 +233,7 @@ struct CommunityFeedView: View {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                         Text("127 participants")
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.modaicsCottonLight)
                     
@@ -241,7 +241,7 @@ struct CommunityFeedView: View {
                         Image(systemName: "leaf.fill")
                             .font(.caption)
                         Text("+100 Eco Points")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.green)
                 }
@@ -254,7 +254,7 @@ struct CommunityFeedView: View {
                         Image(systemName: "plus.circle.fill")
                         Text("Join Challenge")
                     }
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 15, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsDarkBlue)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
@@ -265,19 +265,19 @@ struct CommunityFeedView: View {
                             endPoint: .trailing
                         )
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
             }
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
-                                colors: [Color.yellow.opacity(0.3), Color.orange.opacity(0.3)],
+                                colors: [Color.yellow.opacity(0.3), Color.modaicsChrome1.opacity(0.15)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -293,11 +293,11 @@ struct CommunityFeedView: View {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "person.2.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     Text("Friend Activity")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
@@ -343,11 +343,11 @@ struct CommunityFeedView: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    Rectangle()
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
     }
@@ -358,11 +358,11 @@ struct CommunityFeedView: View {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "mappin.circle.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     Text("Sydney Hub")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
@@ -380,7 +380,7 @@ struct CommunityFeedView: View {
             }
             
             Text("Connect with sustainable fashion enthusiasts in your city. Share tips, organize meetups, and build a greener wardrobe together.")
-                .font(.system(size: 13))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
             
             HStack(spacing: 12) {
@@ -391,13 +391,13 @@ struct CommunityFeedView: View {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
-                                colors: [Color.modaicsChrome1.opacity(0.3), Color.green.opacity(0.3)],
+                                colors: [Color.modaicsChrome1.opacity(0.3), Color.modaicsChrome1.opacity(0.15)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -440,7 +440,7 @@ struct CommunityFeedView: View {
     private var upcomingEventsBanner: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Happening Soon")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -486,18 +486,18 @@ struct TabButton: View {
         Button(action: action) {
             HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                 Text(title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
             }
             .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .stroke(
                                 isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
                                 lineWidth: 1.5
@@ -521,9 +521,9 @@ struct CommunityEventCard: View {
                     // Event Type Badge
                     HStack(spacing: 6) {
                         Image(systemName: event.type.icon)
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                         Text(event.type.rawValue)
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.white)
                     .padding(.horizontal, 10)
@@ -535,19 +535,19 @@ struct CommunityEventCard: View {
                     
                     // Price or Free
                     Text(event.isFree ? "FREE" : "$\(Int(event.price))")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(event.isFree ? .green : .modaicsChrome1)
                 }
                 
                 // Title
                 Text(event.title)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                     .lineLimit(2)
                 
                 // Host
                 Text("by \(event.host)")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                 
                 // Details
@@ -556,7 +556,7 @@ struct CommunityEventCard: View {
                         Image(systemName: "calendar")
                             .font(.caption)
                         Text(event.date, style: .date)
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.modaicsCottonLight)
                     
@@ -564,7 +564,7 @@ struct CommunityEventCard: View {
                         Image(systemName: "mappin.circle.fill")
                             .font(.caption)
                         Text(event.location)
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .lineLimit(1)
                     }
                     .foregroundColor(.modaicsCottonLight)
@@ -573,11 +573,11 @@ struct CommunityEventCard: View {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                         Text("\(event.attendees)/\(event.maxAttendees) attending")
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                         
                         if event.isAlmostFull {
                             Text("• Almost Full!")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.system(size: 12, weight: .medium, design: .monospaced))
                                 .foregroundColor(.orange)
                         }
                     }
@@ -590,7 +590,7 @@ struct CommunityEventCard: View {
                         HStack(spacing: 8) {
                             ForEach(event.tags.prefix(4), id: \.self) { tag in
                                 Text("#\(tag)")
-                                    .font(.system(size: 11))
+                                    .font(.system(size: 11, weight: .medium, design: .monospaced))
                                     .foregroundColor(.modaicsChrome2)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
@@ -603,10 +603,10 @@ struct CommunityEventCard: View {
             }
             .padding(16)
             .background(Color.modaicsDarkBlue.opacity(0.6))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                Rectangle()
+                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -622,45 +622,45 @@ struct CompactEventCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Image(systemName: event.type.icon)
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(event.type.color)
                     
                     Spacer()
                     
                     Text(event.isFree ? "FREE" : "$\(Int(event.price))")
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                         .foregroundColor(event.isFree ? .green : .modaicsChrome1)
                 }
                 
                 Text(event.title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                     .lineLimit(2)
                     .frame(height: 36)
                 
                 HStack(spacing: 4) {
                     Image(systemName: "calendar")
-                        .font(.system(size: 10))
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
                     Text(event.date, style: .date)
-                        .font(.system(size: 11))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                 }
                 .foregroundColor(.modaicsCottonLight)
                 
                 HStack(spacing: 4) {
                     Image(systemName: "person.2.fill")
-                        .font(.system(size: 10))
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
                     Text("\(event.attendees)/\(event.maxAttendees)")
-                        .font(.system(size: 11))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                 }
                 .foregroundColor(.modaicsCottonLight)
             }
             .padding(12)
             .frame(width: 180)
             .background(Color.modaicsDarkBlue.opacity(0.6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(Rectangle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(event.type.color.opacity(0.5), lineWidth: 1.5)
+                Rectangle()
+                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1.5)
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -690,17 +690,17 @@ struct CommunityFeedPostCard: View {
                     .frame(width: 40, height: 40)
                     .overlay(
                         Text(String(post.user.prefix(1)).uppercased())
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsDarkBlue)
                     )
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(post.user)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text(timeAgoString(from: post.createdAt))
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -709,7 +709,7 @@ struct CommunityFeedPostCard: View {
             
             // Content
             Text(post.content)
-                .font(.system(size: 15))
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
                 .fixedSize(horizontal: false, vertical: true)
             
@@ -718,12 +718,12 @@ struct CommunityFeedPostCard: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(post.imageURLs, id: \.self) { imageURL in
-                            RoundedRectangle(cornerRadius: 12)
+                            Rectangle()
                                 .fill(Color.modaicsDarkBlue.opacity(0.4))
                                 .frame(width: 200, height: 200)
                                 .overlay(
                                     Text("📷")
-                                        .font(.system(size: 48))
+                                        .font(.system(size: 48, weight: .medium, design: .monospaced))
                                 )
                         }
                     }
@@ -741,7 +741,7 @@ struct CommunityFeedPostCard: View {
                         Image(systemName: isLiked ? "heart.fill" : "heart")
                             .foregroundColor(isLiked ? .red : .modaicsCottonLight)
                         Text("\(likeCount)")
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                 }
@@ -752,7 +752,7 @@ struct CommunityFeedPostCard: View {
                     HStack(spacing: 6) {
                         Image(systemName: "bubble.right")
                         Text("Reply")
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.modaicsCottonLight)
                 }
@@ -768,10 +768,10 @@ struct CommunityFeedPostCard: View {
         }
         .padding(16)
         .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+            Rectangle()
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -808,7 +808,7 @@ struct EventDetailSheet: View {
                             HStack(spacing: 6) {
                                 Image(systemName: event.type.icon)
                                 Text(event.type.rawValue)
-                                    .font(.system(size: 14, weight: .semibold))
+                                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                             }
                             .foregroundColor(.white)
                             .padding(.horizontal, 12)
@@ -821,12 +821,12 @@ struct EventDetailSheet: View {
                         
                         // Title
                         Text(event.title)
-                            .font(.system(size: 28, weight: .bold))
+                            .font(.system(size: 28, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCotton)
                         
                         // Host
                         Text("Hosted by \(event.host)")
-                            .font(.system(size: 16))
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                         
                         Divider()
@@ -846,11 +846,11 @@ struct EventDetailSheet: View {
                         // Description
                         VStack(alignment: .leading, spacing: 8) {
                             Text("About")
-                                .font(.system(size: 18, weight: .semibold))
+                                .font(.system(size: 18, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCotton)
                             
                             Text(event.description)
-                                .font(.system(size: 15))
+                                .font(.system(size: 15, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCottonLight)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -859,13 +859,13 @@ struct EventDetailSheet: View {
                         if !event.tags.isEmpty {
                             VStack(alignment: .leading, spacing: 12) {
                                 Text("Tags")
-                                    .font(.system(size: 18, weight: .semibold))
+                                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                                     .foregroundColor(.modaicsCotton)
                                 
                                 FlowLayout(spacing: 8) {
                                     ForEach(event.tags, id: \.self) { tag in
                                         Text("#\(tag)")
-                                            .font(.system(size: 13))
+                                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                                             .foregroundColor(.modaicsChrome2)
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 6)
@@ -927,13 +927,13 @@ fileprivate struct DetailRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 18))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1)
                 .frame(width: 24)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 Text(value)
                     .font(.system(size: 15, weight: .medium))
@@ -1003,7 +1003,7 @@ struct FriendActivityRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 16))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(color)
                 .frame(width: 32, height: 32)
                 .background(color.opacity(0.2))
@@ -1012,20 +1012,20 @@ struct FriendActivityRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 4) {
                     Text(userName)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text(action)
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
                 Text(itemName)
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                 
                 Text(timeAgo)
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight.opacity(0.7))
             }
             
@@ -1055,21 +1055,21 @@ struct LocalHubStat: View {
     var body: some View {
         VStack(spacing: 6) {
             Image(systemName: icon)
-                .font(.system(size: 16))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1)
             
             Text(value)
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text(label)
-                .font(.system(size: 11))
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 10)
+            Rectangle()
                 .fill(Color.modaicsSurface2)
         )
     }

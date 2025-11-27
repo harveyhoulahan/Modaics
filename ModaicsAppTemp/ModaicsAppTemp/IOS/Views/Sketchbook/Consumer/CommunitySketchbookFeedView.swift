@@ -50,11 +50,11 @@ struct CommunitySketchbookFeedView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Sketchbook Feed")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.system(size: 28, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("Latest from brands you follow")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -71,7 +71,7 @@ struct CommunitySketchbookFeedView: View {
                     .frame(width: 50, height: 50)
                     .overlay(
                         Image(systemName: "pencil.and.scribble")
-                            .font(.system(size: 22, weight: .bold))
+                            .font(.system(size: 22, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsDarkBlue)
                     )
             }
@@ -128,17 +128,17 @@ struct CommunitySketchbookFeedView: View {
                     .frame(width: 36, height: 36)
                     .overlay(
                         Image(systemName: "building.2.fill")
-                            .font(.system(size: 16))
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                     )
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(post.authorDisplayName ?? post.authorUsername ?? "Brand")
-                        .font(.system(size: 15, weight: .bold))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("View Sketchbook")
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -156,15 +156,15 @@ struct CommunitySketchbookFeedView: View {
     private var emptyFeedView: some View {
         VStack(spacing: 20) {
             Image(systemName: "tray")
-                .font(.system(size: 60))
+                .font(.system(size: 60, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1.opacity(0.5))
             
             Text("No Sketchbook Updates")
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 20, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text("Follow some brands to see their behind-the-scenes content here")
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
@@ -187,7 +187,7 @@ struct CommunitySketchbookFeedView: View {
             ProgressView()
                 .tint(.modaicsChrome1)
             Text("Loading feed...")
-                .font(.system(size: 15))
+                .font(.system(size: 15, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
         .padding(.vertical, 60)
@@ -200,11 +200,11 @@ struct CommunitySketchbookFeedView: View {
                 .foregroundColor(.red)
             
             Text("Error Loading Feed")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text(message)
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
             

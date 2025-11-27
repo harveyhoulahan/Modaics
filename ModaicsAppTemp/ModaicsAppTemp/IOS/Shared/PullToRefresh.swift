@@ -85,7 +85,7 @@ struct RefreshIndicator: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: isRefreshing ? "arrow.clockwise" : "arrow.down")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1)
                 .rotationEffect(.degrees(rotationAngle))
                 .animation(

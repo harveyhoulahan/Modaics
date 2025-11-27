@@ -58,7 +58,7 @@ struct SustainabilityLeaderboardView: View {
     private var header: some View {
         VStack(spacing: 12) {
             Image(systemName: "trophy.fill")
-                .font(.system(size: 48))
+                .font(.system(size: 48, weight: .medium, design: .monospaced))
                 .foregroundStyle(
                     LinearGradient(
                         colors: [.yellow, .orange],
@@ -68,11 +68,11 @@ struct SustainabilityLeaderboardView: View {
                 )
             
             Text("Sustainability Champions")
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 24, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             Text("Making fashion more sustainable, one swap at a time")
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .multilineTextAlignment(.center)
         }
@@ -89,15 +89,15 @@ struct SustainabilityLeaderboardView: View {
                     }
                 } label: {
                     Text(period.rawValue)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(selectedPeriod == period ? .modaicsCotton : .modaicsCottonLight)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(
-                            RoundedRectangle(cornerRadius: 10)
+                            Rectangle()
                                 .fill(selectedPeriod == period ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
+                                    Rectangle()
                                         .stroke(
                                             selectedPeriod == period ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
                                             lineWidth: 1.5
@@ -145,7 +145,7 @@ struct SustainabilityLeaderboardView: View {
     private var leaderboardList: some View {
         VStack(spacing: 12) {
             Text("Top Contributors")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -166,18 +166,18 @@ struct SustainabilityLeaderboardView: View {
     private var yourPosition: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Your Position")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             HStack(spacing: 16) {
                 Text("#24")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                     .frame(width: 60)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(viewModel.currentUser?.username ?? "You")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     HStack(spacing: 8) {
@@ -185,7 +185,7 @@ struct SustainabilityLeaderboardView: View {
                             Image(systemName: "leaf.fill")
                                 .font(.caption)
                             Text("\(viewModel.currentUser?.ecoPoints ?? 0) points")
-                                .font(.system(size: 13))
+                                .font(.system(size: 13, weight: .medium, design: .monospaced))
                         }
                         .foregroundColor(.green)
                         
@@ -193,7 +193,7 @@ struct SustainabilityLeaderboardView: View {
                             Image(systemName: "arrow.up.circle.fill")
                                 .font(.caption)
                             Text("+3 this week")
-                                .font(.system(size: 13))
+                                .font(.system(size: 13, weight: .medium, design: .monospaced))
                         }
                         .foregroundColor(.blue)
                     }
@@ -203,21 +203,21 @@ struct SustainabilityLeaderboardView: View {
                 
                 VStack(alignment: .trailing, spacing: 4) {
                     Text("Top 15%")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.green)
                     
                     Text("320 pts to #23")
-                        .font(.system(size: 11))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(Color.modaicsChrome1.opacity(0.1))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 2)
+                        Rectangle()
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 2)
                     )
             )
         }
@@ -270,14 +270,14 @@ struct PodiumCard: View {
             
             VStack(spacing: 4) {
                 Text(userName)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 HStack(spacing: 4) {
                     Image(systemName: "leaf.fill")
                         .font(.caption2)
                     Text("\(ecoPoints)")
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                 }
                 .foregroundColor(.green)
             }
@@ -292,9 +292,9 @@ struct PodiumCard: View {
                     )
                 )
                 .frame(height: isWinner ? 120 : rank == 2 ? 90 : 70)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(Rectangle())
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    Rectangle()
                         .stroke(color.opacity(0.5), lineWidth: 2)
                 )
         }
@@ -312,7 +312,7 @@ struct LeaderboardRow: View {
         HStack(spacing: 16) {
             // Rank
             Text("\(rank)")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
                 .frame(width: 40, alignment: .center)
             
@@ -328,21 +328,21 @@ struct LeaderboardRow: View {
                 .frame(width: 40, height: 40)
                 .overlay(
                     Text(String(userName.prefix(1)))
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.white)
                 )
             
             // User info
             VStack(alignment: .leading, spacing: 4) {
                 Text(userName)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 15, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 HStack(spacing: 4) {
                     Image(systemName: "leaf.fill")
                         .font(.caption2)
                     Text("\(ecoPoints) points")
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                 }
                 .foregroundColor(.green)
             }
@@ -355,7 +355,7 @@ struct LeaderboardRow: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.4))
         )
     }
@@ -367,7 +367,7 @@ struct LeaderboardRow: View {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.caption)
                 Text(change)
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
             }
             .foregroundColor(.green)
         } else if change.hasPrefix("-") {
@@ -375,7 +375,7 @@ struct LeaderboardRow: View {
                 Image(systemName: "arrow.down.circle.fill")
                     .font(.caption)
                 Text(change)
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
             }
             .foregroundColor(.red)
         } else {
@@ -383,7 +383,7 @@ struct LeaderboardRow: View {
                 Image(systemName: "minus.circle.fill")
                     .font(.caption)
                 Text(change)
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
             }
             .foregroundColor(.modaicsCottonLight)
         }

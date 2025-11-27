@@ -239,7 +239,7 @@ struct FeatureTag: View {
                 .fill(Color.modaicsChrome1.opacity(0.15))
                 .overlay(
                     Capsule()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
     }

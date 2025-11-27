@@ -103,7 +103,7 @@ struct SimplifiedTabBar: View {
                 } label: {
                     VStack(spacing: 3) {
                         Image(systemName: tabs[index].1)
-                            .font(.system(size: 20, weight: .regular))
+                            .font(.system(size: 20, weight: .medium, design: .monospaced))
                             .foregroundColor(selectedTab == index ? .modaicsChrome1 : .modaicsCottonLight)
                         
                         Text(tabs[index].0.uppercased())
@@ -274,7 +274,7 @@ struct MosaicTabItem: View {
                 // Subtle border for unselected state
                 if !isSelected {
                     HexagonShape()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                         .frame(width: 44, height: 44)
                 }
                 
@@ -426,13 +426,13 @@ struct PremiumWelcomeCard: View {
                         endPoint: .trailing
                     )
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
             }
             .padding(.top, 8)
         }
         .padding(24)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(
                     LinearGradient(
                         colors: [
@@ -444,7 +444,7 @@ struct PremiumWelcomeCard: View {
                     )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
                                 colors: [.modaicsChrome1.opacity(0.3), .modaicsChrome2.opacity(0.3)],
@@ -499,7 +499,7 @@ struct PremiumFeatureTile: View {
         .frame(maxWidth: .infinity)
         .frame(height: 140)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(
                     LinearGradient(
                         colors: [
@@ -511,7 +511,7 @@ struct PremiumFeatureTile: View {
                     )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    Rectangle()
                         .stroke(
                             LinearGradient(
                                 colors: gradient.map { $0.opacity(0.3) },

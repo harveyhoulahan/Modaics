@@ -155,11 +155,11 @@ struct EnhancedDiscoverView: View {
             // Enhanced search bar
             HStack(spacing: 12) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .fill(.ultraThinMaterial)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                            Rectangle()
+                                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                         )
                     
                     HStack(spacing: 12) {
@@ -181,7 +181,7 @@ struct EnhancedDiscoverView: View {
                                 isSearching = false
                             } label: {
                                 Image(systemName: "xmark.circle.fill")
-                                    .font(.system(size: 16))
+                                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                                     .foregroundColor(.modaicsChrome2)
                             }
                         }
@@ -195,7 +195,7 @@ struct EnhancedDiscoverView: View {
                     // Voice search action
                 } label: {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .fill(.ultraThinMaterial)
                             .frame(width: 48, height: 48)
                         
@@ -264,11 +264,11 @@ struct EnhancedDiscoverView: View {
             }
         }
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    Rectangle()
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
         .padding(.horizontal, 16)
@@ -356,7 +356,7 @@ struct EnhancedDiscoverView: View {
                 // Navigate to events
             } label: {
                 HStack {
-                    RoundedRectangle(cornerRadius: 8)
+                    Rectangle()
                         .fill(
                             LinearGradient(
                                 colors: [.blue, .purple],
@@ -389,7 +389,7 @@ struct EnhancedDiscoverView: View {
                 }
                 .padding(16)
                 .background(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .fill(.ultraThinMaterial)
                 )
             }
@@ -533,7 +533,7 @@ struct TrendingItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .aspectRatio(3/4, contentMode: .fit)
                     .frame(width: 140)
@@ -546,7 +546,7 @@ struct TrendingItemCard: View {
                             Image(systemName: "flame.fill")
                                 .font(.caption2)
                             Text("TRENDING")
-                                .font(.system(size: 8, weight: .bold))
+                                .font(.system(size: 8, weight: .medium, design: .monospaced))
                         }
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
@@ -609,7 +609,7 @@ struct SustainabilityLeaderboardRow: View {
             }
             
             // Item image
-            RoundedRectangle(cornerRadius: 8)
+            Rectangle()
                 .fill(Color.gray.opacity(0.2))
                 .frame(width: 50, height: 60)
             
@@ -642,10 +642,10 @@ struct SustainabilityLeaderboardRow: View {
         }
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .stroke(Color.modaicsAccent.opacity(0.2), lineWidth: 1)
                 )
         )
@@ -657,7 +657,7 @@ struct CompactItemCard: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            RoundedRectangle(cornerRadius: 8)
+            Rectangle()
                 .fill(Color.gray.opacity(0.2))
                 .frame(width: 80, height: 100)
             
@@ -683,7 +683,7 @@ struct CommunityPickCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .aspectRatio(3/4, contentMode: .fit)
                     .frame(width: 120)
@@ -695,7 +695,7 @@ struct CommunityPickCard: View {
                             Image(systemName: "heart.fill")
                                 .font(.caption2)
                             Text("LOVED")
-                                .font(.system(size: 8, weight: .bold))
+                                .font(.system(size: 8, weight: .medium, design: .monospaced))
                         }
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
@@ -735,7 +735,7 @@ struct AIRecommendationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .aspectRatio(3/4, contentMode: .fit)
                     .frame(width: 130)
@@ -748,7 +748,7 @@ struct AIRecommendationCard: View {
                             Image(systemName: "sparkles")
                                 .font(.caption2)
                             Text("AI PICK")
-                                .font(.system(size: 8, weight: .bold))
+                                .font(.system(size: 8, weight: .medium, design: .monospaced))
                         }
                         .foregroundColor(.modaicsDarkBlue)
                         .padding(.horizontal, 8)
@@ -896,7 +896,7 @@ struct EnhancedFilterView: View {
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(.ultraThinMaterial)
             )
         }
@@ -993,7 +993,7 @@ struct EnhancedFilterView: View {
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(.ultraThinMaterial)
             )
         }
@@ -1026,11 +1026,11 @@ struct EnhancedFilterView: View {
                             .frame(height: 60)
                             .frame(maxWidth: .infinity)
                             .background(
-                                RoundedRectangle(cornerRadius: 8)
+                                Rectangle()
                                     .fill(.ultraThinMaterial)
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                                        Rectangle()
+                                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                                     )
                             )
                         }
@@ -1061,7 +1061,7 @@ struct EnhancedFilterView: View {
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(.ultraThinMaterial)
             )
         }
@@ -1082,13 +1082,13 @@ struct EnhancedFilterView: View {
                 .pickerStyle(MenuPickerStyle())
                 .padding(12)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    Rectangle()
                         .fill(.ultraThinMaterial)
                 )
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(.ultraThinMaterial)
             )
         }
@@ -1113,11 +1113,11 @@ struct FilterToggle: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    Rectangle()
                         .fill(isOn ? Color.modaicsChrome1 : Color.clear)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                            Rectangle()
+                                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                         )
                 )
         }
@@ -1309,7 +1309,7 @@ struct AIStyleAssistantView: View {
             }
             .padding(20)
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                Rectangle()
                     .fill(.ultraThinMaterial)
             )
         }
@@ -1326,16 +1326,16 @@ struct AIStyleAssistantView: View {
             VStack(spacing: 16) {
                 ForEach(0..<3) { index in
                     HStack {
-                        RoundedRectangle(cornerRadius: 8)
+                        Rectangle()
                             .fill(Color.gray.opacity(0.3))
                             .frame(width: 60, height: 80)
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            RoundedRectangle(cornerRadius: 4)
+                            Rectangle()
                                 .fill(Color.gray.opacity(0.3))
                                 .frame(height: 16)
                             
-                            RoundedRectangle(cornerRadius: 4)
+                            Rectangle()
                                 .fill(Color.gray.opacity(0.2))
                                 .frame(height: 12)
                                 .frame(width: 100)
@@ -1348,7 +1348,7 @@ struct AIStyleAssistantView: View {
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(.ultraThinMaterial)
             )
         }
@@ -1370,12 +1370,12 @@ struct StyleOptionCard: View {
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .fill(isSelected
                               ? AnyShapeStyle(Color.modaicsChrome1)      // selected
                               : AnyShapeStyle(.ultraThinMaterial))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
+                            Rectangle()
                                 .stroke(
                                     isSelected ? Color.clear : Color.modaicsChrome1.opacity(0.3),
                                     lineWidth: 1

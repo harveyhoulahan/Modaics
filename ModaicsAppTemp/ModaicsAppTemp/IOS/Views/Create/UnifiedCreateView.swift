@@ -90,11 +90,11 @@ struct UnifiedCreateView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Create")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text("Share with the community")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             
@@ -142,16 +142,16 @@ struct TypeSelectorCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
                     Image(systemName: type.icon)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(isSelected ? .modaicsChrome1 : .modaicsChrome1.opacity(0.7))
                     
                     Text(type.rawValue)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
                 }
                 
                 Text(type.subtitle)
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
@@ -160,10 +160,10 @@ struct TypeSelectorCard: View {
             .padding(.vertical, 12)
             .frame(width: 200, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .stroke(
                                 isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
                                 lineWidth: 1.5
@@ -218,7 +218,7 @@ struct CreateItemView: View {
                             Text("Analyze with AI")
                         }
                     }
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsDarkBlue)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -229,7 +229,7 @@ struct CreateItemView: View {
                             endPoint: .trailing
                         )
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .clipShape(Rectangle())
                 }
                 .disabled(isAnalyzing)
             }
@@ -248,7 +248,7 @@ struct CreateItemView: View {
                         Image(systemName: "checkmark.circle.fill")
                         Text("List Item")
                     }
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsDarkBlue)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -259,7 +259,7 @@ struct CreateItemView: View {
                             endPoint: .trailing
                         )
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .clipShape(Rectangle())
                 }
             }
         }
@@ -272,7 +272,7 @@ struct CreateItemView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Text("Photos")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Spacer()
@@ -295,7 +295,7 @@ struct CreateItemView: View {
                 } label: {
                     VStack(spacing: 16) {
                         Image(systemName: "camera.fill")
-                            .font(.system(size: 40))
+                            .font(.system(size: 40, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                         
                         Text("Add Photos")
@@ -303,15 +303,15 @@ struct CreateItemView: View {
                             .foregroundColor(.modaicsCotton)
                         
                         Text("AI will detect brand, color, and condition")
-                            .font(.system(size: 12))
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     .frame(maxWidth: .infinity, minHeight: 200)
                     .background(
-                        RoundedRectangle(cornerRadius: 16)
+                        Rectangle()
                             .fill(Color.modaicsDarkBlue.opacity(0.6))
                             .overlay(
-                                RoundedRectangle(cornerRadius: 16)
+                                Rectangle()
                                     .stroke(style: StrokeStyle(lineWidth: 2, dash: [8]))
                                     .foregroundColor(.modaicsChrome1.opacity(0.3))
                             )
@@ -326,7 +326,7 @@ struct CreateItemView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 120, height: 160)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .clipShape(Rectangle())
                                 
                                 Button {
                                     selectedImages.remove(at: index)
@@ -350,11 +350,11 @@ struct CreateItemView: View {
                             }
                             .frame(width: 120, height: 160)
                             .background(
-                                RoundedRectangle(cornerRadius: 12)
+                                Rectangle()
                                     .fill(Color.modaicsDarkBlue.opacity(0.6))
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 2)
+                                        Rectangle()
+                                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 2)
                                     )
                             )
                         }
@@ -396,7 +396,7 @@ struct CreateItemView: View {
                         }
                         .padding()
                         .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                     }
                 }
                 
@@ -422,7 +422,7 @@ struct CreateItemView: View {
                         }
                         .padding()
                         .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                     }
                 }
             }
@@ -450,7 +450,7 @@ struct CreateItemView: View {
                     }
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
             }
             
@@ -483,7 +483,7 @@ struct CreateItemView: View {
                     .foregroundColor(.modaicsCotton)
                     .scrollContentBackground(.hidden)
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
             }
         }
     }
@@ -574,11 +574,11 @@ struct FormField: View {
                 .padding(14)
                 .foregroundColor(.modaicsCotton)
                 .background(
-                    RoundedRectangle(cornerRadius: 12)
+                    Rectangle()
                         .fill(Color.modaicsDarkBlue.opacity(0.6))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                            Rectangle()
+                                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                         )
                 )
         }
@@ -602,16 +602,16 @@ struct CreateEventView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Image(systemName: "calendar.badge.plus")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     Text("Event Details")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
                 Text("Create an event for the community to join")
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             .padding(.bottom, 4)
@@ -648,7 +648,7 @@ struct CreateEventView: View {
                     }
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
             }
             
@@ -664,7 +664,7 @@ struct CreateEventView: View {
                     .datePickerStyle(.compact)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
             }
             
             FormField(title: "Capacity", text: $capacity, placeholder: "50")
@@ -682,7 +682,7 @@ struct CreateEventView: View {
                     .foregroundColor(.modaicsCotton)
                     .scrollContentBackground(.hidden)
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
             }
             
             // Submit
@@ -693,7 +693,7 @@ struct CreateEventView: View {
                     Image(systemName: "calendar.badge.plus")
                     Text("Create Event")
                 }
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsDarkBlue)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -704,7 +704,7 @@ struct CreateEventView: View {
                         endPoint: .trailing
                     )
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(Rectangle())
             }
             .disabled(eventName.isEmpty || location.isEmpty)
             .opacity(eventName.isEmpty || location.isEmpty ? 0.5 : 1)
@@ -734,16 +734,16 @@ struct CreateWorkshopView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Image(systemName: "hammer.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     Text("Workshop Details")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
                 Text("Share your skills with the community")
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             .padding(.bottom, 4)
@@ -774,7 +774,7 @@ struct CreateWorkshopView: View {
                         }
                         .padding()
                         .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                     }
                 }
                 
@@ -796,7 +796,7 @@ struct CreateWorkshopView: View {
                     .foregroundColor(.modaicsCotton)
                     .scrollContentBackground(.hidden)
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
             }
             
             // Submit
@@ -807,7 +807,7 @@ struct CreateWorkshopView: View {
                     Image(systemName: "hammer.fill")
                     Text("Create Workshop")
                 }
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsDarkBlue)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -818,7 +818,7 @@ struct CreateWorkshopView: View {
                         endPoint: .trailing
                     )
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(Rectangle())
             }
             .disabled(workshopName.isEmpty || instructor.isEmpty)
             .opacity(workshopName.isEmpty || instructor.isEmpty ? 0.5 : 1)
@@ -845,16 +845,16 @@ struct CreatePostView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Image(systemName: "square.and.pencil")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     Text("Community Post")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                 }
                 
                 Text("Share tips, finds, or inspiration")
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             .padding(.bottom, 4)
@@ -871,7 +871,7 @@ struct CreatePostView: View {
                     .foregroundColor(.modaicsCotton)
                     .scrollContentBackground(.hidden)
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
             }
             
             // Add Images
@@ -888,7 +888,7 @@ struct CreatePostView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -899,7 +899,7 @@ struct CreatePostView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 100, height: 100)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .clipShape(Rectangle())
                                 
                                 Button {
                                     selectedImages.remove(at: index)
@@ -919,7 +919,7 @@ struct CreatePostView: View {
                                 .foregroundColor(.modaicsChrome1)
                                 .frame(width: 100, height: 100)
                                 .background(Color.modaicsDarkBlue.opacity(0.6))
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .clipShape(Rectangle())
                         }
                     }
                 }
@@ -933,7 +933,7 @@ struct CreatePostView: View {
                     Image(systemName: "paperplane.fill")
                     Text("Share Post")
                 }
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsDarkBlue)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -944,7 +944,7 @@ struct CreatePostView: View {
                         endPoint: .trailing
                     )
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(Rectangle())
             }
             .disabled(postContent.isEmpty)
             .opacity(postContent.isEmpty ? 0.5 : 1)

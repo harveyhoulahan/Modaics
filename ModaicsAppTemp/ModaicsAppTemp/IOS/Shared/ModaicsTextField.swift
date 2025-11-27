@@ -26,7 +26,7 @@ struct ModaicsTextField: View {
             HStack(spacing: 12) {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                 }
                 
@@ -46,7 +46,7 @@ struct ModaicsTextField: View {
             .clipShape(Rectangle())
             .overlay(
                 Rectangle()
-                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
             )
         }
     }
@@ -83,7 +83,7 @@ struct ModaicsPicker<T: Hashable & RawRepresentable>: View where T.RawValue == S
                 HStack {
                     if let icon = icon {
                         Image(systemName: icon)
-                            .font(.system(size: 16))
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                     }
                     
@@ -101,7 +101,7 @@ struct ModaicsPicker<T: Hashable & RawRepresentable>: View where T.RawValue == S
                 .clipShape(Rectangle())
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
             }
         }

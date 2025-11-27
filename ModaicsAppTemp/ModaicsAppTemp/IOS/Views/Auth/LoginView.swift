@@ -183,7 +183,7 @@ fileprivate struct ImpactStat: View {
                 .font(.title2)
                 .foregroundColor(.modaicsChrome1)
             Text(value)
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 22, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             Text(label)
                 .font(.caption)

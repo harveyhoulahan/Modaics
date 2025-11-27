@@ -84,12 +84,12 @@ struct SketchbookSettingsView: View {
     private var basicInfoSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Basic Information")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("Name")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 TextField("Sketchbook name", text: $name)
@@ -99,13 +99,13 @@ struct SketchbookSettingsView: View {
                     .clipShape(Rectangle())
                     .overlay(
                         Rectangle()
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                     )
             }
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("Description")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 ZStack(alignment: .topLeading) {
@@ -118,7 +118,7 @@ struct SketchbookSettingsView: View {
                     
                     TextEditor(text: $description)
                         .foregroundColor(.modaicsCotton)
-                        .font(.system(size: 15))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .scrollContentBackground(.hidden)
                         .frame(height: 100)
                         .padding(.horizontal, 12)
@@ -128,7 +128,7 @@ struct SketchbookSettingsView: View {
                 .clipShape(Rectangle())
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
             }
         }
@@ -139,7 +139,7 @@ struct SketchbookSettingsView: View {
     private var accessPolicySection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Access Policy")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             ForEach(SketchbookAccessPolicy.allCases, id: \.self) { policy in
@@ -158,11 +158,11 @@ struct SketchbookSettingsView: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(policy.displayName)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text(policy.description)
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                         .multilineTextAlignment(.leading)
                 }
@@ -193,7 +193,7 @@ struct SketchbookSettingsView: View {
     private var membershipSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Membership Requirements")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             if accessPolicy == .membersOnly {
@@ -206,7 +206,7 @@ struct SketchbookSettingsView: View {
                 }
             } else {
                 Text("Membership requirements only apply when Access Policy is set to Members Only")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                     .padding()
                     .background(Color.modaicsSurface2)
@@ -225,11 +225,11 @@ struct SketchbookSettingsView: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(rule.displayName)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text(rule.description)
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                         .multilineTextAlignment(.leading)
                 }
@@ -258,25 +258,25 @@ struct SketchbookSettingsView: View {
     private var minSpendField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Minimum Spend Amount")
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
             
             HStack {
                 Text("$")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 TextField("0", text: $minSpendAmount)
                     .keyboardType(.numberPad)
                     .foregroundColor(.modaicsCotton)
-                    .font(.system(size: 18))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
             }
             .padding()
             .background(Color.modaicsSurface2)
             .clipShape(Rectangle())
             .overlay(
                 Rectangle()
-                    .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                    .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
             )
         }
     }

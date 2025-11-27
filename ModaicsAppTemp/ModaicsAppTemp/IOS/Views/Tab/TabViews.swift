@@ -128,19 +128,19 @@ struct DiscoverView: View {
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: mode.icon)
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                         
                         Text(mode.rawValue)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 15, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(discoverMode == mode ? .modaicsCotton : .modaicsCottonLight)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(
-                        RoundedRectangle(cornerRadius: 12)
+                        Rectangle()
                             .fill(discoverMode == mode ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 12)
+                                Rectangle()
                                     .stroke(
                                         discoverMode == mode ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
                                         lineWidth: 1.5
@@ -160,11 +160,11 @@ struct DiscoverView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Discover Items")
-                        .font(.system(size: 24, weight: .bold))
+                        .font(.system(size: 24, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Text("AI-powered search across platforms")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 
@@ -213,11 +213,11 @@ struct DiscoverView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Events Near You")
-                            .font(.system(size: 24, weight: .bold))
+                            .font(.system(size: 24, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCotton)
                         
                         Text("Swaps, pop-ups & workshops")
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     
@@ -263,11 +263,11 @@ struct DiscoverView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Sustainable Brands")
-                            .font(.system(size: 24, weight: .bold))
+                            .font(.system(size: 24, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCotton)
                         
                         Text("Verified ethical & local producers")
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     
@@ -329,11 +329,11 @@ struct DiscoverView: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text("Sustainability Verified")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text("FibreTrace certified brands")
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
             }
             
@@ -345,11 +345,11 @@ struct DiscoverView: View {
         }
         .padding(14)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.green.opacity(0.3), lineWidth: 1)
+                    Rectangle()
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
     }
@@ -398,7 +398,7 @@ struct DiscoverView: View {
         }
         .padding()
         .background(Color.modaicsDarkBlue.opacity(0.4))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
     }
     
     private var searchBar: some View {
@@ -415,7 +415,7 @@ struct DiscoverView: View {
                 .font(.title3)
             
             TextField("Search items, brands, or styles...", text: $viewModel.searchQuery)
-                .font(.system(size: 16))
+                .font(.system(size: 16, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
                 .textFieldStyle(.plain)
             
@@ -433,7 +433,7 @@ struct DiscoverView: View {
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 32, height: 32)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .clipShape(Rectangle())
                         }
                         
                         Image(systemName: "xmark.circle.fill")
@@ -451,7 +451,7 @@ struct DiscoverView: View {
                 showImageSourcePicker = true
             } label: {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8)
+                    Rectangle()
                         .fill(LinearGradient(
                             colors: [.modaicsChrome1.opacity(0.2), .modaicsChrome2.opacity(0.2)],
                             startPoint: .topLeading,
@@ -470,7 +470,7 @@ struct DiscoverView: View {
                 showFilters = true
             } label: {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8)
+                    Rectangle()
                         .fill(Color.modaicsChrome1.opacity(0.15))
                         .frame(width: 36, height: 36)
                     
@@ -482,7 +482,7 @@ struct DiscoverView: View {
         }
         .padding()
         .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
     }
     
     private var categoryScroll: some View {
@@ -529,7 +529,7 @@ struct DiscoverView: View {
     private var emptyState: some View {
         VStack(spacing: 20) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 60))
+                .font(.system(size: 60, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsChrome1.opacity(0.3))
             
             Text("No items found")
@@ -618,14 +618,14 @@ struct CreateView: View {
                             createListing()
                         } label: {
                             Text("List Item")
-                                .font(.system(size: 18, weight: .semibold))
+                                .font(.system(size: 18, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsDarkBlue)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
                                 .background(
                                     LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
                                                  startPoint: .leading, endPoint: .trailing))
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .clipShape(Rectangle())
                         }
                         .disabled(itemName.isEmpty || brand.isEmpty || selectedImages.isEmpty)
                         .opacity(itemName.isEmpty || brand.isEmpty || selectedImages.isEmpty ? 0.5 : 1)
@@ -645,22 +645,22 @@ struct CreateView: View {
     private var imageSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Photos")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             if selectedImages.isEmpty {
                 Button(action: { showImagePicker = true }) {
                     VStack(spacing: 16) {
                         Image(systemName: "camera.fill")
-                            .font(.system(size: 40))
+                            .font(.system(size: 40, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                         Text("Add Photos")
-                            .font(.system(size: 16))
+                            .font(.system(size: 16, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     .frame(maxWidth: .infinity, minHeight: 200)
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .clipShape(Rectangle())
                 }
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -670,7 +670,7 @@ struct CreateView: View {
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 120, height: 160)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .clipShape(Rectangle())
                         }
                         
                         Button(action: { showImagePicker = true }) {
@@ -681,7 +681,7 @@ struct CreateView: View {
                             }
                             .frame(width: 120, height: 160)
                             .background(Color.modaicsDarkBlue.opacity(0.6))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(Rectangle())
                         }
                     }
                 }
@@ -692,7 +692,7 @@ struct CreateView: View {
     private var detailsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Item Details")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             VStack(spacing: 12) {
@@ -702,7 +702,7 @@ struct CreateView: View {
                         .foregroundColor(.modaicsCotton)
                         .padding()
                         .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                 }
                 
                 // Brand
@@ -711,7 +711,7 @@ struct CreateView: View {
                         .foregroundColor(.modaicsCotton)
                         .padding()
                         .background(Color.modaicsDarkBlue.opacity(0.6))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(Rectangle())
                 }
                 
                 // Category Picker
@@ -724,7 +724,7 @@ struct CreateView: View {
                     .pickerStyle(.menu)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
                 
                 // Size Picker
@@ -737,7 +737,7 @@ struct CreateView: View {
                     .pickerStyle(.menu)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
                 
                 // Condition Picker
@@ -750,7 +750,7 @@ struct CreateView: View {
                     .pickerStyle(.menu)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 }
             }
         }
@@ -759,7 +759,7 @@ struct CreateView: View {
     private var pricingSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Pricing")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             VStack(spacing: 12) {
@@ -774,7 +774,7 @@ struct CreateView: View {
                 }
                 .padding()
                 .background(Color.modaicsDarkBlue.opacity(0.6))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 
                 HStack {
                     Text("Listing Price")
@@ -787,7 +787,7 @@ struct CreateView: View {
                 }
                 .padding()
                 .background(Color.modaicsDarkBlue.opacity(0.6))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
                 
                 if let original = Double(originalPrice),
                    let listing = Double(listingPrice),
@@ -807,7 +807,7 @@ struct CreateView: View {
     private var descriptionSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Description")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             TextEditor(text: $description)
@@ -816,14 +816,14 @@ struct CreateView: View {
                 .foregroundColor(.modaicsCotton)
                 .scrollContentBackground(.hidden)
                 .background(Color.modaicsDarkBlue.opacity(0.6))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(Rectangle())
         }
     }
     
     private var sustainabilitySection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Sustainability")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 18, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
             
             VStack(spacing: 12) {
@@ -831,13 +831,13 @@ struct CreateView: View {
                     .foregroundColor(.modaicsCotton)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 
                 Toggle("Certified Sustainable", isOn: $sustainabilityInfo.isCertified)
                     .foregroundColor(.modaicsCotton)
                     .padding()
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(Rectangle())
                 
                 if sustainabilityInfo.isCertified {
                     VStack(alignment: .leading, spacing: 8) {
@@ -862,7 +862,7 @@ struct CreateView: View {
                                 }
                                 .padding()
                                 .background(Color.modaicsDarkBlue.opacity(0.6))
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .clipShape(Rectangle())
                             }
                         }
                     }
@@ -979,7 +979,7 @@ struct CommunityView: View {
             if viewModel.communityPosts.isEmpty {
                 VStack(spacing: 20) {
                     Image(systemName: "bubble.left.and.bubble.right")
-                        .font(.system(size: 60))
+                        .font(.system(size: 60, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1.opacity(0.3))
                     
                     Text("No posts yet")
@@ -1008,7 +1008,7 @@ struct CommunityView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Image(systemName: "calendar")
-                    .font(.system(size: 60))
+                    .font(.system(size: 60, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1.opacity(0.3))
                 
                 Text("No upcoming events")
@@ -1028,7 +1028,7 @@ struct CommunityView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Image(systemName: "arrow.left.arrow.right")
-                    .font(.system(size: 60))
+                    .font(.system(size: 60, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1.opacity(0.3))
                 
                 Text("No active swaps")
@@ -1051,7 +1051,7 @@ struct ItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Image placeholder
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.4))
                 .aspectRatio(3/4, contentMode: .fit)
                 .overlay(
@@ -1093,7 +1093,7 @@ struct ItemCard: View {
                 
                 HStack {
                     Text("$\(Int(max(0, item.listingPrice.isNaN ? 0 : item.listingPrice)))")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsChrome1)
                     
                     if !item.originalPrice.isNaN && !item.listingPrice.isNaN && 
@@ -1113,7 +1113,7 @@ struct ItemCard: View {
             }
         }
         .background(Color.modaicsDarkBlue.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
     }
 }
 
@@ -1215,11 +1215,11 @@ struct ItemDetailView: View {
         .tabViewStyle(.page(indexDisplayMode: .automatic))
         .frame(height: 420)
         .background(Color.black.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(Rectangle())
     }
     
     private var placeholderImage: some View {
-        RoundedRectangle(cornerRadius: 0)
+        Rectangle()
             .fill(Color.gray.opacity(0.2))
             .overlay(
                 VStack(spacing: 12) {
@@ -1303,7 +1303,7 @@ struct ItemDetailView: View {
         }
         .padding()
         .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
     }
 
     private var sustainabilityCard: some View {
@@ -1326,7 +1326,7 @@ struct ItemDetailView: View {
                         Text(cert)
                             .font(.caption2)
                             .padding(.horizontal, 8).padding(.vertical, 4)
-                            .background(Color.green.opacity(0.15))
+                            .background(Color.modaicsChrome1.opacity(0.15))
                             .foregroundColor(.green)
                             .clipShape(Rectangle())
                     }
@@ -1334,8 +1334,8 @@ struct ItemDetailView: View {
             }
         }
         .padding()
-        .background(Color.green.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(Color.modaicsChrome1.opacity(0.15))
+        .clipShape(Rectangle())
     }
 
     private var descriptionBlock: some View {
@@ -1426,7 +1426,7 @@ fileprivate struct DetailRow: View {
 struct EventCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            RoundedRectangle(cornerRadius: 12)
+            Rectangle()
                 .fill(LinearGradient(
                     colors: [.blue, .purple],
                     startPoint: .topLeading,
@@ -1486,7 +1486,7 @@ struct EventCard: View {
             .padding()
         }
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         
     }
 }
@@ -1496,7 +1496,7 @@ struct SwapRequestCard: View {
         HStack(spacing: 16) {
             // Your item
             VStack {
-                RoundedRectangle(cornerRadius: 8)
+                Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .frame(width: 80, height: 100)
                 Text("Your Item")
@@ -1509,7 +1509,7 @@ struct SwapRequestCard: View {
             
             // Their item
             VStack {
-                RoundedRectangle(cornerRadius: 8)
+                Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .frame(width: 80, height: 100)
                 Text("Their Item")
@@ -1534,7 +1534,7 @@ struct SwapRequestCard: View {
         }
         .padding()
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         
     }
 }
@@ -1544,7 +1544,7 @@ struct ReviewCard: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Circle()
-                    .fill(Color.orange.opacity(0.3))
+                    .fill(Color.modaicsChrome1.opacity(0.15))
                     .frame(width: 40, height: 40)
                 
                 VStack(alignment: .leading) {
@@ -1574,7 +1574,7 @@ struct ReviewCard: View {
         }
         .padding()
         .background(Color.gray.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(Rectangle())
     }
 }
 
@@ -1770,9 +1770,9 @@ struct EventMapCard: View {
                     // Event type badge
                     HStack(spacing: 6) {
                         Image(systemName: event.type.icon)
-                            .font(.system(size: 11))
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
                         Text(event.type.rawValue)
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.white)
                     .padding(.horizontal, 10)
@@ -1797,7 +1797,7 @@ struct EventMapCard: View {
                 }
                 
                 Text(event.title)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                     .lineLimit(2)
                 
@@ -1806,13 +1806,13 @@ struct EventMapCard: View {
                         Image(systemName: "calendar")
                             .font(.caption)
                         Text(event.date, style: .date)
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                         
                         Text("•")
                             .foregroundColor(.modaicsCottonLight.opacity(0.5))
                         
                         Text(event.date, style: .time)
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                     }
                     .foregroundColor(.modaicsCottonLight)
                     
@@ -1820,7 +1820,7 @@ struct EventMapCard: View {
                         Image(systemName: "mappin.circle.fill")
                             .font(.caption)
                         Text(event.location)
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .lineLimit(1)
                     }
                     .foregroundColor(.modaicsCottonLight)
@@ -1829,17 +1829,17 @@ struct EventMapCard: View {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                         Text("\(event.attendees) attending")
-                            .font(.system(size: 13))
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                         
                         Spacer()
                         
                         if event.isFree {
                             Text("Free")
-                                .font(.system(size: 12, weight: .bold))
+                                .font(.system(size: 12, weight: .medium, design: .monospaced))
                                 .foregroundColor(.green)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
-                                .background(Color.green.opacity(0.2))
+                                .background(Color.modaicsChrome1.opacity(0.15))
                                 .clipShape(Rectangle())
                         }
                     }
@@ -1848,7 +1848,7 @@ struct EventMapCard: View {
                 
                 if !event.description.isEmpty {
                     Text(event.description)
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                         .lineLimit(2)
                         .padding(.top, 4)
@@ -1856,11 +1856,11 @@ struct EventMapCard: View {
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                Rectangle()
                     .fill(Color.modaicsDarkBlue.opacity(0.6))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(event.type.color.opacity(0.3), lineWidth: 1.5)
+                        Rectangle()
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1.5)
                     )
             )
         }
@@ -1894,19 +1894,19 @@ struct EventTypeFilterChip: View {
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: type.icon)
-                .font(.system(size: 12))
+                .font(.system(size: 12, weight: .medium, design: .monospaced))
             
             Text(type.rawValue)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
         }
         .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            Rectangle()
                 .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    Rectangle()
                         .stroke(
                             isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
                             lineWidth: 1
@@ -1924,7 +1924,7 @@ struct BrandCard: View {
         VStack(alignment: .leading, spacing: 12) {
             // Brand logo/image placeholder
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
+                Rectangle()
                     .fill(
                         LinearGradient(
                             colors: [Color.modaicsChrome1.opacity(0.3), Color.modaicsChrome2.opacity(0.3)],
@@ -1935,7 +1935,7 @@ struct BrandCard: View {
                     .aspectRatio(1, contentMode: .fit)
                 
                 Image(systemName: "building.2.fill")
-                    .font(.system(size: 32))
+                    .font(.system(size: 32, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                 
                 // Sustainability badge overlay
@@ -1961,12 +1961,12 @@ struct BrandCard: View {
             
             VStack(alignment: .leading, spacing: 6) {
                 Text(brand.name)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.system(size: 15, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                     .lineLimit(1)
                 
                 Text(brand.tagline)
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                     .lineLimit(2)
                 
@@ -1974,10 +1974,10 @@ struct BrandCard: View {
                     Image(systemName: "star.fill")
                         .font(.caption2)
                     Text(String(format: "%.1f", brand.rating))
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                     
                     Text("(\(brand.itemCount) items)")
-                        .font(.system(size: 11))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 .foregroundColor(.yellow)
@@ -1985,12 +1985,12 @@ struct BrandCard: View {
         }
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            Rectangle()
                 .fill(Color.modaicsDarkBlue.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .stroke(
-                            brand.hasSustainabilityBadge ? Color.green.opacity(0.3) : Color.modaicsChrome1.opacity(0.2),
+                            brand.hasSustainabilityBadge ? Color.modaicsChrome1.opacity(0.15) : Color.modaicsChrome1.opacity(0.2),
                             lineWidth: 1
                         )
                 )
@@ -2027,7 +2027,7 @@ struct CategoryChip: View {
     var body: some View {
         Button(action: action) {
             Text(category?.rawValue ?? "All")
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCotton)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)

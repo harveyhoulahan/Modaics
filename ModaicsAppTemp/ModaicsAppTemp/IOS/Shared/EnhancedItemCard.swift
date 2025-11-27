@@ -269,7 +269,7 @@ struct SustainabilityBadge: View {
                     .frame(width: 20, height: 20)
                 
                 Image(systemName: "leaf.fill")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundColor(score.sustainabilityColor)
                     .scaleEffect(1.0 + sin(animationProgress * .pi * 2) * 0.1)
             }
@@ -281,7 +281,7 @@ struct SustainabilityBadge: View {
             
             if score.fibreTraceVerified {
                 Image(systemName: "checkmark.seal.fill")
-                    .font(.system(size: 10))
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsAccent)
             }
         }
@@ -319,7 +319,7 @@ struct CategoryPill: View {
                     .fill(Color.modaicsChrome1.opacity(0.15))
                     .overlay(
                         Capsule()
-                            .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 0.5)
+                            .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 0.5)
                     )
             )
     }
@@ -663,7 +663,7 @@ struct CommunityPostCard: View {
                 .fill(.ultraThinMaterial)
                 .overlay(
                     Rectangle()
-                        .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
         )
     }
@@ -849,7 +849,7 @@ struct SimilarityBadge: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: "sparkles")
-                .font(.system(size: 10, weight: .bold))
+                .font(.system(size: 10, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsAccent)
             
             Text("\(Int(similarity * 100))%")

@@ -209,8 +209,8 @@ struct SustainabilityIcon: View {
                 .fill(
                     RadialGradient(
                         colors: [
-                            Color.green.opacity(0.2),
-                            Color.green.opacity(0.05)
+                            Color.modaicsChrome1.opacity(0.15),
+                            Color.modaicsChrome1.opacity(0.15)
                         ],
                         center: .center,
                         startRadius: 0,
@@ -317,11 +317,11 @@ extension Font {
 // MARK: - Industrial Minimalist Theme (Grey/Red - Above the Clouds/Grailed Inspired)
 extension Color {
     // Industrial grey backgrounds - concrete aesthetic
-    static let modaicsDarkBlue = Color(red: 0.22, green: 0.22, blue: 0.22)      // Dark concrete grey
-    static let modaicsMidBlue = Color(red: 0.28, green: 0.28, blue: 0.28)        // Medium concrete
-    static let modaicsLightBlue = Color(red: 0.35, green: 0.35, blue: 0.35)      // Light concrete
+    static let modaicsDarkBlue = Color(red: 0.22, green: 0.22, blue: 0.22)      // Dark concrete grey - main background
+    static let modaicsMidBlue = Color(red: 0.35, green: 0.35, blue: 0.35)        // Medium concrete - floating boxes
+    static let modaicsLightBlue = Color(red: 0.45, green: 0.45, blue: 0.45)      // Light concrete - borders
     
-    // Deep industrial red - subtle undertones only
+    // Deep industrial red - subtle glow only
     static let modaicsChrome1 = Color(red: 0.65, green: 0.15, blue: 0.15)       // Deep maroon red
     static let modaicsChrome2 = Color(red: 0.55, green: 0.12, blue: 0.12)       // Deeper maroon
     static let modaicsChrome3 = Color(red: 0.60, green: 0.14, blue: 0.14)       // Mid maroon
@@ -337,13 +337,13 @@ extension Color {
 
 // MARK: - Industrial Typography
 extension Font {
-    // Heading styles - uppercase, monospaced, tracked
+    // Heading styles - uppercase, monospaced, tracked (SAME AS TAB BAR)
     static func modaicsTitle() -> Font {
-        .system(size: 24, weight: .semibold, design: .monospaced)
+        .system(size: 24, weight: .medium, design: .monospaced)
     }
     
     static func modaicsHeadline() -> Font {
-        .system(size: 18, weight: .semibold, design: .monospaced)
+        .system(size: 18, weight: .medium, design: .monospaced)
     }
     
     static func modaicsSubheadline() -> Font {
@@ -352,31 +352,31 @@ extension Font {
     
     // Body styles
     static func modaicsBody() -> Font {
-        .system(size: 14, weight: .regular, design: .monospaced)
+        .system(size: 14, weight: .medium, design: .monospaced)
     }
     
     static func modaicsBodyBold() -> Font {
-        .system(size: 14, weight: .semibold, design: .monospaced)
+        .system(size: 14, weight: .medium, design: .monospaced)
     }
     
     // Small text
     static func modaicsCaption() -> Font {
-        .system(size: 12, weight: .regular, design: .monospaced)
+        .system(size: 12, weight: .medium, design: .monospaced)
     }
     
     static func modaicsCaptionBold() -> Font {
         .system(size: 12, weight: .medium, design: .monospaced)
     }
     
-    // Tiny labels
+    // Tiny labels (EXACT SAME AS TAB BAR)
     static func modaicsLabel() -> Font {
         .system(size: 10, weight: .medium, design: .monospaced)
     }
 }
 
 extension View {
-    // Helper to apply uppercase + tracking
-    func industrialText(tracking: CGFloat = 1.0) -> some View {
+    // Helper to apply uppercase + tracking (SAME AS TAB BAR: 0.5 tracking)
+    func industrialText(tracking: CGFloat = 0.5) -> some View {
         self.tracking(tracking)
     }
 }

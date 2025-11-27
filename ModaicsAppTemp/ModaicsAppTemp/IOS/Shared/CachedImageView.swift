@@ -56,7 +56,7 @@ struct CachedImageView: View {
             )
             
             Image(systemName: "photo")
-                .font(.system(size: 40))
+                .font(.system(size: 40, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight.opacity(0.5))
         }
     }

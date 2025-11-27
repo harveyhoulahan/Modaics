@@ -167,20 +167,20 @@ struct OptimizedItemCard: View {
             // Brand tag
             if !item.brand.isEmpty && item.brand != "Unknown" {
                 Text(item.brand.uppercased())
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                     .tracking(0.5)
                     .lineLimit(1)
             } else {
                 // Spacer to maintain consistent height
                 Text(" ")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .opacity(0)
             }
             
             // Title
             Text(item.name)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCotton)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
@@ -190,7 +190,7 @@ struct OptimizedItemCard: View {
             // Price and category
             HStack {
                 Text("$\(Int(item.listingPrice))")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundStyle(
                         LinearGradient(
                             colors: [.modaicsChrome1, .modaicsChrome2],

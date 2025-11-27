@@ -127,7 +127,7 @@ struct SmartCreateView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             Image(systemName: "sparkles")
-                .font(.system(size: 40))
+                .font(.system(size: 40, weight: .medium, design: .monospaced))
                 .foregroundStyle(
                     LinearGradient(
                         colors: [.modaicsChrome1, .modaicsChrome2],
@@ -143,7 +143,7 @@ struct SmartCreateView: View {
             
             if !hasAnalyzed {
                 Text("Our AI will automatically detect item details")
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                     .multilineTextAlignment(.center)
             }
@@ -159,12 +159,12 @@ struct SmartCreateView: View {
                 Image(systemName: "photo.on.rectangle.angled")
                     .foregroundColor(.modaicsChrome1)
                 Text("Photos")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 Spacer()
                 if !selectedImages.isEmpty {
                     Text("\(selectedImages.count) photo\(selectedImages.count == 1 ? "" : "s")")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
             }
@@ -173,7 +173,7 @@ struct SmartCreateView: View {
                 Button(action: { showImagePicker = true }) {
                     VStack(spacing: 16) {
                         Image(systemName: "camera.fill")
-                            .font(.system(size: 48))
+                            .font(.system(size: 48, weight: .medium, design: .monospaced))
                             .foregroundStyle(
                                 LinearGradient(
                                     colors: [.modaicsChrome1, .modaicsChrome2],
@@ -184,18 +184,18 @@ struct SmartCreateView: View {
                         
                         VStack(spacing: 6) {
                             Text("Add Photos")
-                                .font(.system(size: 18, weight: .semibold))
+                                .font(.system(size: 18, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCotton)
                             Text("AI will analyze your item")
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
                                 .foregroundColor(.modaicsCottonLight)
                         }
                     }
                     .frame(maxWidth: .infinity, minHeight: 240)
                     .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .clipShape(Rectangle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
+                        Rectangle()
                             .stroke(
                                 LinearGradient(
                                     colors: [.modaicsChrome1.opacity(0.3), .modaicsChrome2.opacity(0.3)],
@@ -215,7 +215,7 @@ struct SmartCreateView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 140, height: 180)
-                                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                                    .clipShape(Rectangle())
                                 
                                 // Remove button
                                 Button {
@@ -227,7 +227,7 @@ struct SmartCreateView: View {
                                     }
                                 } label: {
                                     Image(systemName: "xmark.circle.fill")
-                                        .font(.system(size: 24))
+                                        .font(.system(size: 24, weight: .medium, design: .monospaced))
                                         .foregroundColor(.modaicsCotton)
                                         .background(Circle().fill(Color.modaicsDarkBlue))
                                 }
@@ -239,7 +239,7 @@ struct SmartCreateView: View {
                         Button(action: { showImagePicker = true }) {
                             VStack(spacing: 8) {
                                 Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 32))
+                                    .font(.system(size: 32, weight: .medium, design: .monospaced))
                                     .foregroundColor(.modaicsChrome1)
                                 Text("Add More")
                                     .font(.system(size: 12, weight: .medium))
@@ -247,9 +247,9 @@ struct SmartCreateView: View {
                             }
                             .frame(width: 140, height: 180)
                             .background(Color.modaicsDarkBlue.opacity(0.4))
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .clipShape(Rectangle())
                             .overlay(
-                                RoundedRectangle(cornerRadius: 16)
+                                Rectangle()
                                     .stroke(Color.modaicsChrome1.opacity(0.3), style: StrokeStyle(lineWidth: 2, dash: [8]))
                             )
                         }
@@ -278,7 +278,7 @@ struct SmartCreateView: View {
         }
         .padding(20)
         .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
     }
     
     private var aiConfidenceBadge: some View {
@@ -294,11 +294,11 @@ struct SmartCreateView: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("AI Analysis Complete")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 if let confidence = VisionAnalysisService.shared.analysisResult?.confidence {
                     Text("\(Int(confidence * 100))% confidence")
-                        .font(.system(size: 14))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
             }
@@ -313,10 +313,10 @@ struct SmartCreateView: View {
         }
         .padding(16)
         .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(Rectangle())
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+            Rectangle()
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -328,7 +328,7 @@ struct SmartCreateView: View {
                 Image(systemName: "tag.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Item Details")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -428,7 +428,7 @@ struct SmartCreateView: View {
                 Image(systemName: "dollarsign.circle.fill")
                     .foregroundColor(.modaicsChrome1)
                 Text("Pricing")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -461,8 +461,8 @@ struct SmartCreateView: View {
                         .foregroundColor(.green)
                 }
                 .padding(12)
-                .background(Color.green.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(Color.modaicsChrome1.opacity(0.15))
+                .clipShape(Rectangle())
             }
         }
     }
@@ -475,11 +475,11 @@ struct SmartCreateView: View {
                 Image(systemName: "text.alignleft")
                     .foregroundColor(.modaicsChrome1)
                 Text("Description")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
                 
                 Text("(Optional)")
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight)
                 
                 Spacer()
@@ -495,7 +495,7 @@ struct SmartCreateView: View {
             // Show AI suggestion hint if description is populated
             if !description.isEmpty && hasAnalyzed {
                 Text("💡 AI-generated. Feel free to edit or replace with your own description.")
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCottonLight.opacity(0.8))
                     .padding(.top, 4)
             }
@@ -510,7 +510,7 @@ struct SmartCreateView: View {
                 Image(systemName: "leaf.fill")
                     .foregroundColor(.green)
                 Text("Sustainability")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             
@@ -533,7 +533,7 @@ struct SmartCreateView: View {
                                 .foregroundColor(.modaicsCotton)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(Color.green.opacity(0.1))
+                                .background(Color.modaicsChrome1.opacity(0.15))
                                 .clipShape(Rectangle())
                             }
                         }
@@ -546,17 +546,17 @@ struct SmartCreateView: View {
                     .foregroundColor(.green)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Secondhand Marketplace")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     Text("Help reduce fashion waste")
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 Spacer()
             }
             .padding(12)
-            .background(Color.green.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(Color.modaicsChrome1.opacity(0.15))
+            .clipShape(Rectangle())
         }
     }
     

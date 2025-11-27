@@ -28,18 +28,18 @@ struct SketchbookHeaderView: View {
                     .frame(width: 80, height: 80)
                     .overlay(
                         Image(systemName: "pencil.and.scribble")
-                            .font(.system(size: 34, weight: .bold))
+                            .font(.system(size: 34, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsDarkBlue)
                     )
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(sketchbook.title)
-                        .font(.system(size: 24, weight: .bold))
+                        .font(.system(size: 24, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     if let description = sketchbook.description, !description.isEmpty {
                         Text(description)
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                             .lineLimit(2)
                     }
@@ -82,7 +82,7 @@ struct SketchbookHeaderView: View {
         .clipShape(Rectangle())
         .overlay(
             Rectangle()
-                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -92,14 +92,14 @@ struct SketchbookHeaderView: View {
         VStack(spacing: 4) {
             HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 12))
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsChrome1)
                 Text(value)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18, weight: .medium, design: .monospaced))
                     .foregroundColor(.modaicsCotton)
             }
             Text(label)
-                .font(.system(size: 11))
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
                 .foregroundColor(.modaicsCottonLight)
         }
     }
@@ -118,7 +118,7 @@ struct SketchbookHeaderView: View {
         .clipShape(Rectangle())
         .overlay(
             Capsule()
-                .stroke(Color.modaicsLightBlue.opacity(0.3), lineWidth: 1)
+                .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -128,37 +128,37 @@ struct SketchbookHeaderView: View {
                 // Already a member
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 16))
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.green)
                     
                     Text("You're a member")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 15, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCotton)
                     
                     Spacer()
                     
                     Text("Since \(membership.joinedAt.formatted(.dateTime.month(.abbreviated).year()))")
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundColor(.modaicsCottonLight)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                .background(Color.green.opacity(0.1))
+                .background(Color.modaicsChrome1.opacity(0.15))
                 .clipShape(Rectangle())
                 .overlay(
                     Rectangle()
-                        .stroke(Color.green.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.modaicsChrome1.opacity(0.15), lineWidth: 1)
                 )
             } else if !sketchbook.isPublic {
                 // Need to join
                 VStack(spacing: 8) {
                     HStack(spacing: 8) {
                         Image(systemName: "lock.fill")
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsChrome1)
                         
                         Text(sketchbook.membershipRequirementText)
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(.modaicsCottonLight)
                     }
                     
