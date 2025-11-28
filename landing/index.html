@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modaics — Circular fashion, AI-first</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1f1f1f;
+      --surface: #2e2e2e;
+      --surface-alt: #383838;
+      --border: #595959;
+      --text-main: #f2f2f2;
+      --text-muted: #9a9a9a;
+      --accent: #d92626; /* modaicsChrome1 / appRed */
+      --accent-soft: #a81e1e;
+      --denim: #9a9a9a; /* modaicsDenim1 */
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "DM Mono", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(140% 140% at 10% 10%, rgba(217, 38, 38, 0.08), transparent),
+                  radial-gradient(120% 120% at 80% 0%, rgba(255, 255, 255, 0.04), transparent),
+                  linear-gradient(180deg, #171717 0%, #0f0f0f 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 96px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      background: rgba(46, 46, 46, 0.6);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 20px;
+      z-index: 10;
+      border-radius: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "DM Mono", monospace;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(217, 38, 38, 0.9), rgba(168, 30, 30, 0.9));
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.05);
+    }
+
+    nav {
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    nav a {
+      padding: 8px 10px;
+      border-radius: 6px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    nav a:hover {
+      background: rgba(217, 38, 38, 0.08);
+      color: var(--text-main);
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(217, 38, 38, 0.18);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-top: 32px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.1;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-copy h1 span {
+      color: var(--accent);
+    }
+
+    .hero-copy p {
+      margin: 0 0 20px;
+      color: var(--text-muted);
+      max-width: 560px;
+      font-size: 17px;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 22px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(46, 46, 46, 0.7);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+    }
+
+    .pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(217, 38, 38, 0.1);
+    }
+
+    .hero-panel {
+      background: radial-gradient(80% 80% at 50% 30%, rgba(217, 38, 38, 0.2), transparent),
+                  rgba(46, 46, 46, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(closest-side, rgba(217, 38, 38, 0.12), transparent);
+      top: -80px;
+      right: -80px;
+      filter: blur(10px);
+    }
+
+    .hero-panel .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "DM Mono", monospace;
+      letter-spacing: 0.08em;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .hero-panel .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(56, 56, 56, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stat .label {
+      color: var(--text-muted);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .stat .trend {
+      color: var(--accent);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    section {
+      margin-top: 64px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      max-width: 700px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: rgba(46, 46, 46, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      min-height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(217, 38, 38, 0.12);
+      border: 1px solid rgba(217, 38, 38, 0.4);
+      margin-bottom: 12px;
+    }
+
+    .icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: #fff;
+      stroke-width: 1.6;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      background: rgba(46, 46, 46, 0.7);
+    }
+
+    .step .step-tag {
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 16px;
+      background: rgba(46, 46, 46, 0.7);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .metric .value {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .metric .label {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .cta-panel {
+      margin-top: 56px;
+      padding: 24px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(217, 38, 38, 0.2), rgba(217, 38, 38, 0));
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    footer {
+      margin-top: 64px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    @media (max-width: 720px) {
+      header { position: static; }
+      .hero { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <div style="font-size:14px;color:#fff;">modaics</div>
+          <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.12em;">circular fashion</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#flow">How it works</a>
+        <a href="#metrics">Impact</a>
+        <a href="#cta">Get the app</a>
+      </nav>
+      <a class="cta" href="#cta">Launch Modaics</a>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="pills">
+          <span class="pill"><span class="dot"></span> AI-led discovery</span>
+          <span class="pill"><span class="dot"></span> Community-first</span>
+          <span class="pill"><span class="dot"></span> Circular wardrobe</span>
+        </div>
+        <h1>
+          The <span>AI platform</span> for circular fashion, resale, and community-led styling.
+        </h1>
+        <p>
+          Modaics brings resale marketplaces, sustainable brands, community events, and AI-powered styling into a single experience. Search visually, swap locally, and grow a wardrobe that respects the planet.
+        </p>
+        <div class="pills" style="margin-top:6px;">
+          <span class="pill">Depop · Grailed · Vinted aggregation</span>
+          <span class="pill">Local swaps & workshops</span>
+          <span class="pill">Sustainability scores</span>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
+          <a class="cta" href="#cta">Download iOS build</a>
+          <a class="cta" style="background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--text-main);" href="#features">See what’s inside</a>
+        </div>
+      </div>
+
+      <div class="hero-panel" aria-label="Modaics preview">
+        <div class="panel-title">Live pulse · Modaics</div>
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="label">Active seekers</div>
+            <div class="value">12.4k</div>
+            <div class="trend">+18% this week</div>
+          </div>
+          <div class="stat">
+            <div class="label">Circular swaps</div>
+            <div class="value">3.2k</div>
+            <div class="trend">Carbon saved 12.8t</div>
+          </div>
+          <div class="stat">
+            <div class="label">Sustainable picks</div>
+            <div class="value">24,180</div>
+            <div class="trend">Curated by community</div>
+          </div>
+          <div class="stat">
+            <div class="label">Events near you</div>
+            <div class="value">86</div>
+            <div class="trend">Workshops & swap meets</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-head">
+        <div>
+          <h2>Everything in one Modaics flow</h2>
+          <p>Mirrors the in-app experience: gradient chrome, monospaced accents, and modular cards that carry the Modaics look you know from the iOS build.</p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v4m0 10v4m4-8h4M4 12h4m6.8-6.8-2.9 2.9m0 7.8 2.9 2.9m-7.8 0 2.9-2.9m0-7.8-2.9-2.9" /></svg>
+          </div>
+          <h3>AI-powered discovery</h3>
+          <p>Computer vision and text search across Depop, Grailed, Vinted, and Modaics brand partners. Upload an image or type a vibe—get ranked matches instantly.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 11h10M7 15h6M7 7h7m-5 13h8a2 2 0 0 0 2-2V6l-4-4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z" /></svg>
+          </div>
+          <h3>Personalized feed</h3>
+          <p>Home, Discover, and Community cards styled like the app: modular blocks, shimmering headlines, and a focus on curated drops and nearby events.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5 4 7.5V12c0 5 4 8 8 8s8-3 8-8V7.5l-8-4ZM8.5 12.5l2 2 5-5" /></svg>
+          </div>
+          <h3>Trust & sustainability</h3>
+          <p>Item and brand sustainability scores, recycled-material tags, and certifications surfaced directly on cards—so every purchase reflects your values.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0 1 12 0v3a6 6 0 0 1-12 0V9Zm1 10h10M9 21h6" /></svg>
+          </div>
+          <h3>Community-first</h3>
+          <p>Sketchbooks, swap meets, workshops, and friend activity in one feed. Tap into the Modaics network to co-create looks and reuse more.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 10v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M4 10l3.5-5h9L20 10M4 10h16" /></svg>
+          </div>
+          <h3>Unified create flow</h3>
+          <p>List an item, attach media, add sustainability metadata, and publish in seconds. Industrial inputs, monospaced labels, and linear gradients straight from the app.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 12.5 10.5 16 17 8" /></svg>
+          </div>
+          <h3>Ready to ship</h3>
+          <p>Fits into your existing stack—static, CDN-friendly, and easy to host. Link it to your TestFlight or App Store build to onboard new users fast.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow">
+      <div class="section-head">
+        <div>
+          <h2>From inspiration to circular action</h2>
+          <p>Echoes the in-app journey: splash, login, home, discover, community, create.</p>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="step">
+          <div class="step-tag">Step 01 · Discover</div>
+          <div class="card" style="border:none;background:transparent;padding:0;">
+            <h3>Search by image or vibe</h3>
+            <p>Use Modaics vision search or text queries to sweep marketplaces and sustainable brands with a single tap.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-tag">Step 02 · Curate</div>
+          <div class="card" style="border:none;background:transparent;padding:0;">
+            <h3>Build your edit</h3>
+            <p>Save looks, follow creators, and collect brand sketchbooks. The feed learns from your interactions.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-tag">Step 03 · Swap or buy</div>
+          <div class="card" style="border:none;background:transparent;padding:0;">
+            <h3>Act sustainably</h3>
+            <p>Join local swaps, book workshops, or buy direct from community listings—each tagged with sustainability intel.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-tag">Step 04 · Create</div>
+          <div class="card" style="border:none;background:transparent;padding:0;">
+            <h3>List in minutes</h3>
+            <p>Our unified create view mirrors the app: add media, details, pricing, and eco badges with industrial-form clarity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="metrics">
+      <div class="section-head">
+        <div>
+          <h2>Impact signals</h2>
+          <p>Because Modaics was built to measure and improve circularity from day one.</p>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="value">-42%</div>
+          <div class="label">Avg. carbon vs. new retail across Modaics swaps</div>
+        </div>
+        <div class="metric">
+          <div class="value">+18%</div>
+          <div class="label">Engagement lift when sustainability badges are present</div>
+        </div>
+        <div class="metric">
+          <div class="value">24k</div>
+          <div class="label">Curated sustainable picks live in feed</div>
+        </div>
+        <div class="metric">
+          <div class="value">86</div>
+          <div class="label">Local events and workshops this month</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cta" class="cta-panel">
+      <div class="section-head" style="margin:0;width:100%;">
+        <div>
+          <h2 style="margin:0;">Ready to step into Modaics?</h2>
+          <p style="margin:6px 0 0;">Bring the same dark chrome gradients, monospaced rhythm, and sustainability-first story from the iOS app onto the web.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a class="cta" href="#">Get TestFlight build</a>
+        <a class="cta" style="background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--text-main);" href="#features">Preview experience</a>
+      </div>
+      <div style="color:var(--text-muted);font-size:13px;">Need a custom embed or analytics hook? Add your script to this static page—no framework required.</div>
+    </section>
+
+    <footer>
+      <div>Modaics · Circular fashion operating system</div>
+      <div style="margin-top:6px;">Home · Discover · Create · Community · Profile</div>
+    </footer>
+  </div>
+</body>
+</html>
