@@ -275,7 +275,6 @@ struct ItemOverrides {
 
 // MARK: - Offline Action Queue
 
-@MainActor
 private actor OfflineActionQueue {
     private var queuedAddItems: [AddItemRequest] = []
     private let userDefaultsKey = "offline_queued_items"

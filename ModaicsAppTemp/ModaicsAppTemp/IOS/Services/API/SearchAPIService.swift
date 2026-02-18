@@ -311,7 +311,6 @@ class SearchAPIService: ObservableObject {
 
 // MARK: - Search Cache
 
-@MainActor
 private actor SearchCache {
     private var cache: [String: (results: [SearchResult], timestamp: Date)] = [:]
     private let cacheDuration: TimeInterval = 300 // 5 minutes

@@ -375,7 +375,6 @@ class AIAnalysisService: ObservableObject {
 
 // MARK: - Analysis Cache
 
-@MainActor
 private actor AnalysisCache {
     private var cache: [String: (result: ItemAnalysisResult, timestamp: Date)] = [:]
     private let cacheDuration: TimeInterval = 3600 // 1 hour
