@@ -169,9 +169,3 @@ class AuthManager: ObservableObject {
         }
     }
 }
-
-// MARK: - Notification Names
-
-extension Notification.Name {
-    static let apiAuthTokenRefreshed = Notification.Name("apiAuthTokenRefreshed")
-}
