@@ -22,13 +22,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		E40267A22DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "Copy Bundle Resources" phase from "ModaicsAppTemp" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = E402674F2DF16BC0002D4CE4 /* Resources */;
-			membershipExceptions = (
-				"IOS/Shared/UIImage+PixelBuffer.swift",
-			);
-		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -36,7 +29,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				E40267A12DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "ModaicsAppTemp" target */,
-				E40267A22DF1FAD2002D4CE4 /* Exceptions for "ModaicsAppTemp" folder in "Copy Bundle Resources" phase from "ModaicsAppTemp" target */,
 			);
 			path = ModaicsAppTemp;
 			sourceTree = "<group>";
