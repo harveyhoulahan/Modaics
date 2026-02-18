@@ -23,7 +23,7 @@ class ItemService: ObservableObject {
     
     // MARK: - Shared Instance
     
-    static let shared = ItemService()
+    nonisolated(unsafe) static let shared = ItemService()
     
     // MARK: - Published Properties
     

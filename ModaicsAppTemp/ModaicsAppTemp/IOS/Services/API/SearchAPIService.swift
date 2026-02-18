@@ -17,7 +17,7 @@ class SearchAPIService: ObservableObject {
     
     // MARK: - Shared Instance
     
-    static let shared = SearchAPIService()
+    nonisolated(unsafe) static let shared = SearchAPIService()
     
     // MARK: - Published Properties
     

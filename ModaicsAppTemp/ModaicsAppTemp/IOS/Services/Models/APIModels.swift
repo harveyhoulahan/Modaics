@@ -361,8 +361,9 @@ enum SketchbookMembershipRule: String, Codable {
     case inviteOnly = "invite_only"
 }
 
-enum SketchbookPostType: String, Codable {
+enum SketchbookPostType: String, Codable, CaseIterable {
     case standard = "standard"
+    case update = "update"
     case poll = "poll"
     case event = "event"
     case announcement = "announcement"
@@ -675,6 +676,19 @@ extension Sketchbook {
         description: "A sample sketchbook for preview purposes",
         accessPolicy: .public_access,
         membershipRule: .autoApprove,
+        minSpendAmount: nil,
+        minSpendWindowMonths: nil,
+        createdAt: Date(),
+        updatedAt: Date()
+    )
+
+    static let memberOnly = Sketchbook(
+        id: 2,
+        brandId: "brand-member-only",
+        title: "Exclusive Sketchbook",
+        description: "Members-only content and updates",
+        accessPolicy: .members_only,
+        membershipRule: .requestApproval,
         minSpendAmount: nil,
         minSpendWindowMonths: nil,
         createdAt: Date(),

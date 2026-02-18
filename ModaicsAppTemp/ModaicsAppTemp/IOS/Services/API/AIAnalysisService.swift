@@ -135,7 +135,7 @@ class AIAnalysisService: ObservableObject {
     
     // MARK: - Shared Instance
     
-    static let shared = AIAnalysisService()
+    nonisolated(unsafe) static let shared = AIAnalysisService()
     
     // MARK: - Published Properties
     

@@ -16,7 +16,7 @@ class SketchbookAPIService: ObservableObject {
     
     // MARK: - Shared Instance
     
-    static let shared = SketchbookAPIService()
+    nonisolated(unsafe) static let shared = SketchbookAPIService()
     
     // MARK: - Published Properties
     

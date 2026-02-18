@@ -172,7 +172,7 @@ struct UserSubscription: Codable, Identifiable {
 // MARK: - Payment Service
 @MainActor
 class PaymentService: ObservableObject {
-    static let shared = PaymentService()
+    nonisolated(unsafe) static let shared = PaymentService()
     
     // MARK: - Published Properties
     @Published var isLoading = false
@@ -521,7 +521,7 @@ class PaymentService: ObservableObject {
         }
         
         // Refresh subscription status
-        await fetchUserSubscription()
+        _ = try? await fetchUserSubscription()
     }
     
     // MARK: - Transaction Management
@@ -696,9 +696,9 @@ class PaymentService: ObservableObject {
     
     // MARK: - Private Helpers
     
-    private func getShippingDetails() -> PaymentSheet.ShippingDetails {
+    private func getShippingDetails() -> PaymentSheet.Configuration.ShippingDetails {
         // Return user's saved shipping address or collect new one
-        return PaymentSheet.ShippingDetails(
+        return PaymentSheet.Configuration.ShippingDetails(
             address: .init(
                 city: "",
                 country: "US",
