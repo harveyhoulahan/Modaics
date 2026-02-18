@@ -71,7 +71,7 @@ struct APIConfiguration {
     
     // MARK: - Shared Instance
     
-    static let shared = APIConfiguration()
+    static var shared = APIConfiguration()
     
     // MARK: - Properties
     
