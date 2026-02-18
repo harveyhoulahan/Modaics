@@ -390,7 +390,7 @@ final class PaymentServiceTests: XCTestCase {
         // Given
         let paymentIntentId = "pi_test_123"
         
-        mockAPIClient.mockTransaction = Transaction(
+        mockAPIClient.mockTransaction = PaymentTransaction(
             id: "txn_123",
             buyerId: "buyer_456",
             sellerId: "seller_789",
@@ -420,7 +420,7 @@ final class PaymentServiceTests: XCTestCase {
     func testFetchTransactionHistory_Success() async throws {
         // Given
         let mockTransactions = [
-            Transaction(
+            PaymentTransaction(
                 id: "txn_1",
                 buyerId: "user_123",
                 sellerId: "user_456",
@@ -436,7 +436,7 @@ final class PaymentServiceTests: XCTestCase {
                 updatedAt: Date(),
                 metadata: nil
             ),
-            Transaction(
+            PaymentTransaction(
                 id: "txn_2",
                 buyerId: "user_123",
                 sellerId: "user_789",
@@ -470,7 +470,7 @@ final class PaymentServiceTests: XCTestCase {
         // Given
         let transactionId = "txn_123"
         
-        mockAPIClient.mockTransaction = Transaction(
+        mockAPIClient.mockTransaction = PaymentTransaction(
             id: transactionId,
             buyerId: "buyer_456",
             sellerId: "seller_789",
@@ -730,7 +730,7 @@ final class PaymentServiceTests: XCTestCase {
     func testTransactionHistory_Pagination() async throws {
         // Given
         let page1 = (1...25).map { i in
-            Transaction(
+            PaymentTransaction(
                 id: "txn_\(i)",
                 buyerId: "user_123",
                 sellerId: "user_\(i)",
@@ -762,8 +762,8 @@ final class PaymentServiceTests: XCTestCase {
 
 class MockPaymentAPIClient {
     var mockPaymentIntent: PaymentIntentResponse?
-    var mockTransaction: Transaction?
-    var mockTransactions: [Transaction] = []
+    var mockTransaction: PaymentTransaction?
+    var mockTransactions: [PaymentTransaction] = []
     var mockSubscription: UserSubscription?
     var mockError: Error?
     
@@ -796,7 +796,7 @@ class MockPaymentAPIClient {
         return intent
     }
     
-    func confirmPayment(paymentIntentId: String) async throws -> Transaction {
+    func confirmPayment(paymentIntentId: String) async throws -> PaymentTransaction {
         confirmPaymentCalled = true
         
         if let error = mockError {
@@ -810,7 +810,7 @@ class MockPaymentAPIClient {
         return transaction
     }
     
-    func fetchTransactions(limit: Int, offset: Int) async throws -> [Transaction] {
+    func fetchTransactions(limit: Int, offset: Int) async throws -> [PaymentTransaction] {
         fetchTransactionsCalled = true
         
         if let error = mockError {
@@ -820,7 +820,7 @@ class MockPaymentAPIClient {
         return mockTransactions
     }
     
-    func fetchTransaction(transactionId: String) async throws -> Transaction {
+    func fetchTransaction(transactionId: String) async throws -> PaymentTransaction {
         fetchTransactionCalled = true
         lastTransactionId = transactionId
         

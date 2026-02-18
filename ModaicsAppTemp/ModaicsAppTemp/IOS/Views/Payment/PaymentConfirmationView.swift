@@ -475,7 +475,7 @@ struct ShareSheet: UIViewControllerRepresentable {
 struct PaymentConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
         PaymentConfirmationView(
-            transaction: Transaction(
+            transaction: PaymentTransaction(
                 id: "txn_123456789",
                 buyerId: "user_123",
                 sellerId: "user_456",
