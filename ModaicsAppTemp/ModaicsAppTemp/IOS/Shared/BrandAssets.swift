@@ -1,14 +1,9 @@
 //
-//  ModaicsLogo.swift
-//  ModaicsAppTemp
+//  BrandAssets.swift
+//  Modaics
 //
-//  Created by Harvey Houlahan on 6/6/2025.
-//
-
-
-//
-//  ModaicsLogo.swift
 //  Enhanced logo and brand components for Modaics
+//  Dark Green Porsche Aesthetic
 //
 
 import SwiftUI
@@ -30,8 +25,8 @@ struct ModaicsLogo: View {
                 .fill(
                     RadialGradient(
                         colors: [
-                            Color.modaicsChrome1.opacity(0.1),
-                            Color.modaicsDarkBlue.opacity(0.05)
+                            Color.luxeGold.opacity(0.1),
+                            Color.forestDeep.opacity(0.05)
                         ],
                         center: .center,
                         startRadius: 0,
@@ -47,7 +42,7 @@ struct ModaicsLogo: View {
                 Circle()
                     .stroke(
                         LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2, .modaicsChrome1],
+                            colors: [.luxeGold, .luxeGoldBright, .luxeGold],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
@@ -71,7 +66,7 @@ struct ModaicsLogo: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [.modaicsDenim1, .modaicsDenim2],
+                                colors: [.emerald, .emeraldDeep],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -83,7 +78,7 @@ struct ModaicsLogo: View {
                         .font(.system(size: size * 0.08, weight: .medium))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.modaicsCotton, .modaicsCottonLight],
+                                colors: [.sageWhite, .sageMuted],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -117,7 +112,7 @@ struct FashionDot: View {
         Circle()
             .fill(
                 LinearGradient(
-                    colors: [.modaicsChrome1, .modaicsChrome2],
+                    colors: [.luxeGold, .luxeGoldBright],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -162,14 +157,8 @@ struct ModaicsWordmark: View {
         ZStack {
             // Main text
             Text("modaics")
-                .font(.system(size: size, weight: .ultraLight, design: .serif))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2, .modaicsChrome1],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+                .font(.forestDisplay(size))
+                .foregroundStyle(.luxeGoldGradient)
             
             // Shimmer effect
             LinearGradient(
@@ -185,7 +174,7 @@ struct ModaicsWordmark: View {
             .offset(x: shimmerOffset)
             .mask(
                 Text("modaics")
-                    .font(.system(size: size, weight: .ultraLight, design: .serif))
+                    .font(.forestDisplay(size))
             )
         }
         .onAppear {
@@ -199,7 +188,6 @@ struct ModaicsWordmark: View {
 // MARK: - Enhanced Feature Icons
 struct SustainabilityIcon: View {
     var size: CGFloat
-    //let size: CGFloat = 24
     @State private var leafRotation: Double = 0
     
     var body: some View {
@@ -209,8 +197,8 @@ struct SustainabilityIcon: View {
                 .fill(
                     RadialGradient(
                         colors: [
-                            Color.green.opacity(0.2),
-                            Color.green.opacity(0.05)
+                            Color.emerald.opacity(0.2),
+                            Color.emerald.opacity(0.05)
                         ],
                         center: .center,
                         startRadius: 0,
@@ -224,7 +212,7 @@ struct SustainabilityIcon: View {
                 .font(.system(size: size, weight: .medium))
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.green, Color(red: 0.2, green: 0.6, blue: 0.3)],
+                        colors: [.emerald, .organicGreen],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -248,7 +236,7 @@ struct CommunityIcon: View {
             // Connection lines
             ForEach(0..<3, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 1)
-                    .fill(Color.blue.opacity(0.3))
+                    .fill(Color.natureTeal.opacity(0.3))
                     .frame(width: size * 0.6, height: 2)
                     .rotationEffect(.degrees(Double(index) * 60))
                     .scaleEffect(pulseScale)
@@ -259,7 +247,7 @@ struct CommunityIcon: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [.blue, .purple],
+                            colors: [.natureTeal, .forestLight],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -282,57 +270,58 @@ struct CommunityIcon: View {
 
 // MARK: - Brand Colors Extension
 extension Color {
-    // Enhanced color palette
-    static let modaicsPrimary = Color.modaicsChrome1
-    static let modaicsSecondary = Color.modaicsDenim1
-    static let modaicsAccent = Color(red: 0.2, green: 0.6, blue: 0.4) // Sustainable green
-    static let modaicsWarning = Color(red: 0.9, green: 0.6, blue: 0.2) // Warm orange
-    static let modaicsError = Color(red: 0.8, green: 0.3, blue: 0.3) // Soft red
+    // Enhanced color palette - Porsche Dark Green Aesthetic
+    static let modaicsPrimary = Color.luxeGold
+    static let modaicsSecondary = Color.emerald
+    static let modaicsAccent = Color.emerald
+    static let modaicsWarning = Color.earthAmber
+    static let modaicsError = Color.coralError
     
     // Surface colors for better hierarchy
-    static let modaicsSurface1 = Color.modaicsDarkBlue.opacity(0.8)
-    static let modaicsSurface2 = Color.modaicsMidBlue.opacity(0.6)
-    static let modaicsSurface3 = Color.modaicsLightBlue.opacity(0.4)
+    static let modaicsSurface1 = Color.forestDeep.opacity(0.8)
+    static let modaicsSurface2 = Color.surfaceElevated
+    static let modaicsSurface3 = Color.forestSoft.opacity(0.4)
 }
 
 // MARK: - Brand Typography
 extension Font {
     static func modaicsDisplay(_ size: CGFloat) -> Font {
-        .system(size: size, weight: .ultraLight, design: .serif)
+        .forestDisplay(size)
     }
     
     static func modaicsHeadline(_ size: CGFloat) -> Font {
-        .system(size: size, weight: .medium, design: .default)
+        .forestHeadline(size)
     }
     
     static func modaicsBody(_ size: CGFloat) -> Font {
-        .system(size: size, weight: .regular, design: .default)
+        .forestBody(size)
     }
     
     static func modaicsCaption(_ size: CGFloat) -> Font {
-        .system(size: size, weight: .light, design: .default)
+        .forestCaption(size)
     }
 }
 
-// MARK: - Color Theme
+// MARK: - Color Theme Compatibility
+// These ensure backward compatibility while using new theme
 extension Color {
     // Dark sophisticated background colors
-    static let modaicsDarkBlue = Color(red: 0.1, green: 0.15, blue: 0.2)
-    static let modaicsMidBlue = Color(red: 0.15, green: 0.2, blue: 0.3)
-    static let modaicsLightBlue = Color(red: 0.2, green: 0.25, blue: 0.35)
+    static let modaicsDarkBlue = Color.forestDeep
+    static let modaicsMidBlue = Color.forestRich
+    static let modaicsLightBlue = Color.forestMid
     
-    // Chrome/metallic colors
-    static let modaicsChrome1 = Color(red: 0.7, green: 0.75, blue: 0.8)
-    static let modaicsChrome2 = Color(red: 0.5, green: 0.55, blue: 0.65)
-    static let modaicsChrome3 = Color(red: 0.6, green: 0.65, blue: 0.75)
+    // Gold/metallic colors replace chrome
+    static let modaicsChrome1 = Color.luxeGold
+    static let modaicsChrome2 = Color.luxeGoldBright
+    static let modaicsChrome3 = Color.luxeGoldDeep
     
-    // Denim blue for middle section
-    static let modaicsDenim1 = Color(red: 0.2, green: 0.4, blue: 0.7)
-    static let modaicsDenim2 = Color(red: 0.15, green: 0.3, blue: 0.6)
+    // Forest tones replace denim
+    static let modaicsDenim1 = Color.forestSoft
+    static let modaicsDenim2 = Color.forestLight
     
-    // Cotton white variations
-    static let modaicsCotton = Color.white.opacity(0.9)
-    static let modaicsCottonLight = Color.white.opacity(0.6)
+    // Sage whites replace cotton
+    static let modaicsCotton = Color.sageWhite
+    static let modaicsCottonLight = Color.sageMuted
 }
 
 // MARK: - Custom Modifiers
@@ -355,9 +344,9 @@ struct ShimmerEffect: ViewModifier {
                     LinearGradient(
                         colors: [
                             Color.clear,
-                            Color.modaicsChrome1.opacity(intensity * 0.3),
-                            Color.modaicsChrome2.opacity(intensity * 0.5),
-                            Color.modaicsChrome1.opacity(intensity * 0.3),
+                            Color.luxeGold.opacity(intensity * 0.3),
+                            Color.luxeGoldBright.opacity(intensity * 0.5),
+                            Color.luxeGold.opacity(intensity * 0.3),
                             Color.clear
                         ],
                         startPoint: .leading,
@@ -384,77 +373,26 @@ extension View {
 
 // MARK: - Custom Animations
 extension Animation {
-    static let modaicsSpring = Animation.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.1)
-    static let modaicsSmoothSpring = Animation.spring(response: 0.8, dampingFraction: 0.9, blendDuration: 0.1)
-    static let modaicsElastic = Animation.spring(response: 1.2, dampingFraction: 0.6, blendDuration: 0.1)
+    static let modaicsSpring = Animation.forestSpring
+    static let modaicsSmoothSpring = Animation.forestElegant
+    static let modaicsElastic = Animation.forestSpring
 }
 
-// MARK: - Chrome Door Component
-struct ChromeDoor: View {
-    let isLeft: Bool
-    @State private var handleGlow: Bool = false
-    
-    var body: some View {
-        ZStack {
-            // Main door body with premium gradient
-            RoundedRectangle(cornerRadius: 10)
-                .fill(
-                    LinearGradient(
-                        colors: isLeft ?
-                            [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3] :
-                            [.modaicsChrome3, .modaicsChrome2, .modaicsChrome1],
-                        startPoint: isLeft ? .topLeading : .topTrailing,
-                        endPoint: isLeft ? .bottomTrailing : .bottomLeading
-                    )
-                )
-                .frame(width: 45, height: 130)
-                .overlay(
-                    // Metallic sheen effect
-                    LinearGradient(
-                        colors: [
-                            Color.white.opacity(0.3),
-                            Color.clear,
-                            Color.white.opacity(0.1)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .blendMode(.overlay)
-                )
+// MARK: - Preview
+#Preview {
+    ZStack {
+        LinearGradient.forestBackground
+            .ignoresSafeArea()
+        
+        VStack(spacing: 40) {
+            ModaicsLogo(size: 100)
             
-            // Cotton texture overlay
-            VStack(spacing: 6) {
-                ForEach(0..<3, id: \.self) { _ in
-                    Capsule()
-                        .fill(Color.white.opacity(0.2))
-                        .frame(width: 28, height: 2)
-                        .blur(radius: 0.5)
-                }
+            ModaicsWordmark(size: 32)
+            
+            HStack(spacing: 20) {
+                SustainabilityIcon(size: 24)
+                CommunityIcon()
             }
-            
-            // Premium chrome handle
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [.white, .modaicsChrome1],
-                        center: .topLeading,
-                        startRadius: 1,
-                        endRadius: 8
-                    )
-                )
-                .frame(width: 10, height: 10)
-                .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white.opacity(0.8), lineWidth: 0.5)
-                )
-                .scaleEffect(handleGlow ? 1.2 : 1.0)
-                .offset(x: isLeft ? 15 : -15, y: 0)
-                .onAppear {
-                    withAnimation(.easeInOut(duration: 2).repeatForever()) {
-                        handleGlow = true
-                    }
-                }
         }
     }
 }

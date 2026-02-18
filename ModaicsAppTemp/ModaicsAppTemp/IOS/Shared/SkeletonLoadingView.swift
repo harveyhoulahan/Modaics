@@ -3,6 +3,7 @@
 //  Modaics
 //
 //  Skeleton loading states for smoother perceived performance
+//  Dark Green Porsche Aesthetic
 //
 
 import SwiftUI
@@ -14,23 +15,23 @@ struct SkeletonItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Image placeholder
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: ForestRadius.large)
                 .fill(skeletonGradient)
                 .aspectRatio(0.7, contentMode: .fit)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             
             // Title placeholder
             RoundedRectangle(cornerRadius: 4)
                 .fill(skeletonGradient)
                 .frame(height: 16)
                 .frame(maxWidth: .infinity)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             
             // Price placeholder
             RoundedRectangle(cornerRadius: 4)
                 .fill(skeletonGradient)
                 .frame(width: 60, height: 14)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
         }
         .onAppear {
             isAnimating = true
@@ -40,8 +41,8 @@ struct SkeletonItemCard: View {
     private var skeletonGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color.modaicsDarkBlue.opacity(0.3),
-                Color.modaicsMidBlue.opacity(0.3)
+                Color.forestMid.opacity(0.3),
+                Color.forestSoft.opacity(0.3)
             ],
             startPoint: .leading,
             endPoint: .trailing
@@ -60,7 +61,7 @@ struct SkeletonEventCard: View {
                 Capsule()
                     .fill(skeletonGradient)
                     .frame(width: 80, height: 28)
-                    .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                    .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
                 
                 Spacer()
                 
@@ -68,26 +69,26 @@ struct SkeletonEventCard: View {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(skeletonGradient)
                     .frame(width: 50, height: 20)
-                    .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                    .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             }
             
             // Title placeholders
             RoundedRectangle(cornerRadius: 4)
                 .fill(skeletonGradient)
                 .frame(height: 20)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             
             RoundedRectangle(cornerRadius: 4)
                 .fill(skeletonGradient)
                 .frame(height: 20)
                 .frame(width: 200)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             
             // Host placeholder
             RoundedRectangle(cornerRadius: 4)
                 .fill(skeletonGradient)
                 .frame(width: 120, height: 14)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             
             // Details placeholders
             VStack(alignment: .leading, spacing: 8) {
@@ -96,13 +97,19 @@ struct SkeletonEventCard: View {
                         .fill(skeletonGradient)
                         .frame(height: 13)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                        .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
                 }
             }
         }
         .padding(16)
-        .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(
+            RoundedRectangle(cornerRadius: ForestRadius.large)
+                .fill(.forestMid.opacity(0.6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: ForestRadius.large)
+                        .stroke(.luxeGold.opacity(0.1), lineWidth: 1)
+                )
+        )
         .onAppear {
             isAnimating = true
         }
@@ -111,8 +118,8 @@ struct SkeletonEventCard: View {
     private var skeletonGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color.modaicsDarkBlue.opacity(0.3),
-                Color.modaicsMidBlue.opacity(0.3)
+                Color.forestMid.opacity(0.3),
+                Color.forestSoft.opacity(0.3)
             ],
             startPoint: .leading,
             endPoint: .trailing
@@ -127,29 +134,29 @@ struct SkeletonListItem: View {
     var body: some View {
         HStack(spacing: 12) {
             // Thumbnail
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: ForestRadius.medium)
                 .fill(skeletonGradient)
                 .frame(width: 80, height: 80)
-                .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             
             VStack(alignment: .leading, spacing: 8) {
                 // Title
                 RoundedRectangle(cornerRadius: 4)
                     .fill(skeletonGradient)
                     .frame(height: 16)
-                    .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                    .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
                 
                 // Subtitle
                 RoundedRectangle(cornerRadius: 4)
                     .fill(skeletonGradient)
                     .frame(width: 120, height: 14)
-                    .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                    .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
                 
                 // Price
                 RoundedRectangle(cornerRadius: 4)
                     .fill(skeletonGradient)
                     .frame(width: 60, height: 14)
-                    .modifier(SkeletonAnimation(isAnimating: $isAnimating))
+                    .modifier(ForestSkeletonAnimation(isAnimating: $isAnimating))
             }
             
             Spacer()
@@ -162,8 +169,8 @@ struct SkeletonListItem: View {
     private var skeletonGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color.modaicsDarkBlue.opacity(0.3),
-                Color.modaicsMidBlue.opacity(0.3)
+                Color.forestMid.opacity(0.3),
+                Color.forestSoft.opacity(0.3)
             ],
             startPoint: .leading,
             endPoint: .trailing
@@ -171,8 +178,8 @@ struct SkeletonListItem: View {
     }
 }
 
-// MARK: - Skeleton Animation Modifier
-struct SkeletonAnimation: ViewModifier {
+// MARK: - Forest Skeleton Animation Modifier
+struct ForestSkeletonAnimation: ViewModifier {
     @Binding var isAnimating: Bool
     
     func body(content: Content) -> some View {
@@ -181,7 +188,7 @@ struct SkeletonAnimation: ViewModifier {
                 LinearGradient(
                     colors: [
                         .clear,
-                        .modaicsChrome1.opacity(0.4),
+                        .luxeGold.opacity(0.4),
                         .clear
                     ],
                     startPoint: .leading,
@@ -233,30 +240,26 @@ struct SkeletonEventList: View {
 // MARK: - Preview
 #Preview {
     ZStack {
-        LinearGradient(
-            colors: [.modaicsDarkBlue, .modaicsMidBlue],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .ignoresSafeArea()
+        LinearGradient.forestBackground
+            .ignoresSafeArea()
         
         ScrollView {
             VStack(spacing: 40) {
                 Text("Item Grid Skeleton")
-                    .font(.headline)
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
                 
                 SkeletonItemGrid()
                 
                 Text("Event Card Skeleton")
-                    .font(.headline)
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
                 
                 SkeletonEventList()
                 
                 Text("List Item Skeleton")
-                    .font(.headline)
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
                 
                 VStack(spacing: 12) {
                     ForEach(0..<3, id: \.self) { _ in

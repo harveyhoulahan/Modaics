@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D3B2E"/>
+      <stop offset="100%" style="stop-color:#1A5F4A"/>
+    </linearGradient>
+    <linearGradient id="emeraldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2ECC71"/>
+      <stop offset="100%" style="stop-color:#27AE60"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="230" fill="url(#bgGradient)"/>
+  
+  <!-- Subtle Grid Pattern -->
+  <g opacity="0.03" stroke="#fff" stroke-width="2">
+    <line x1="0" y1="200" x2="1024" y2="200"/>
+    <line x1="0" y1="400" x2="1024" y2="400"/>
+    <line x1="0" y1="600" x2="1024" y2="600"/>
+    <line x1="0" y1="800" x2="1024" y2="800"/>
+    <line x1="200" y1="0" x2="200" y2="1024"/>
+    <line x1="400" y1="0" x2="400" y2="1024"/>
+    <line x1="600" y1="0" x2="600" y2="1024"/>
+    <line x1="800" y1="0" x2="800" y2="1024"/>
+  </g>
+  
+  <!-- M Logo - Hanger Concept -->
+  <g transform="translate(512, 512)" filter="url(#glow)">
+    <!-- Left hanger arc -->
+    <path d="M -180 -50 Q -180 -180 -80 -180 L -60 -180" 
+          fill="none" 
+          stroke="url(#emeraldGradient)" 
+          stroke-width="40" 
+          stroke-linecap="round"/>
+    
+    <!-- Right hanger arc -->
+    <path d="M 180 -50 Q 180 -180 80 -180 L 60 -180" 
+          fill="none" 
+          stroke="url(#emeraldGradient)" 
+          stroke-width="40" 
+          stroke-linecap="round"/>
+    
+    <!-- Center crossbar -->
+    <line x1="-180" y1="-50" x2="180" y2="-50" 
+          stroke="url(#emeraldGradient)" 
+          stroke-width="40" 
+          stroke-linecap="round"/>
+    
+    <!-- Hook stem -->
+    <line x1="0" y1="-180" x2="0" y2="-230" 
+          stroke="#E8E8E8" 
+          stroke-width="20" 
+          stroke-linecap="round"/>
+    
+    <!-- Hook curve -->
+    <path d="M 0 -230 Q 0 -280 30 -280 Q 50 -280 50 -260" 
+          fill="none" 
+          stroke="#E8E8E8" 
+          stroke-width="20" 
+          stroke-linecap="round"/>
+    
+    <!-- Subtle accent lines -->
+    <line x1="-100" y1="50" x2="-100" y2="150" 
+          stroke="#2ECC71" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          opacity="0.5"/>
+    <line x1="100" y1="50" x2="100" y2="150" 
+          stroke="#2ECC71" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          opacity="0.5"/>
+  </g>
+  
+  <!-- Metallic sheen overlay -->
+  <rect width="1024" height="1024" rx="230" fill="url(#sheen)" opacity="0.1"/>
+  <defs>
+    <linearGradient id="sheen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff"/>
+      <stop offset="50%" style="stop-color:transparent"/>
+      <stop offset="100%" style="stop-color:#fff;stop-opacity:0.3"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -3,6 +3,7 @@
 //  ModaicsAppTemp
 //
 //  Elegant shimmer loading effect for skeleton states
+//  Dark Green Porsche Aesthetic
 //  Created by Harvey Houlahan on 11/26/2025.
 //
 
@@ -23,7 +24,7 @@ struct ShimmerModifier: ViewModifier {
                             LinearGradient(
                                 colors: [
                                     .clear,
-                                    .white.opacity(0.6),
+                                    .luxeGold.opacity(0.6),
                                     .clear
                                 ],
                                 startPoint: .leading,
@@ -59,7 +60,7 @@ struct SkeletonRectangle: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(Color.gray.opacity(0.2))
+            .fill(.forestMid.opacity(0.4))
             .frame(width: width, height: height)
             .shimmer()
     }
@@ -70,7 +71,7 @@ struct SkeletonCircle: View {
     
     var body: some View {
         Circle()
-            .fill(Color.gray.opacity(0.2))
+            .fill(.forestMid.opacity(0.4))
             .frame(width: diameter, height: diameter)
             .shimmer()
     }
@@ -89,8 +90,7 @@ struct SkeletonText: View {
                     height: lineHeight,
                     cornerRadius: 4
                 )
-                .frame(maxWidth: index == lines - 1 ? .infinity : .infinity)
-                .frame(width: index == lines - 1 ? nil : nil)
+                .frame(maxWidth: .infinity)
                 .scaleEffect(x: index == lines - 1 ? lastLineWidth : 1.0, anchor: .leading)
             }
         }
@@ -102,7 +102,7 @@ struct ItemCardSkeleton: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Image placeholder
-            SkeletonRectangle(height: 200, cornerRadius: 16)
+            SkeletonRectangle(height: 200, cornerRadius: ForestRadius.large)
             
             // Title
             SkeletonText(lines: 2, lineHeight: 16, lastLineWidth: 0.6)
@@ -116,8 +116,12 @@ struct ItemCardSkeleton: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: ForestRadius.xlarge)
                 .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                        .stroke(.luxeGold.opacity(0.1), lineWidth: 1)
+                )
         )
     }
 }
@@ -148,7 +152,7 @@ struct ListSkeleton: View {
         VStack(spacing: 16) {
             ForEach(0..<count, id: \.self) { _ in
                 HStack(spacing: 12) {
-                    SkeletonRectangle(width: 80, height: 80, cornerRadius: 12)
+                    SkeletonRectangle(width: 80, height: 80, cornerRadius: ForestRadius.medium)
                     
                     VStack(alignment: .leading, spacing: 8) {
                         SkeletonText(lines: 2, lineHeight: 14)
@@ -159,11 +163,35 @@ struct ListSkeleton: View {
                 }
                 .padding()
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: ForestRadius.large)
                         .fill(.ultraThinMaterial)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: ForestRadius.large)
+                                .stroke(.luxeGold.opacity(0.1), lineWidth: 1)
+                        )
                 )
             }
         }
         .padding(.horizontal, 20)
+    }
+}
+
+#Preview {
+    ZStack {
+        LinearGradient.forestBackground
+            .ignoresSafeArea()
+        
+        ScrollView {
+            VStack(spacing: 40) {
+                Text("Shimmer & Skeleton Views")
+                    .font(.forestDisplay(24))
+                    .foregroundColor(.sageWhite)
+                
+                GridSkeleton()
+                
+                ListSkeleton(count: 3)
+            }
+            .padding(.vertical, 40)
+        }
     }
 }

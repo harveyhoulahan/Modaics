@@ -1347,6 +1347,365 @@ async def metrics():
     }
 
 
+# ============================================================================
+# PAYMENT ENDPOINTS
+# ============================================================================
+
+try:
+    from . import payments
+except ImportError:
+    import payments
+
+
+@app.get("/config/stripe")
+async def get_stripe_config():
+    """Get Stripe publishable key for client-side initialization."""
+    import os
+    return {
+        "publishableKey": os.getenv("STRIPE_PUBLISHABLE_KEY", "pk_test_your_key"),
+        "connectedAccountId": None  # Set if using Stripe Connect
+    }
+
+
+@app.post("/payments/item-purchase", response_model=payments.PaymentIntentResponse)
+async def create_item_purchase_payment(payload: payments.ItemPurchaseRequest, request: Request):
+    """
+    Create a PaymentIntent for item purchase.
+    
+    Flow:
+    1. Calculate fees (buyer fee + platform fee)
+    2. Create Stripe PaymentIntent
+    3. Create transaction record
+    4. Return client secret for PaymentSheet
+    """
+    try:
+        # Extract user ID from auth token (implement your auth logic)
+        buyer_id = extract_user_id_from_request(request)
+        if not buyer_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        result = await payments.create_item_purchase_intent(buyer_id, payload)
+        return result
+    except ValueError as e:
+        logger.error(f"Invalid purchase request: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as exc:
+        logger.error(f"Failed to create payment intent: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to create payment")
+
+
+@app.post("/payments/subscription", response_model=payments.PaymentIntentResponse)
+async def create_subscription_payment(payload: payments.SubscriptionRequest, request: Request):
+    """Create a PaymentIntent for brand subscription."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        result = await payments.create_subscription_intent(user_id, payload)
+        return result
+    except ValueError as e:
+        logger.error(f"Invalid subscription request: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as exc:
+        logger.error(f"Failed to create subscription: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to create subscription")
+
+
+@app.post("/payments/p2p-transfer", response_model=payments.PaymentIntentResponse)
+async def create_p2p_transfer(payload: payments.P2PTransferRequest, request: Request):
+    """Create a PaymentIntent for P2P transfer."""
+    try:
+        sender_id = extract_user_id_from_request(request)
+        if not sender_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        result = await payments.create_p2p_transfer_intent(sender_id, payload)
+        return result
+    except ValueError as e:
+        logger.error(f"Invalid transfer request: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as exc:
+        logger.error(f"Failed to create transfer: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to create transfer")
+
+
+@app.post("/payments/event-ticket", response_model=payments.PaymentIntentResponse)
+async def create_event_ticket_payment(payload: payments.EventTicketRequest, request: Request):
+    """Create a PaymentIntent for event ticket purchase."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        # Convert EventTicketRequest to PaymentIntentRequest
+        payment_request = payments.PaymentIntentRequest(
+            amount=payload.amount,
+            currency=payload.currency,
+            description=f"Event ticket (x{payload.quantity})",
+            metadata={
+                "event_id": payload.event_id,
+                "quantity": str(payload.quantity)
+            }
+        )
+        
+        # Use generic payment intent creation with event metadata
+        customer_id = await payments.get_or_create_stripe_customer(user_id)
+        ephemeral_key = await payments.create_ephemeral_key(customer_id)
+        
+        import stripe
+        import os
+        
+        payment_intent = stripe.PaymentIntent.create(
+            amount=int(payload.amount * 100),
+            currency=payload.currency.lower(),
+            customer=customer_id,
+            automatic_payment_methods={"enabled": True},
+            metadata={
+                "type": "event_ticket",
+                "user_id": user_id,
+                "event_id": payload.event_id,
+                "quantity": str(payload.quantity)
+            },
+            description=f"Event ticket for {payload.event_id}"
+        )
+        
+        # Create transaction record
+        await payments.create_transaction_record(
+            buyer_id=user_id,
+            seller_id=None,
+            item_id=None,
+            amount=payload.amount,
+            currency=payload.currency,
+            platform_fee=payload.amount * payments.PLATFORM_FEE_PERCENT,
+            seller_amount=payload.amount * (1 - payments.PLATFORM_FEE_PERCENT),
+            type=payments.TransactionType.EVENT_TICKET,
+            description=f"Event ticket purchase",
+            stripe_payment_intent_id=payment_intent.id,
+            metadata={
+                "event_id": payload.event_id,
+                "quantity": payload.quantity
+            }
+        )
+        
+        return payments.PaymentIntentResponse(
+            client_secret=payment_intent.client_secret,
+            payment_intent_id=payment_intent.id,
+            ephemeral_key=ephemeral_key,
+            customer_id=customer_id,
+            publishable_key=os.getenv("STRIPE_PUBLISHABLE_KEY", "pk_test_your_key"),
+            amount=payload.amount,
+            currency=payload.currency,
+            status=payment_intent.status
+        )
+    except Exception as exc:
+        logger.error(f"Failed to create event ticket payment: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to create event ticket payment")
+
+
+@app.post("/payments/confirm")
+async def confirm_payment(payload: dict):
+    """Confirm a payment and update transaction status."""
+    try:
+        payment_intent_id = payload.get("payment_intent_id")
+        if not payment_intent_id:
+            raise HTTPException(status_code=400, detail="payment_intent_id is required")
+        
+        transaction = await payments.confirm_payment(payment_intent_id)
+        return transaction
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as exc:
+        logger.error(f"Failed to confirm payment: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to confirm payment")
+
+
+@app.get("/transactions")
+async def get_transactions(
+    request: Request,
+    limit: int = 50,
+    offset: int = 0,
+    type: Optional[str] = None
+):
+    """Get transaction history for authenticated user."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        transactions = await payments.get_user_transactions(user_id, limit, offset)
+        
+        # Filter by type if specified
+        if type:
+            transactions = [t for t in transactions if t.get("type") == type]
+        
+        return transactions
+    except Exception as exc:
+        logger.error(f"Failed to get transactions: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to fetch transactions")
+
+
+@app.get("/transactions/{transaction_id}")
+async def get_transaction_detail(transaction_id: str, request: Request):
+    """Get details of a specific transaction."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        transaction = await payments.get_transaction(transaction_id)
+        if not transaction:
+            raise HTTPException(status_code=404, detail="Transaction not found")
+        
+        # Verify user has access to this transaction
+        if transaction["buyer_id"] != user_id and transaction.get("seller_id") != user_id:
+            raise HTTPException(status_code=403, detail="Access denied")
+        
+        return transaction
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Failed to get transaction: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to fetch transaction")
+
+
+@app.post("/transactions/{transaction_id}/refund")
+async def request_refund(transaction_id: str, payload: dict, request: Request):
+    """Request a refund for a transaction."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        transaction = await payments.get_transaction(transaction_id)
+        if not transaction:
+            raise HTTPException(status_code=404, detail="Transaction not found")
+        
+        # Only buyer can request refund
+        if transaction["buyer_id"] != user_id:
+            raise HTTPException(status_code=403, detail="Only buyer can request refund")
+        
+        # Check if transaction is eligible for refund
+        if transaction["status"] != payments.TransactionStatus.COMPLETED.value:
+            raise HTTPException(status_code=400, detail="Transaction not eligible for refund")
+        
+        # Process refund through Stripe
+        import stripe
+        
+        payment_intent = stripe.PaymentIntent.retrieve(transaction["stripe_payment_intent_id"])
+        if payment_intent.charges.data:
+            charge_id = payment_intent.charges.data[0].id
+            refund = stripe.Refund.create(charge=charge_id)
+            
+            logger.info(f"Refund created: {refund.id} for transaction {transaction_id}")
+            return {"success": True, "refund_id": refund.id}
+        else:
+            raise HTTPException(status_code=400, detail="No charge found for refund")
+            
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Failed to process refund: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to process refund")
+
+
+@app.get("/subscriptions/current")
+async def get_current_subscription(request: Request):
+    """Get current user's active subscription."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        subscription = await payments.get_user_subscription(user_id)
+        if not subscription:
+            raise HTTPException(status_code=404, detail="No active subscription found")
+        
+        return subscription
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Failed to get subscription: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to fetch subscription")
+
+
+@app.post("/subscriptions/{subscription_id}/cancel")
+async def cancel_user_subscription(subscription_id: str, request: Request):
+    """Cancel a subscription."""
+    try:
+        user_id = extract_user_id_from_request(request)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        await payments.cancel_subscription(subscription_id)
+        return {"success": True, "message": "Subscription will be cancelled at the end of the billing period"}
+    except Exception as exc:
+        logger.error(f"Failed to cancel subscription: {exc}")
+        raise HTTPException(status_code=500, detail="Failed to cancel subscription")
+
+
+@app.post("/webhooks/stripe")
+async def stripe_webhook(request: Request):
+    """
+    Handle Stripe webhooks for payment events.
+    
+    Events handled:
+    - payment_intent.succeeded
+    - payment_intent.payment_failed
+    - charge.refunded
+    - customer.subscription.created
+    - customer.subscription.deleted
+    """
+    try:
+        payload = await request.body()
+        signature = request.headers.get("stripe-signature")
+        
+        if not signature:
+            raise HTTPException(status_code=400, detail="Missing stripe-signature header")
+        
+        result = await payments.handle_stripe_webhook(payload, signature)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as exc:
+        logger.error(f"Webhook error: {exc}")
+        raise HTTPException(status_code=500, detail="Webhook processing failed")
+
+
+@app.get("/payments/fees")
+async def get_fee_structure():
+    """Get current fee structure."""
+    return {
+        "platform_fee_percent": payments.PLATFORM_FEE_PERCENT,
+        "buyer_fee_domestic": payments.BUYER_FEE_DOMESTIC,
+        "buyer_fee_international": payments.BUYER_FEE_INTERNATIONAL,
+        "minimum_transaction_amount": payments.MINIMUM_TRANSACTION_AMOUNT
+    }
+
+
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
+def extract_user_id_from_request(request: Request) -> Optional[str]:
+    """
+    Extract user ID from request auth header.
+    In production, implement proper JWT validation.
+    """
+    auth_header = request.headers.get("authorization")
+    if not auth_header:
+        return None
+    
+    # Extract Bearer token
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:]
+        # In production: validate JWT and extract user_id
+        # For now, return token as user_id (demo purposes)
+        return token
+    
+    return None
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(

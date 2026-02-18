@@ -1,14 +1,6 @@
 //
-//  EnhancedSplashView.swift
-//  ModaicsAppTemp
-//
-//  Created by Harvey Houlahan on 8/6/2025.
-//
-
-
-//
 //  SplashView.swift
-//  Modaics - A mesmerizing mosaic-themed splash screen
+//  Modaics - A mesmerizing splash screen with dark green Porsche aesthetic
 //
 
 import SwiftUI
@@ -20,7 +12,6 @@ struct SplashView: View {
     @State private var logoScale: CGFloat = 0.3
     @State private var logoOpacity: Double = 0
     @State private var logoRotation: Double = -180
-    @State private var mosaicTilesVisible = false
     @State private var textOpacity: Double = 0
     @State private var textOffset: CGFloat = 50
     @State private var backgroundTiles: [TileData] = []
@@ -40,7 +31,7 @@ struct SplashView: View {
     
     var body: some View {
         ZStack {
-            // Dynamic mosaic background
+            // Dynamic forest background
             backgroundMosaic
             
             // Main content
@@ -49,13 +40,13 @@ struct SplashView: View {
                 
                 // Main mosaic logo with effects
                 ZStack {
-                    // Secondary glow layer
+                    // Gold glow layer
                     Circle()
                         .fill(
                             RadialGradient(
                                 colors: [
-                                    Color.modaicsChrome1.opacity(0.3),
-                                    Color.modaicsDenim1.opacity(0.2),
+                                    Color.luxeGold.opacity(0.3),
+                                    Color.emerald.opacity(0.2),
                                     Color.clear
                                 ],
                                 center: .center,
@@ -78,18 +69,12 @@ struct SplashView: View {
                 // Brand typography with shimmer
                 VStack(spacing: 16) {
                     Text("modaics")
-                        .font(.system(size: 56, weight: .ultraLight, design: .serif))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.modaicsChrome1, .modaicsChrome2, .modaicsChrome3],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .font(.forestDisplay(56))
+                        .foregroundStyle(.luxeGoldGradient)
                     
                     Text("A digital mosaic of sustainable fashion")
-                        .font(.system(size: 18, weight: .light))
-                        .foregroundColor(.modaicsCotton.opacity(0.9))
+                        .font(.forestCaption(18))
+                        .foregroundColor(.sageWhite.opacity(0.9))
                         .multilineTextAlignment(.center)
                         .opacity(taglineOpacity)
                     
@@ -106,7 +91,7 @@ struct SplashView: View {
                 Spacer()
                 
                 // Loading indicator
-                MosaicLoadingIndicator()
+                ForestLoadingIndicator()
                     .opacity(textOpacity)
                     .padding(.bottom, 60)
             }
@@ -123,21 +108,13 @@ struct SplashView: View {
     // MARK: - Background Mosaic
     private var backgroundMosaic: some View {
         ZStack {
-            // Base gradient
-            LinearGradient(
-                colors: [
-                    Color.modaicsDarkBlue,
-                    Color.modaicsMidBlue,
-                    Color.modaicsLightBlue.opacity(0.3)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // Base gradient - dark forest
+            LinearGradient.forestBackground
+                .ignoresSafeArea()
             
             // Animated mosaic tiles
             ForEach(backgroundTiles) { tile in
-                MosaicBackgroundTile(
+                ForestBackgroundTile(
                     color: tile.color,
                     size: tile.size,
                     rotation: tile.rotation
@@ -151,17 +128,17 @@ struct SplashView: View {
     
     // MARK: - Animation Sequence
     private func startAnimationSequence() {
-        // Logo entrance - smoother and faster
-        withAnimation(.spring(response: 0.8, dampingFraction: 0.75)) {
+        // Logo entrance
+        withAnimation(.forestElegant) {
             logoScale = 1.0
             logoOpacity = 1.0
             logoRotation = 0
         }
         
-        // Background tiles cascade - reduced for performance
+        // Background tiles cascade
         for (index, _) in backgroundTiles.prefix(30).enumerated() {
             withAnimation(
-                .spring(response: 0.6, dampingFraction: 0.7)
+                .forestElegant
                 .delay(Double(index) * 0.015 + 0.2)
             ) {
                 backgroundTiles[index].opacity = 0.12
@@ -169,7 +146,7 @@ struct SplashView: View {
             }
         }
         
-        // Text appearance - smoother
+        // Text appearance
         withAnimation(.easeOut(duration: 0.6).delay(0.5)) {
             textOpacity = 1.0
             textOffset = 0
@@ -188,20 +165,20 @@ struct SplashView: View {
     
     // MARK: - Generate Background Tiles
     private func generateBackgroundTiles() {
-        let tileCount = 35 // Reduced from 50 for better performance
+        let tileCount = 35
         let colors: [Color] = [
-            .modaicsChrome1.opacity(0.25),
-            .modaicsChrome2.opacity(0.25),
-            .modaicsChrome3.opacity(0.25),
-            .modaicsDenim1.opacity(0.15),
-            .modaicsDenim2.opacity(0.15)
+            .luxeGold.opacity(0.25),
+            .luxeGoldBright.opacity(0.25),
+            .emerald.opacity(0.25),
+            .forestLight.opacity(0.15),
+            .forestSoft.opacity(0.15)
         ]
         
         for _ in 0..<tileCount {
             let randomX = CGFloat.random(in: 0...UIScreen.main.bounds.width)
             let randomY = CGFloat.random(in: 0...UIScreen.main.bounds.height)
             let randomSize = CGFloat.random(in: 25...55)
-            let randomColor = colors.randomElement() ?? .modaicsChrome1
+            let randomColor = colors.randomElement() ?? .luxeGold
             let randomDelay = Double.random(in: 0...0.3)
             let randomRotation = Double.random(in: 0...360)
             
@@ -231,21 +208,21 @@ struct FeatureTag: View {
                 .font(.caption)
                 .fontWeight(.medium)
         }
-        .foregroundColor(.modaicsChrome1)
+        .foregroundColor(.luxeGold)
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(
             Capsule()
-                .fill(Color.modaicsChrome1.opacity(0.15))
+                .fill(.luxeGold.opacity(0.15))
                 .overlay(
                     Capsule()
-                        .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+                        .stroke(.luxeGold.opacity(0.3), lineWidth: 1)
                 )
         )
     }
 }
 
-struct MosaicBackgroundTile: View {
+struct ForestBackgroundTile: View {
     let color: Color
     let size: CGFloat
     let rotation: Double
@@ -265,20 +242,14 @@ struct MosaicBackgroundTile: View {
     }
 }
 
-struct MosaicLoadingIndicator: View {
+struct ForestLoadingIndicator: View {
     @State private var rotation: Double = 0
     
     var body: some View {
         HStack(spacing: 8) {
             ForEach(0..<3, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .fill(.luxeGoldGradient)
                     .frame(width: 8, height: 8)
                     .rotationEffect(.degrees(rotation + Double(index) * 120))
                     .scaleEffect(1 + sin(rotation * .pi / 180 + Double(index)) * 0.2)
@@ -290,4 +261,8 @@ struct MosaicLoadingIndicator: View {
             }
         }
     }
+}
+
+#Preview {
+    SplashView(onAnimationComplete: {})
 }

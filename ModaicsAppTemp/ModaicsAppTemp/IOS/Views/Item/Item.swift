@@ -220,71 +220,9 @@ struct Material: Codable {
 }
 
 // MARK: - User Model
-struct User: Identifiable, Codable {
-    let id: UUID
-    var username: String
-    var email: String
-    var profileImageURL: String?
-    var bio: String
-    var location: String
-    var joinDate: Date
-    var isVerified: Bool
-    var userType: UserType
-    var sustainabilityPoints: Int
-    var ecoPoints: Int
-    var membershipTier: MembershipTier
-    var following: [String]
-    var followers: [String]
-    var likedItems: [String]
-    var wardrobe: [String] // Item IDs
-    
-    enum UserType: String, Codable {
-        case consumer = "Consumer"
-        case brand = "Brand"
-        case both = "Both"
-    }
-    
-    enum MembershipTier: String, Codable {
-        case basic = "Basic"
-        case premium = "Premium"
-    }
-    
-    init(
-        id: UUID = UUID(),
-        username: String,
-        email: String,
-        profileImageURL: String? = nil,
-        bio: String = "",
-        location: String = "",
-        joinDate: Date = Date(),
-        isVerified: Bool = false,
-        userType: UserType = .consumer,
-        sustainabilityPoints: Int = 0,
-        ecoPoints: Int = 0,
-        membershipTier: MembershipTier = .basic,
-        following: [String] = [],
-        followers: [String] = [],
-        likedItems: [String] = [],
-        wardrobe: [String] = []
-    ) {
-        self.id = id
-        self.username = username
-        self.email = email
-        self.profileImageURL = profileImageURL
-        self.bio = bio
-        self.location = location
-        self.joinDate = joinDate
-        self.isVerified = isVerified
-        self.userType = userType
-        self.sustainabilityPoints = sustainabilityPoints
-        self.ecoPoints = ecoPoints
-        self.membershipTier = membershipTier
-        self.following = following
-        self.followers = followers
-        self.likedItems = likedItems
-        self.wardrobe = wardrobe
-    }
-}
+// NOTE: The User model has been moved to Models/User.swift
+// This supports Firebase Authentication and Firestore integration
+// The old User struct has been replaced with a more comprehensive version
 
 // MARK: - Transaction Model
 struct Transaction: Identifiable, Codable {

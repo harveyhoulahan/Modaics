@@ -11,6 +11,7 @@ import SwiftUI
 import Combine
 import CoreML
 import UIKit
+import FirebaseFirestore
 
 // MARK: - Main Fashion View Model
 @MainActor
@@ -34,6 +35,9 @@ class FashionViewModel: ObservableObject {
     @Published var isAISearchEnabled: Bool = false
     @Published var selectedSearchImage: UIImage?
     private let searchClient = SearchAPIClient(baseURL: "http://10.20.99.164:8000")
+    
+    // Firebase
+    private let db = Firestore.firestore()
 
         // KEEP this implementation fuck sake
         // MARK: - Likes
@@ -110,30 +114,40 @@ class FashionViewModel: ObservableObject {
     }
     
     private func loadUserData() {
-        // Create sample user
-        currentUser = User(
-            username: "harvey",
-            email: "harvey@modaics.com",
-            bio: "Sustainable fashion enthusiast",
-            location: "Melbourne, VIC",
-            userType: .consumer,
-            sustainabilityPoints: 250
-        )
-        
-        // Load user's wardrobe
+        // User data will be loaded from AuthViewModel
+        // This is called after auth state is established
         loadUserWardrobe()
     }
     
     // Setup brand user when brand login is selected
     func setupBrandUser(brandName: String = "nike") {
-        currentUser = User(
-            username: brandName,
-            email: "\(brandName)@brand.com",
-            bio: "Official brand account",
-            location: "Brand HQ",
-            userType: .brand,
-            sustainabilityPoints: 0
-        )
+        // Brand user setup is now handled by AuthViewModel
+        // This method remains for backward compatibility
+    }
+    
+    // MARK: - Sync with Auth User
+    func syncWithAuthUser(_ user: User?) {
+        self.currentUser = user
+        if let user = user {
+            // Load user's wardrobe from Firestore
+            loadUserWardrobeFromFirestore(userId: user.id)
+        }
+    }
+    
+    private func loadUserWardrobeFromFirestore(userId: String) {
+        db.collection("users").document(userId).collection("wardrobe")
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Error loading wardrobe: \(error.localizedDescription)")
+                    return
+                }
+                
+                // Map wardrobe item IDs to actual items
+                // This is a placeholder - implement based on your data structure
+                self.loadUserWardrobe()
+            }
     }
     
     func loadUserWardrobe() {

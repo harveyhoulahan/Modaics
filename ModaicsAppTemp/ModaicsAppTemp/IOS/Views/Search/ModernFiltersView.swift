@@ -2,7 +2,7 @@
 //  ModernFiltersView.swift
 //  Modaics
 //
-//  Redesigned filters with modern UI components
+//  Redesigned filters with dark green Porsche aesthetic
 //
 
 import SwiftUI
@@ -21,13 +21,9 @@ struct ModernFiltersView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradient matching app theme
-                LinearGradient(
-                    colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                // Dark green gradient background
+                LinearGradient.forestBackground
+                    .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 28) {
@@ -35,31 +31,31 @@ struct ModernFiltersView: View {
                         priceRangeSection
                         
                         Divider()
-                            .background(Color.modaicsChrome1.opacity(0.2))
+                            .background(.luxeGold.opacity(0.2))
                         
                         // Category Section
                         categorySection
                         
                         Divider()
-                            .background(Color.modaicsChrome1.opacity(0.2))
+                            .background(.luxeGold.opacity(0.2))
                         
                         // Condition Section
                         conditionSection
                         
                         Divider()
-                            .background(Color.modaicsChrome1.opacity(0.2))
+                            .background(.luxeGold.opacity(0.2))
                         
                         // Size Section
                         sizeSection
                         
                         Divider()
-                            .background(Color.modaicsChrome1.opacity(0.2))
+                            .background(.luxeGold.opacity(0.2))
                         
                         // Sustainability Section
                         sustainabilitySection
                         
                         Divider()
-                            .background(Color.modaicsChrome1.opacity(0.2))
+                            .background(.luxeGold.opacity(0.2))
                         
                         // Marketplace Section
                         marketplaceSection
@@ -90,13 +86,13 @@ struct ModernFiltersView: View {
                     .padding(.vertical, 16)
                     .background(
                         LinearGradient(
-                            colors: [.modaicsDarkBlue.opacity(0.95), .modaicsMidBlue.opacity(0.95)],
+                            colors: [.forestDeep.opacity(0.95), .forestRich.opacity(0.95)],
                             startPoint: .top,
                             endPoint: .bottom
                         )
                         .overlay(
                             Rectangle()
-                                .fill(Color.modaicsChrome1.opacity(0.1))
+                                .fill(.luxeGold.opacity(0.1))
                                 .frame(height: 1),
                             alignment: .top
                         )
@@ -113,14 +109,8 @@ struct ModernFiltersView: View {
                 
                 ToolbarItem(placement: .principal) {
                     Text("Filters")
-                        .font(.system(size: 20, weight: .semibold, design: .serif))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.modaicsChrome1, .modaicsChrome2],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .font(.forestDisplay(20))
+                        .foregroundStyle(.luxeGoldGradient)
                 }
             }
         }
@@ -132,52 +122,52 @@ struct ModernFiltersView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "dollarsign.circle.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Price Range")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Min")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.sageMuted)
                     
                     HStack {
                         Text("$")
-                            .foregroundColor(.modaicsChrome1)
+                            .foregroundColor(.luxeGold)
                         TextField("0", value: $tempFilters.minPrice, format: .number)
                             .keyboardType(.numberPad)
-                            .foregroundColor(.modaicsCotton)
+                            .foregroundColor(.sageWhite)
                     }
                     .padding()
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(.forestMid.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: ForestRadius.medium)
+                            .stroke(.luxeGold.opacity(0.2), lineWidth: 1)
                     )
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Max")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.sageMuted)
                     
                     HStack {
                         Text("$")
-                            .foregroundColor(.modaicsChrome1)
+                            .foregroundColor(.luxeGold)
                         TextField("999", value: $tempFilters.maxPrice, format: .number)
                             .keyboardType(.numberPad)
-                            .foregroundColor(.modaicsCotton)
+                            .foregroundColor(.sageWhite)
                     }
                     .padding()
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(.forestMid.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: ForestRadius.medium)
+                            .stroke(.luxeGold.opacity(0.2), lineWidth: 1)
                     )
                 }
             }
@@ -212,10 +202,10 @@ struct ModernFiltersView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "tshirt.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Category")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             LazyVGrid(columns: [
@@ -241,10 +231,10 @@ struct ModernFiltersView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "star.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Condition")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             VStack(spacing: 10) {
@@ -254,27 +244,27 @@ struct ModernFiltersView: View {
                     } label: {
                         HStack {
                             Image(systemName: tempFilters.selectedConditions.contains(condition) ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(tempFilters.selectedConditions.contains(condition) ? .modaicsChrome1 : .modaicsCottonLight)
+                                .foregroundColor(tempFilters.selectedConditions.contains(condition) ? .luxeGold : .sageMuted)
                             
                             Text(condition.rawValue)
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.modaicsCotton)
+                                .font(.forestCaption(16))
+                                .foregroundColor(.sageWhite)
                             
                             Spacer()
                         }
                         .padding()
                         .background(
                             tempFilters.selectedConditions.contains(condition)
-                                ? Color.modaicsChrome1.opacity(0.15)
-                                : Color.modaicsDarkBlue.opacity(0.6)
+                                ? .luxeGold.opacity(0.15)
+                                : .forestMid.opacity(0.6)
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: ForestRadius.medium)
                                 .stroke(
                                     tempFilters.selectedConditions.contains(condition)
-                                        ? Color.modaicsChrome1.opacity(0.4)
-                                        : Color.modaicsChrome1.opacity(0.2),
+                                        ? .luxeGold.opacity(0.4)
+                                        : .luxeGold.opacity(0.2),
                                     lineWidth: 1
                                 )
                         )
@@ -290,10 +280,10 @@ struct ModernFiltersView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "ruler.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Size")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -317,44 +307,38 @@ struct ModernFiltersView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "leaf.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(.emerald)
                 Text("Sustainability")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             VStack(spacing: 12) {
                 HStack {
                     Text("Minimum Score")
-                        .font(.system(size: 16))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestBody(16))
+                        .foregroundColor(.sageMuted)
                     
                     Spacer()
                     
                     Text("\(Int(tempFilters.minSustainabilityScore))")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.modaicsChrome1)
+                        .font(.forestHeadline(18))
+                        .foregroundColor(.luxeGold)
                 }
                 
                 Slider(value: $tempFilters.minSustainabilityScore, in: 0...100, step: 10)
-                    .tint(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .tint(.emerald)
                 
                 HStack(spacing: 8) {
                     Image(systemName: "arrow.3.trianglepath")
                         .font(.caption)
-                        .foregroundColor(.green)
+                        .foregroundColor(.emerald)
                     Text("All items are secondhand and help reduce fashion waste")
-                        .font(.system(size: 13))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(13))
+                        .foregroundColor(.sageMuted)
                 }
                 .padding(12)
-                .background(Color.green.opacity(0.1))
+                .background(.emerald.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
         }
@@ -366,10 +350,10 @@ struct ModernFiltersView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "cart.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Marketplace")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -468,4 +452,8 @@ struct SearchFilters {
         minSustainabilityScore > 0 ||
         !selectedMarketplaces.isEmpty
     }
+}
+
+#Preview {
+    ModernFiltersView(filters: .constant(SearchFilters()))
 }

@@ -3,6 +3,7 @@
 //  Modaics
 //
 //  AI-powered sell flow with automatic item detection
+//  Dark Green Porsche Aesthetic
 //
 
 import SwiftUI
@@ -39,13 +40,9 @@ struct SmartCreateView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradient
-                LinearGradient(
-                    colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                // Dark green gradient background
+                LinearGradient.forestBackground
+                    .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 24) {
@@ -97,14 +94,8 @@ struct SmartCreateView: View {
                 
                 ToolbarItem(placement: .principal) {
                     Text("Smart Sell")
-                        .font(.system(size: 20, weight: .semibold, design: .serif))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.modaicsChrome1, .modaicsChrome2],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .font(.forestDisplay(20))
+                        .foregroundStyle(.luxeGoldGradient)
                 }
             }
         }
@@ -112,8 +103,6 @@ struct SmartCreateView: View {
             ImagePicker(images: $selectedImages)
         }
         .onChange(of: selectedImages) { oldValue, newValue in
-            // Only auto-analyze when first image is added
-            // Don't re-analyze when user adds more images (they can manually re-analyze)
             if oldValue.isEmpty && !newValue.isEmpty && !hasAnalyzed {
                 Task {
                     await performAIAnalysis()
@@ -128,23 +117,17 @@ struct SmartCreateView: View {
         VStack(spacing: 12) {
             Image(systemName: "sparkles")
                 .font(.system(size: 40))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .foregroundStyle(.luxeGoldGradient)
             
             Text(hasAnalyzed ? "Review AI Analysis" : "Upload Photos to Get Started")
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(.modaicsCotton)
+                .font(.forestHeadline(18))
+                .foregroundColor(.sageWhite)
                 .multilineTextAlignment(.center)
             
             if !hasAnalyzed {
                 Text("Our AI will automatically detect item details")
-                    .font(.system(size: 14))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
                     .multilineTextAlignment(.center)
             }
         }
@@ -157,15 +140,15 @@ struct SmartCreateView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "photo.on.rectangle.angled")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Photos")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
                 Spacer()
                 if !selectedImages.isEmpty {
                     Text("\(selectedImages.count) photo\(selectedImages.count == 1 ? "" : "s")")
-                        .font(.system(size: 14))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestBody(14))
+                        .foregroundColor(.sageMuted)
                 }
             }
             
@@ -174,36 +157,23 @@ struct SmartCreateView: View {
                     VStack(spacing: 16) {
                         Image(systemName: "camera.fill")
                             .font(.system(size: 48))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.modaicsChrome1, .modaicsChrome2],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+                            .foregroundStyle(.luxeGoldGradient)
                         
                         VStack(spacing: 6) {
                             Text("Add Photos")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundColor(.modaicsCotton)
+                                .font(.forestHeadline(18))
+                                .foregroundColor(.sageWhite)
                             Text("AI will analyze your item")
-                                .font(.system(size: 14))
-                                .foregroundColor(.modaicsCottonLight)
+                                .font(.forestCaption(14))
+                                .foregroundColor(.sageMuted)
                         }
                     }
                     .frame(maxWidth: .infinity, minHeight: 240)
-                    .background(Color.modaicsDarkBlue.opacity(0.6))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .background(.forestMid.opacity(0.6))
+                    .clipShape(RoundedRectangle(cornerRadius: ForestRadius.xlarge))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [.modaicsChrome1.opacity(0.3), .modaicsChrome2.opacity(0.3)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 2
-                            )
+                        RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                            .stroke(.luxeGoldGradient, lineWidth: 2)
                     )
                 }
             } else {
@@ -215,7 +185,7 @@ struct SmartCreateView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 140, height: 180)
-                                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                                    .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
                                 
                                 // Remove button
                                 Button {
@@ -228,8 +198,8 @@ struct SmartCreateView: View {
                                 } label: {
                                     Image(systemName: "xmark.circle.fill")
                                         .font(.system(size: 24))
-                                        .foregroundColor(.modaicsCotton)
-                                        .background(Circle().fill(Color.modaicsDarkBlue))
+                                        .foregroundColor(.sageWhite)
+                                        .background(Circle().fill(.forestDeep))
                                 }
                                 .padding(8)
                             }
@@ -240,17 +210,17 @@ struct SmartCreateView: View {
                             VStack(spacing: 8) {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size: 32))
-                                    .foregroundColor(.modaicsChrome1)
+                                    .foregroundColor(.luxeGold)
                                 Text("Add More")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.modaicsCottonLight)
+                                    .font(.forestCaption(12))
+                                    .foregroundColor(.sageMuted)
                             }
                             .frame(width: 140, height: 180)
-                            .background(Color.modaicsDarkBlue.opacity(0.4))
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .background(.forestMid.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
                             .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.modaicsChrome1.opacity(0.3), style: StrokeStyle(lineWidth: 2, dash: [8]))
+                                RoundedRectangle(cornerRadius: ForestRadius.large)
+                                    .stroke(.luxeGold.opacity(0.3), style: StrokeStyle(lineWidth: 2, dash: [8]))
                             )
                         }
                     }
@@ -265,41 +235,35 @@ struct SmartCreateView: View {
         VStack(spacing: 16) {
             HStack(spacing: 12) {
                 ProgressView()
-                    .tint(.modaicsChrome1)
+                    .tint(.luxeGold)
                 Text("AI is analyzing your item...")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
             }
             
             ProgressView(value: analysisProgress)
-                .tint(.modaicsChrome1)
-                .background(Color.modaicsDarkBlue.opacity(0.3))
+                .tint(.luxeGold)
+                .background(.forestMid.opacity(0.3))
                 .clipShape(Capsule())
         }
         .padding(20)
-        .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(.forestMid.opacity(0.6))
+        .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
     }
     
     private var aiConfidenceBadge: some View {
         HStack(spacing: 12) {
             Image(systemName: "checkmark.seal.fill")
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .foregroundStyle(.luxeGoldGradient)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("AI Analysis Complete")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
                 if let confidence = VisionAnalysisService.shared.analysisResult?.confidence {
                     Text("\(Int(confidence * 100))% confidence")
-                        .font(.system(size: 14))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestBody(14))
+                        .foregroundColor(.sageMuted)
                 }
             }
             
@@ -312,11 +276,11 @@ struct SmartCreateView: View {
             }
         }
         .padding(16)
-        .background(Color.modaicsDarkBlue.opacity(0.6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(.forestMid.opacity(0.6))
+        .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: ForestRadius.large)
+                .stroke(.luxeGold.opacity(0.3), lineWidth: 1)
         )
     }
     
@@ -326,10 +290,10 @@ struct SmartCreateView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "tag.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Item Details")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
             }
             
             ModaicsTextField(label: "", placeholder: "Item Name", text: $itemName, icon: "tshirt.fill")
@@ -338,8 +302,8 @@ struct SmartCreateView: View {
             // Category chips
             VStack(alignment: .leading, spacing: 8) {
                 Text("Category")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -358,8 +322,8 @@ struct SmartCreateView: View {
             // Size chips
             VStack(alignment: .leading, spacing: 8) {
                 Text("Size")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -378,8 +342,8 @@ struct SmartCreateView: View {
             // Condition chips
             VStack(alignment: .leading, spacing: 8) {
                 Text("Condition")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -399,18 +363,18 @@ struct SmartCreateView: View {
             if !detectedColors.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Detected Colors")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.sageMuted)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(detectedColors, id: \.self) { color in
                                 Text(color)
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(.modaicsCotton)
+                                    .font(.forestCaption(13))
+                                    .foregroundColor(.sageWhite)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
-                                    .background(Color.modaicsDarkBlue.opacity(0.6))
+                                    .background(.forestMid.opacity(0.6))
                                     .clipShape(Capsule())
                             }
                         }
@@ -426,10 +390,10 @@ struct SmartCreateView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "dollarsign.circle.fill")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Pricing")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
             }
             
             HStack(spacing: 12) {
@@ -455,13 +419,13 @@ struct SmartCreateView: View {
                original > listing {
                 HStack(spacing: 8) {
                     Image(systemName: "arrow.down.circle.fill")
-                        .foregroundColor(.green)
+                        .foregroundColor(.emerald)
                     Text("\(Int((original - listing) / original * 100))% off retail")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.green)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.emerald)
                 }
                 .padding(12)
-                .background(Color.green.opacity(0.1))
+                .background(.emerald.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
         }
@@ -473,14 +437,14 @@ struct SmartCreateView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "text.alignleft")
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
                 Text("Description")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
                 
                 Text("(Optional)")
-                    .font(.system(size: 12))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(12))
+                    .foregroundColor(.sageMuted)
                 
                 Spacer()
             }
@@ -495,8 +459,8 @@ struct SmartCreateView: View {
             // Show AI suggestion hint if description is populated
             if !description.isEmpty && hasAnalyzed {
                 Text("💡 AI-generated. Feel free to edit or replace with your own description.")
-                    .font(.system(size: 12))
-                    .foregroundColor(.modaicsCottonLight.opacity(0.8))
+                    .font(.forestCaption(12))
+                    .foregroundColor(.sageMuted.opacity(0.8))
                     .padding(.top, 4)
             }
         }
@@ -508,17 +472,17 @@ struct SmartCreateView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "leaf.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(.emerald)
                 Text("Sustainability")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
             }
             
             if !detectedMaterials.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Detected Materials")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.sageMuted)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
@@ -526,14 +490,14 @@ struct SmartCreateView: View {
                                 HStack(spacing: 6) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .font(.caption)
-                                        .foregroundColor(.green)
+                                        .foregroundColor(.emerald)
                                     Text(material)
-                                        .font(.system(size: 13, weight: .medium))
+                                        .font(.forestCaption(13))
                                 }
-                                .foregroundColor(.modaicsCotton)
+                                .foregroundColor(.sageWhite)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(Color.green.opacity(0.1))
+                                .background(.emerald.opacity(0.1))
                                 .clipShape(Capsule())
                             }
                         }
@@ -543,20 +507,20 @@ struct SmartCreateView: View {
             
             HStack(spacing: 12) {
                 Image(systemName: "arrow.3.trianglepath")
-                    .foregroundColor(.green)
+                    .foregroundColor(.emerald)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Secondhand Marketplace")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.sageWhite)
                     Text("Help reduce fashion waste")
-                        .font(.system(size: 12))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(12))
+                        .foregroundColor(.sageMuted)
                 }
                 Spacer()
             }
             .padding(12)
-            .background(Color.green.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(.emerald.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
         }
     }
     
@@ -564,8 +528,6 @@ struct SmartCreateView: View {
     
     private func performAIAnalysis() async {
         guard !selectedImages.isEmpty else { return }
-        
-        // Prevent duplicate analysis if already running
         guard !isAnalyzing else {
             print("⚠️ Analysis already in progress, skipping duplicate call")
             return
@@ -574,7 +536,7 @@ struct SmartCreateView: View {
         isAnalyzing = true
         hasAnalyzed = false
         
-        print("🤖 Starting AI analysis for \(selectedImages.count) image(s) - will analyze first image only")
+        print("🤖 Starting AI analysis for \(selectedImages.count) image(s)")
         
         // Simulate progress
         for progress in stride(from: 0.0, through: 0.9, by: 0.1) {
@@ -604,31 +566,6 @@ struct SmartCreateView: View {
         
         isAnalyzing = false
         hasAnalyzed = true
-    }
-    
-    private func enhanceDescription() async {
-        guard let image = selectedImages.first else {
-            print("❌ No image available for description enhancement")
-            return
-        }
-        
-        print("✨ Enhancing description with AI...")
-        
-        // Show loading state (you could add a @State variable for this)
-        let (enhancedDesc, confidence) = await VisionAnalysisService.shared.generateEnhancedDescription(
-            image: image,
-            category: selectedCategory.rawValue,
-            brand: brand,
-            colors: detectedColors,
-            condition: selectedCondition,
-            materials: detectedMaterials,
-            size: selectedSize
-        )
-        
-        // Update description with AI-generated text
-        description = enhancedDesc
-        
-        print("✅ Description enhanced with confidence: \(Int(confidence * 100))%")
     }
     
     private var isFormValid: Bool {
@@ -665,4 +602,9 @@ struct SmartCreateView: View {
             dismiss()
         }
     }
+}
+
+#Preview {
+    SmartCreateView(userType: .user)
+        .environmentObject(FashionViewModel())
 }

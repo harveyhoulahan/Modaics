@@ -1,6 +1,6 @@
 //
 //  LoginView.swift  (Auth module)
-//  — enhanced, animated login screen
+//  — enhanced, animated login screen with dark green Porsche aesthetic
 //
 
 import SwiftUI
@@ -25,11 +25,11 @@ struct LoginView: View {
 
                     header                         // mini-logo + word-mark
 
-                    introSection                  // “Welcome…” + paragraph
+                    introSection                  // "Welcome…" + paragraph
 
                     impactStats                   // Items Saved / Users / CO₂
 
-                    premiumFeatures               // chrome cards
+                    premiumFeatures               // forest cards
 
                     actionButtons                 // User / Brand
                 }
@@ -41,8 +41,7 @@ struct LoginView: View {
 
     // ───────────────────────────── sub-views
     private var background: some View {
-        LinearGradient(colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                       startPoint: .top, endPoint: .bottom)
+        LinearGradient.forestBackground
             .ignoresSafeArea()
     }
 
@@ -50,10 +49,8 @@ struct LoginView: View {
         HStack {
             ModaicsMosaicLogo(size: CGFloat(80))
             Text("modaics")
-                .font(.system(size: 32, weight: .ultraLight, design: .serif))
-                .foregroundStyle(
-                    LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                   startPoint: .leading, endPoint: .trailing))
+                .font(.forestDisplay(32))
+                .foregroundStyle(.luxeGoldGradient)
             Spacer()
         }
         .padding(.horizontal, 24).padding(.top, 60)
@@ -62,14 +59,14 @@ struct LoginView: View {
     private var introSection: some View {
         VStack(spacing: 20) {
             Text("Welcome to your\ndigital wardrobe")
-                .font(.system(size: 36, weight: .ultraLight, design: .serif))
-                .foregroundColor(.modaicsCotton)
+                .font(.forestDisplay(36))
+                .foregroundColor(.sageWhite)
                 .multilineTextAlignment(.center)
                 .lineSpacing(8)
 
             Text("Modaics helps you discover, swap and sell fashion items while reducing your environmental footprint.")
-                .font(.system(size: 16, weight: .light))
-                .foregroundColor(.modaicsCotton.opacity(0.8))
+                .font(.forestCaption(16))
+                .foregroundColor(.sageWhite.opacity(0.8))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
                 .lineSpacing(4)
@@ -80,9 +77,9 @@ struct LoginView: View {
 
     private var impactStats: some View {
         HStack(spacing: 30) {
-            ImpactStat(value: "2.5M", label: "Items Saved", icon: "arrow.3.trianglepath")
-            ImpactStat(value: "500K", label: "Active Users", icon: "person.2.fill")
-            ImpactStat(value: "1.2M", label: "kg CO₂ Saved", icon: "leaf.fill")
+            ImpactStat(value: "2.5M", label: "Items Saved", icon: "arrow.3.trianglepath", color: .emerald)
+            ImpactStat(value: "500K", label: "Active Users", icon: "person.2.fill", color: .luxeGold)
+            ImpactStat(value: "1.2M", label: "kg CO₂ Saved", icon: "leaf.fill", color: .organicGreen)
         }
         .padding(.vertical, 10)
         .opacity(statVisible ? 1 : 0)
@@ -124,7 +121,7 @@ struct LoginView: View {
 
             Text("By continuing you agree to our Terms & Privacy Policy")
                 .font(.caption2)
-                .foregroundColor(.modaicsChrome1.opacity(0.6))
+                .foregroundColor(.luxeGold.opacity(0.6))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
         }
@@ -146,28 +143,26 @@ struct LoginView: View {
                 Image(systemName: sfSymbol)
                 Text(label).fontWeight(.medium)
             }
-            .foregroundColor(.modaicsDarkBlue)
+            .foregroundColor(.forestDeep)
             .frame(maxWidth: .infinity).padding(.vertical, 20)
-            .background(
-                LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                               startPoint: .leading, endPoint: .trailing))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .modaicsChrome1.opacity(0.3), radius: 10, y: 5)
+            .background(.luxeGoldGradient)
+            .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
+            .shadow(color: .luxeGold.opacity(0.3), radius: 10, y: 5)
         }
         .scaleEffect(btnScale[idx])
-        .animation(.modaicsSpring, value: btnScale[idx])
+        .animation(.forestSpring, value: btnScale[idx])
     }
 
     private func runAnimations() {
         // intro text
-        withAnimation(.modaicsSpring.delay(0.2)) {
+        withAnimation(.forestSpring.delay(0.2)) {
             introOpacity = 1; introOffset = 0
         }
         // stats
-        withAnimation(.modaicsSpring.delay(0.4)) { statVisible = true }
+        withAnimation(.forestSpring.delay(0.4)) { statVisible = true }
         // cards
         for i in featureShown.indices {
-            withAnimation(.modaicsSpring.delay(0.6 + Double(i)*0.2)) {
+            withAnimation(.forestSpring.delay(0.6 + Double(i)*0.2)) {
                 featureShown[i] = true
             }
         }
@@ -176,18 +171,18 @@ struct LoginView: View {
 
 // ─────────────────────────────────────────────── MARK: ImpactStat
 fileprivate struct ImpactStat: View {
-    let value: String; let label: String; let icon: String
+    let value: String; let label: String; let icon: String; let color: Color
     var body: some View {
         VStack(spacing: 6) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(.modaicsChrome1)
+                .foregroundColor(color)
             Text(value)
-                .font(.system(size: 22, weight: .bold))
-                .foregroundColor(.modaicsCotton)
+                .font(.forestHeadline(22))
+                .foregroundColor(.sageWhite)
             Text(label)
                 .font(.caption)
-                .foregroundColor(.modaicsCottonLight)
+                .foregroundColor(.sageMuted)
         }
         .frame(maxWidth: .infinity)
     }
@@ -200,20 +195,31 @@ fileprivate struct PremiumFeatureCard: View {
     var body: some View {
         HStack(spacing: 18) {
             Circle()
-                .fill(Color.modaicsDenim1.opacity(0.3))
+                .fill(.forestSoft.opacity(0.5))
                 .frame(width: 50, height: 50)
                 .overlay(Image(systemName: icon)
                             .font(.title2)
-                            .foregroundStyle(
-                                LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                               startPoint: .topLeading, endPoint: .bottomTrailing)))
+                            .foregroundStyle(.luxeGoldGradient))
             VStack(alignment: .leading, spacing: 4) {
-                Text(title).foregroundColor(.modaicsCotton).font(.headline)
-                Text(description).foregroundColor(.modaicsCottonLight).font(.subheadline)
+                Text(title).foregroundColor(.sageWhite).font(.headline)
+                Text(description).foregroundColor(.sageMuted).font(.subheadline)
             }
             Spacer()
         }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: ForestRadius.large)
+                .fill(.forestMid.opacity(0.6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: ForestRadius.large)
+                        .stroke(.luxeGold.opacity(0.2), lineWidth: 1)
+                )
+        )
         .opacity(isVisible ? 1 : 0)
         .offset(x: isVisible ? 0 : -25)
     }
+}
+
+#Preview {
+    LoginView(onUserSelect: { _ in })
 }

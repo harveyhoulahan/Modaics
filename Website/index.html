@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modaics - Your Digital Wardrobe for Sustainable Fashion</title>
+    <meta name="description" content="Transform your closet into currency. Buy, sell, and discover pre-loved fashion with AI-powered visual search.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --midnight-green: #0D3B2E; --racing-green: #1A5F4A; --emerald: #2ECC71; --silver: #E8E8E8; --dark-bg: #0A2A21; --card-bg: rgba(26, 95, 74, 0.3); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--silver); line-height: 1.6; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1.5rem 5%; background: linear-gradient(to bottom, var(--dark-bg) 0%, transparent 100%); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 600; color: var(--silver); text-decoration: none; }
+        .logo span { color: var(--emerald); }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { color: var(--silver); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--emerald); }
+        .nav-cta { background: var(--emerald); color: var(--dark-bg) !important; padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; }
+        .mobile-menu { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .mobile-menu span { width: 25px; height: 2px; background: var(--silver); }
+        .hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 5% 4rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 800px; height: 800px; background: radial-gradient(circle, var(--racing-green) 0%, transparent 70%); opacity: 0.4; animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.1); opacity: 0.6; } }
+        .hero-content { max-width: 1400px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+        .hero-text h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 600; line-height: 1.1; margin-bottom: 1.5rem; }
+        .hero-text h1 span { color: var(--emerald); }
+        .hero-text p { font-size: 1.25rem; color: rgba(232, 232, 232, 0.8); margin-bottom: 2.5rem; max-width: 500px; }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .btn-primary { background: var(--emerald); color: var(--dark-bg); }
+        .btn-primary:hover { background: #25a55b; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3); }
+        .btn-secondary { background: transparent; color: var(--silver); border: 1px solid rgba(232, 232, 232, 0.3); }
+        .btn-secondary:hover { background: rgba(232, 232, 232, 0.1); border-color: var(--emerald); }
+        .phone-mockup { width: 300px; height: 600px; background: linear-gradient(145deg, var(--midnight-green), var(--racing-green)); border-radius: 40px; padding: 12px; box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5); position: relative; transform: perspective(1000px) rotateY(-15deg); transition: transform 0.5s; margin: 0 auto; }
+        .phone-mockup:hover { transform: perspective(1000px) rotateY(-5deg); }
+        .phone-screen { width: 100%; height: 100%; background: var(--dark-bg); border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; }
+        .phone-notch { width: 120px; height: 25px; background: #000; margin: 0 auto; border-radius: 0 0 15px 15px; }
+        .phone-content { flex: 1; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        .phone-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .phone-title { font-size: 0.85rem; font-weight: 600; color: var(--emerald); }
+        .phone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+        .phone-item { aspect-ratio: 3/4; background: var(--card-bg); border-radius: 12px; }
+        .phone-fab { width: 50px; height: 50px; background: var(--emerald); border-radius: 50%; position: absolute; bottom: 20px; right: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--dark-bg); box-shadow: 0 5px 20px rgba(46, 204, 113, 0.4); }
+        .hero-stats { position: absolute; bottom: 2rem; left: 5%; right: 5%; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 600; color: var(--emerald); }
+        .stat-label { font-size: 0.9rem; color: rgba(232, 232, 232, 0.7); text-transform: uppercase; letter-spacing: 1px; }
+        .features { padding: 8rem 5%; background: linear-gradient(to bottom, var(--dark-bg), var(--midnight-green)); }
+        .section-header { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem; }
+        .section-header p { color: rgba(232, 232, 232, 0.7); font-size: 1.1rem; }
+        .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 2.5rem; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--emerald); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--emerald), var(--racing-green)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1.5rem; }
+        .feature-card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: rgba(232, 232, 232, 0.7); font-size: 0.95rem; }
+        .how-it-works { padding: 8rem 5%; background: var(--midnight-green); position: relative; }
+        .how-it-works::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--emerald), transparent); }
+        .steps { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 3rem; }
+        .step { display: grid; grid-template-columns: 100px 1fr; gap: 2rem; align-items: center; }
+        .step-number { font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 700; color: var(--emerald); opacity: 0.3; line-height: 1; }
+        .step-content h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .step-content p { color: rgba(232, 232, 232, 0.7); max-width: 500px; }
+        .impact { padding: 8rem 5%; background: linear-gradient(135deg, var(--midnight-green), var(--racing-green)); position: relative; overflow: hidden; }
+        .impact::before { content: ''; position: absolute; bottom: -30%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, var(--emerald) 0%, transparent 70%); opacity: 0.15; }
+        .impact-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+        .impact-content h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; }
+        .impact-content p { color: rgba(232, 232, 232, 0.8); font-size: 1.1rem; margin-bottom: 2rem; }
+        .impact-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .impact-stat { background: rgba(13, 59, 46, 0.5); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(46, 204, 113, 0.2); }
+        .impact-stat-value { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 600; color: var(--emerald); }
+        .impact-stat-label { font-size: 0.9rem; color: rgba(232, 232, 232, 0.7); margin-top: 0.25rem; }
+        .impact-visual { display: flex; justify-content: center; }
+        .impact-circle { width: 350px; height: 350px; border-radius: 50%; background: conic-gradient(from 0deg, var(--emerald) 0deg 120deg, var(--racing-green) 120deg 240deg, var(--midnight-green) 240deg 360deg); padding: 20px; position: relative; animation: rotate 20s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .impact-circle-inner { width: 100%; height: 100%; background: var(--midnight-green); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: counter-rotate 20s linear infinite; }
+        @keyframes counter-rotate { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        .download { padding: 6rem 5%; background: var(--dark-bg); text-align: center; }
+        .download-content { max-width: 600px; margin: 0 auto; }
+        .download h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 1rem; }
+        .download p { color: rgba(232, 232, 232, 0.7); margin-bottom: 2rem; }
+        .newsletter { padding: 6rem 5%; background: linear-gradient(to bottom, var(--dark-bg), var(--midnight-green)); }
+        .newsletter-content { max-width: 600px; margin: 0 auto; text-align: center; }
+        .newsletter h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.75rem; }
+        .newsletter p { color: rgba(232, 232, 232, 0.7); margin-bottom: 2rem; }
+        .newsletter-form { display: flex; gap: 1rem; max-width: 450px; margin: 0 auto; }
+        .newsletter-form input { flex: 1; padding: 1rem 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50px; background: rgba(255, 255, 255, 0.05); color: var(--silver); font-size: 1rem; outline: none; }
+        .newsletter-form input:focus { border-color: var(--emerald); }
+        .newsletter-form button { padding: 1rem 2rem; background: var(--emerald); color: var(--dark-bg); border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .newsletter-form button:hover { background: #25a55b; transform: translateY(-2px); }
+        footer { padding: 4rem 5% 2rem; background: var(--dark-bg); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand p { color: rgba(232, 232, 232, 0.6); margin-top: 1rem; font-size: 0.9rem; }
+        .footer-links h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: rgba(232, 232, 232, 0.6); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--emerald); }
+        .social-links { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-links a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; color: var(--silver); text-decoration: none; transition: all 0.3s; }
+        .social-links a:hover { background: var(--emerald); color: var(--dark-bg); }
+        .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .footer-bottom p { color: rgba(232, 232, 232, 0.4); font-size: 0.85rem; }
+        @media (max-width: 1024px) {
+            .hero-content { grid-template-columns: 1fr; text-align: center; }
+            .hero-text p { margin-left: auto; margin-right: auto; }
+            .hero-buttons { justify-content: center; }
+            .phone-mockup { transform: none; width: 250px; height: 500px; }
+            .impact-grid { grid-template-columns: 1fr; text-align: center; }
+            .impact-stats { max-width: 500px; margin: 0 auto; }
+            .footer-content { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu { display: flex; }
+            .hero { padding-top: 6rem; }
+            .hero-stats { gap: 2rem; }
+            .step { grid-template-columns: 60px 1fr; }
+            .step-number { font-size: 3rem; }
+            .newsletter-form { flex-direction: column; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .social-links { justify-content: center; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Moda<span>ics</span></a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#impact">Impact</a></li>
+            <li><a href="#download" class="nav-cta">Get the App</a></li>
+        </ul>
+        <div class="mobile-menu"><span></span><span></span><span></span></div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Your Digital Wardrobe for <span>Sustainable Fashion</span></h1>
+                <p>Transform your closet into currency. Buy, sell, and discover pre-loved fashion with AI-powered visual search and sustainability tracking.</p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">Download on App Store</a>
+                    <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="phone-notch"></div>
+                        <div class="phone-content">
+                            <div class="phone-header"><span class="phone-title">Discover</span></div>
+                            <div class="phone-grid"><div class="phone-item"></div><div class="phone-item"></div><div class="phone-item"></div><div class="phone-item"></div></div>
+                            <div class="phone-fab">+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><div class="stat-number">50K+</div><div class="stat-label">Active Users</div></div>
+            <div class="stat"><div class="stat-number">200K+</div><div class="stat-label">Items Listed</div></div>
+            <div class="stat"><div class="stat-number">2.5M</div><div class="stat-label">Gallons Saved</div></div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Premium Features for the Conscious Fashionista</h2>
+            <p>Discover tools designed to make sustainable fashion effortless, elegant, and rewarding.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon">📸</div><h3>AI Visual Search</h3><p>See something you love? Snap a photo and our AI instantly finds similar items across the marketplace.</p></div>
+            <div class="feature-card"><div class="feature-icon">⚡</div><h3>Smart Auto-Listing</h3><p>Turn your closet into cash in seconds. Our AI generates titles, descriptions, and pricing automatically.</p></div>
+            <div class="feature-card"><div class="feature-icon">🌱</div><h3>Sustainability Tracking</h3><p>Watch your positive impact grow with real-time stats on water saved and CO2 prevented.</p></div>
+            <div class="feature-card"><div class="feature-icon">✓</div><h3>Verified Community</h3><p>Connect with trusted fashion lovers. Our verification ensures authentic items and reliable sellers.</p></div>
+            <div class="feature-card"><div class="feature-icon">💬</div><h3>Seamless Messaging</h3><p>Negotiate, ask questions, and build connections with real-time chat.</p></div>
+            <div class="feature-card"><div class="feature-icon">🔒</div><h3>Secure Payments</h3><p>Shop with confidence. Our payment system protects buyers and sellers with encrypted transactions.</p></div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Three simple steps to join the sustainable fashion revolution.</p>
+        </div>
+        <div class="steps">
+            <div class="step"><div class="step-number">01</div><div class="step-content"><h3>Scan & Discover</h3><p>Use our AI visual search to find items that match your style. Point your camera at any piece of clothing and discover similar items instantly.</p></div></div>
+            <div class="step"><div class="step-number">02</div><div class="step-content"><h3>List & Sell</h3><p>Clear out your closet with ease. Snap photos and our AI fills in the details automatically. Set your price and reach thousands of buyers.</p></div></div>
+            <div class="step"><div class="step-number">03</div><div class="step-content"><h3>Discover & Connect</h3><p>Join a community of conscious fashion lovers. Save favorites, follow curators, and track your sustainability impact.</p></div></div>
+        </div>
+    </section>
+
+    <section class="impact" id="impact">
+        <div class="impact-grid">
+            <div class="impact-content">
+                <h2>Fashion That Gives Back</h2>
+                <p>Every transaction on Modaics contributes to a healthier planet. Together, we're changing fashion, one outfit at a time.</p>
+                <div class="impact-stats">
+                    <div class="impact-stat"><div class="impact-stat-value">1,800</div><div class="impact-stat-label">Gallons of water saved per item</div></div>
+                    <div class="impact-stat"><div class="impact-stat-value">20lbs</div><div class="impact-stat-label">CO2 emissions prevented</div></div>
+                    <div class="impact-stat"><div class="impact-stat-value">95%</div><div class="impact-stat-label">Of textiles are recyclable</div></div>
+                    <div class="impact-stat"><div class="impact-stat-value">$500</div><div class="impact-stat-label">Average annual savings</div></div>
+                </div>
+            </div>
+            <div class="impact-visual">
+                <div class="impact-circle">
+                    <div class="impact-circle-inner"><span style="color: var(--emerald); font-size: 3rem;">🌍</span><span style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Impact</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="download-content">
+            <h2>Download Modaics Today</h2>
+            <p>Join thousands of fashion-forward individuals transforming how we buy, sell, and think about clothing.</p>
+            <a href="https://apps.apple.com" class="btn btn-primary" style="font-size: 1.1rem; padding: 1.2rem 2.5rem;">📱 Download on the App Store</a>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <div class="newsletter-content">
+            <h3>Stay in the Loop</h3>
+            <p>Get the latest updates on sustainable fashion, app features, and exclusive offers.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">Moda<span>ics</span></a>
+                <p>Your Digital Wardrobe for Sustainable Fashion. Transforming how we buy, sell, and think about clothing.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram">IG</a>
+                    <a href="#" aria-label="TikTok">TT</a>
+                    <a href="#" aria-label="Twitter">X</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Premium</a></li>
+                    <li><a href="#download">Download</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Modaics, Inc. All rights reserved.</p>
+            <p>Made with 💚 for the planet</p>
+        </div>
+    </footer>
+</body>
+</html>

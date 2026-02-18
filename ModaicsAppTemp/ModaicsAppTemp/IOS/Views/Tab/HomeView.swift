@@ -3,6 +3,7 @@
 //  ModaicsAppTemp
 //
 //  Premium curated homepage with AI/ML recommendations, events, and database items
+//  Dark Green Porsche Aesthetic - Luxury Sustainable Fashion
 //  Created by Harvey Houlahan on 6/6/2025.
 //
 
@@ -27,13 +28,9 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Premium gradient background
-                LinearGradient(
-                    colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                // Premium dark green gradient background - Porsche aesthetic
+                LinearGradient.forestBackground
+                    .ignoresSafeArea()
 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 24) {
@@ -102,18 +99,12 @@ struct HomeView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text("modaics")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .font(.forestDisplay(28))
+                    .foregroundStyle(.luxeGoldGradient)
                 
                 Text(greetingText)
-                    .font(.system(size: 14))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
             }
 
             Spacer()
@@ -126,11 +117,11 @@ struct HomeView: View {
                     ZStack(alignment: .topTrailing) {
                         Image(systemName: "bell.fill")
                             .font(.title3)
-                            .foregroundColor(.modaicsChrome1)
+                            .foregroundColor(.luxeGold)
                         
                         // Notification badge
                         Circle()
-                            .fill(Color.red)
+                            .fill(Color.emerald)
                             .frame(width: 8, height: 8)
                             .offset(x: 4, y: -4)
                     }
@@ -142,7 +133,7 @@ struct HomeView: View {
                 } label: {
                     Image(systemName: "person.circle.fill")
                         .font(.title2)
-                        .foregroundColor(.modaicsChrome1)
+                        .foregroundColor(.luxeGold)
                 }
             }
         }
@@ -152,30 +143,30 @@ struct HomeView: View {
     private var heroSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(userType == .user ? "Your Wardrobe" : "Dashboard")
-                .font(.system(size: 32, weight: .bold, design: .rounded))
-                .foregroundColor(.modaicsCotton)
+                .font(.forestDisplay(32))
+                .foregroundColor(.sageWhite)
             
             HStack(spacing: 16) {
-                // Stats cards
+                // Stats cards with gold accents
                 StatCard(
                     icon: "square.grid.3x3.fill",
                     value: "\(viewModel.allItems.count)",
                     label: "Items",
-                    color: .modaicsChrome1
+                    color: .luxeGold
                 )
                 
                 StatCard(
                     icon: "heart.fill",
                     value: "\(viewModel.likedIDs.count)",
                     label: "Saved",
-                    color: .red
+                    color: .emerald
                 )
                 
                 StatCard(
                     icon: "leaf.fill",
                     value: "\(viewModel.calculateUserSustainabilityScore())%",
                     label: "Eco Score",
-                    color: .green
+                    color: .organicGreen
                 )
             }
         }
@@ -187,20 +178,20 @@ struct HomeView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Happening Near You")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(18))
+                        .foregroundColor(.sageWhite)
                     
                     Text("Events worth checking out")
-                        .font(.system(size: 13))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(13))
+                        .foregroundColor(.sageMuted)
                 }
                 
                 Spacer()
                 
                 NavigationLink(destination: CommunityFeedView().environmentObject(viewModel)) {
                     Text("See All")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsChrome1)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.luxeGold)
                 }
             }
             .padding(.horizontal, 20)
@@ -225,32 +216,26 @@ struct HomeView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "sparkles")
                         .font(.system(size: 16))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.modaicsChrome1, .modaicsChrome2],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .foregroundStyle(.luxeGoldGradient)
                     
                     Text("Picked for You")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(18))
+                        .foregroundColor(.sageWhite)
                 }
                 
                 Spacer()
                 
                 Text("AI-powered")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.modaicsChrome2)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
+                    .font(.forestCaption(11))
+                    .foregroundColor(.luxeGold)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
                     .background(
                         Capsule()
-                            .fill(Color.modaicsChrome2.opacity(0.2))
+                            .fill(.luxeGold.opacity(0.15))
                             .overlay(
                                 Capsule()
-                                    .stroke(Color.modaicsChrome2.opacity(0.3), lineWidth: 1)
+                                    .stroke(.luxeGold.opacity(0.3), lineWidth: 1)
                             )
                     )
             }
@@ -275,19 +260,19 @@ struct HomeView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "flame.fill")
                         .font(.system(size: 16))
-                        .foregroundColor(.orange)
+                        .foregroundColor(.earthAmber)
                     
                     Text("Trending Now")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(18))
+                        .foregroundColor(.sageWhite)
                 }
                 
                 Spacer()
                 
                 NavigationLink(destination: DiscoverView().environmentObject(viewModel)) {
                     Text("Explore")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.modaicsChrome1)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.luxeGold)
                 }
             }
             .padding(.horizontal, 20)
@@ -310,12 +295,12 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
                 Image(systemName: "leaf.circle.fill")
-                    .font(.system(size: 16))
-                    .foregroundColor(.green)
+                    .font(.system(size: 18))
+                    .foregroundColor(.emerald)
                 
                 Text("Impact This Month")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(18))
+                    .foregroundColor(.sageWhite)
             }
             
             VStack(spacing: 12) {
@@ -323,7 +308,7 @@ struct HomeView: View {
                     icon: "drop.fill",
                     label: "Water Saved",
                     value: "2,847 L",
-                    color: .blue,
+                    color: .natureTeal,
                     description: "compared to new"
                 )
                 
@@ -331,7 +316,7 @@ struct HomeView: View {
                     icon: "cloud.fill",
                     label: "Carbon Offset",
                     value: "\(viewModel.calculateUserSustainabilityScore()) kg",
-                    color: .green,
+                    color: .emerald,
                     description: "emissions avoided"
                 )
                 
@@ -339,19 +324,19 @@ struct HomeView: View {
                     icon: "arrow.3.trianglepath",
                     label: "Items Circulated",
                     value: "\(viewModel.userWardrobe.filter { $0.sustainabilityScore.isRecycled }.count)",
-                    color: .orange,
+                    color: .earthAmber,
                     description: "given new life"
                 )
             }
             .padding(20)
             .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.modaicsDarkBlue.opacity(0.6))
+                RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                    .fill(.forestMid.opacity(0.6))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: ForestRadius.xlarge)
                             .stroke(
                                 LinearGradient(
-                                    colors: [Color.green.opacity(0.3), Color.blue.opacity(0.3)],
+                                    colors: [.emerald.opacity(0.3), .natureTeal.opacity(0.3)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
@@ -366,8 +351,8 @@ struct HomeView: View {
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Quick Actions")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.modaicsCotton)
+                .font(.forestHeadline(18))
+                .foregroundColor(.sageWhite)
             
             LazyVGrid(columns: [
                 GridItem(.flexible(), spacing: 12),
@@ -377,28 +362,28 @@ struct HomeView: View {
                     icon: "plus.circle.fill",
                     title: "List Item",
                     subtitle: "Sell or swap",
-                    gradient: [.modaicsChrome1, .modaicsChrome2]
+                    gradient: [.luxeGold, .luxeGoldBright]
                 )
                 
                 QuickActionCard(
                     icon: "magnifyingglass.circle.fill",
                     title: "AI Search",
                     subtitle: "Find anything",
-                    gradient: [.modaicsDenim1, .modaicsDenim2]
+                    gradient: [.emerald, .emeraldDeep]
                 )
                 
                 QuickActionCard(
                     icon: "arrow.triangle.swap",
                     title: "Swap Meet",
                     subtitle: "Join event",
-                    gradient: [.green, Color(red: 0.2, green: 0.6, blue: 0.4)]
+                    gradient: [.organicGreen, .emerald]
                 )
                 
                 QuickActionCard(
                     icon: "chart.line.uptrend.xyaxis.circle.fill",
                     title: "Analytics",
                     subtitle: "View stats",
-                    gradient: [.purple, .pink]
+                    gradient: [.natureTeal, .forestLight]
                 )
             }
         }
@@ -457,11 +442,11 @@ struct HomeView: View {
     }
 
     private func runAppearAnimations() {
-        withAnimation(.easeOut(duration: 0.6)) {
+        withAnimation(.forestElegant) {
             headerOffset = 0
         }
         
-        withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
+        withAnimation(.forestElegant.delay(0.2)) {
             sectionsVisible = true
         }
     }
@@ -487,20 +472,20 @@ struct StatCard: View {
                 .foregroundColor(color)
             
             Text(value)
-                .font(.system(size: 20, weight: .bold))
-                .foregroundColor(.modaicsCotton)
+                .font(.forestHeadline(20))
+                .foregroundColor(.sageWhite)
             
             Text(label)
-                .font(.system(size: 12))
-                .foregroundColor(.modaicsCottonLight)
+                .font(.forestCaption(12))
+                .foregroundColor(.sageMuted)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
+            RoundedRectangle(cornerRadius: ForestRadius.large)
+                .fill(.forestMid.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: ForestRadius.large)
                         .stroke(color.opacity(0.3), lineWidth: 1)
                 )
         )
@@ -519,9 +504,9 @@ struct CuratedEventCard: View {
                     Image(systemName: event.type.icon)
                         .font(.system(size: 12))
                     Text(event.type.rawValue)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.forestCaption(12))
                 }
-                .foregroundColor(.white)
+                .foregroundColor(.sageWhite)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 .background(event.type.color)
@@ -531,35 +516,35 @@ struct CuratedEventCard: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(event.title)
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(16))
+                        .foregroundColor(.sageWhite)
                         .lineLimit(2)
                     
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
                             .font(.caption)
                         Text(event.date, style: .date)
-                            .font(.system(size: 12))
+                            .font(.forestCaption(12))
                     }
-                    .foregroundColor(.modaicsCottonLight)
+                    .foregroundColor(.sageMuted)
                     
                     HStack(spacing: 4) {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                         Text("\(event.attendees) attending")
-                            .font(.system(size: 12))
+                            .font(.forestCaption(12))
                     }
-                    .foregroundColor(.modaicsCottonLight)
+                    .foregroundColor(.sageMuted)
                 }
             }
             .padding(16)
             .frame(width: 220, height: 200)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: ForestRadius.xlarge)
                     .fill(
                         LinearGradient(
                             colors: [
-                                Color.modaicsDarkBlue.opacity(0.8),
+                                .forestMid.opacity(0.8),
                                 event.type.color.opacity(0.2)
                             ],
                             startPoint: .topLeading,
@@ -567,7 +552,7 @@ struct CuratedEventCard: View {
                         )
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: ForestRadius.xlarge)
                             .stroke(event.type.color.opacity(0.4), lineWidth: 1.5)
                     )
             )
@@ -583,8 +568,8 @@ fileprivate struct HomeCompactItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Image
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.modaicsSurface2)
+            RoundedRectangle(cornerRadius: ForestRadius.medium)
+                .fill(.surfaceElevated)
                 .aspectRatio(3/4, contentMode: .fit)
                 .frame(width: 140)
                 .overlay(
@@ -594,22 +579,22 @@ fileprivate struct HomeCompactItemCard: View {
                         }
                     }
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.brand)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.modaicsChrome1)
+                    .font(.forestCaption(12))
+                    .foregroundColor(.luxeGold)
                 
                 Text(item.name)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestBody(14))
+                    .foregroundColor(.sageWhite)
                     .lineLimit(2)
                 
                 if item.listingPrice > 0 {
                     Text("$\(Int(item.listingPrice))")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(.modaicsChrome2)
+                        .font(.forestCaption(13))
+                        .foregroundColor(.luxeGoldBright)
                 }
             }
         }
@@ -633,16 +618,16 @@ struct ImpactRow: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
-                    .font(.system(size: 14))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
                 
                 Text(value)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(20))
+                    .foregroundColor(.sageWhite)
                 
                 Text(description)
-                    .font(.system(size: 11))
-                    .foregroundColor(.modaicsCottonLight.opacity(0.7))
+                    .font(.forestCaption(11))
+                    .foregroundColor(.sageSubtle)
             }
             
             Spacer()
@@ -659,7 +644,7 @@ struct QuickActionCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Image(systemName: icon)
-                .font(.title)
+                .font(.title2)
                 .foregroundStyle(
                     LinearGradient(
                         colors: gradient,
@@ -670,21 +655,21 @@ struct QuickActionCard: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
                 
                 Text(subtitle)
-                    .font(.system(size: 12))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(12))
+                    .foregroundColor(.sageMuted)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
+            RoundedRectangle(cornerRadius: ForestRadius.large)
+                .fill(.forestMid.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: ForestRadius.large)
                         .stroke(
                             LinearGradient(
                                 colors: gradient.map { $0.opacity(0.4) },
@@ -696,4 +681,9 @@ struct QuickActionCard: View {
                 )
         )
     }
+}
+
+#Preview {
+    HomeView(userType: .user)
+        .environmentObject(FashionViewModel())
 }

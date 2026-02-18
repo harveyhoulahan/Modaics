@@ -2,7 +2,7 @@
 //  ModaicsButton.swift
 //  Modaics
 //
-//  Reusable button component with consistent theming
+//  Reusable button component with dark green Porsche aesthetic
 //
 
 import SwiftUI
@@ -28,30 +28,24 @@ struct ModaicsPrimaryButton: View {
             HStack(spacing: 8) {
                 if isLoading {
                     ProgressView()
-                        .tint(.modaicsDarkBlue)
+                        .tint(.forestDeep)
                 } else {
                     if let icon = icon {
                         Image(systemName: icon)
                             .font(.system(size: 16, weight: .semibold))
                     }
                     Text(title)
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.forestHeadline(18))
                 }
             }
-            .foregroundColor(.modaicsDarkBlue)
+            .foregroundColor(.forestDeep)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(
-                LinearGradient(
-                    colors: [.modaicsChrome1, .modaicsChrome2],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .background(.luxeGoldGradient)
+            .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+                RoundedRectangle(cornerRadius: ForestRadius.large)
+                    .stroke(.luxeGold.opacity(0.3), lineWidth: 1)
             )
         }
         .disabled(!isEnabled || isLoading)
@@ -81,16 +75,16 @@ struct ModaicsSecondaryButton: View {
                         .font(.system(size: 16, weight: .medium))
                 }
                 Text(title)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.forestCaption(16))
             }
-            .foregroundColor(.modaicsCotton)
+            .foregroundColor(.sageWhite)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(Color.modaicsDarkBlue.opacity(0.6))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(.forestMid.opacity(0.6))
+            .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.modaicsChrome1.opacity(0.2), lineWidth: 1)
+                RoundedRectangle(cornerRadius: ForestRadius.medium)
+                    .stroke(.luxeGold.opacity(0.2), lineWidth: 1)
             )
         }
         .disabled(!isEnabled)
@@ -103,16 +97,16 @@ struct ModaicsIconButton: View {
     let icon: String
     let action: () -> Void
     var size: CGFloat = 44
-    var foregroundColor: Color = .modaicsChrome1
+    var foregroundColor: Color = .luxeGold
     
     var body: some View {
         Button(action: action) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.modaicsDarkBlue.opacity(0.6))
+                RoundedRectangle(cornerRadius: ForestRadius.medium)
+                    .fill(.forestMid.opacity(0.6))
                     .frame(width: size, height: size)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: ForestRadius.medium)
                             .stroke(foregroundColor.opacity(0.3), lineWidth: 1)
                     )
                 
@@ -146,32 +140,112 @@ struct ModaicsChip: View {
                         .font(.caption)
                 }
                 Text(title)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.forestCaption(14))
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(
                 isSelected
-                    ? LinearGradient(
-                        colors: [.modaicsChrome1, .modaicsChrome2],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
+                    ? .luxeGoldGradient
                     : LinearGradient(
-                        colors: [Color.modaicsDarkBlue.opacity(0.6)],
+                        colors: [.forestMid.opacity(0.6)],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
             )
-            .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCottonLight)
+            .foregroundColor(isSelected ? .forestDeep : .sageWhite)
             .clipShape(Capsule())
             .overlay(
                 Capsule()
                     .stroke(
-                        isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.modaicsChrome1.opacity(0.2),
+                        isSelected ? Color.luxeGold.opacity(0.5) : Color.luxeGold.opacity(0.2),
                         lineWidth: 1
                     )
             )
         }
+    }
+}
+
+// MARK: - Glass Button
+struct GlassButton: View {
+    let title: String
+    let icon: String
+    let style: ButtonStyle
+    let size: ButtonSize
+    let action: () -> Void
+    
+    enum ButtonStyle {
+        case primary
+        case secondary
+        case ghost
+    }
+    
+    enum ButtonSize {
+        case small
+        case medium
+        case large
+    }
+    
+    init(_ title: String, icon: String, style: ButtonStyle = .primary, size: ButtonSize = .medium, action: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.style = style
+        self.size = size
+        self.action = action
+    }
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                Text(title)
+            }
+            .font(.forestCaption(size == .small ? 12 : 14))
+            .foregroundColor(style == .primary ? .forestDeep : .luxeGold)
+            .padding(.horizontal, size == .small ? 12 : 16)
+            .padding(.vertical, size == .small ? 8 : 12)
+            .background(
+                style == .primary
+                    ? .luxeGoldGradient
+                    : Color.clear
+            )
+            .background(
+                style != .primary
+                    ? .ultraThinMaterial
+                    : Color.clear
+            )
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .stroke(.luxeGold.opacity(style == .ghost ? 0.5 : 0.3), lineWidth: 1)
+            )
+        }
+    }
+}
+
+#Preview {
+    ZStack {
+        LinearGradient.forestBackground
+            .ignoresSafeArea()
+        
+        VStack(spacing: 20) {
+            ModaicsPrimaryButton("Primary Button", icon: "checkmark") {}
+            
+            ModaicsSecondaryButton("Secondary Button", icon: "arrow.right") {}
+            
+            ModaicsIconButton(icon: "gear") {}
+            
+            HStack(spacing: 12) {
+                ModaicsChip("Chip Selected", isSelected: true) {}
+                ModaicsChip("Chip Default", isSelected: false) {}
+            }
+            
+            HStack(spacing: 12) {
+                GlassButton("Small", icon: "star", style: .primary, size: .small) {}
+                GlassButton("Medium", icon: "star", style: .secondary, size: .medium) {}
+                GlassButton("Ghost", icon: "star", style: .ghost, size: .small) {}
+            }
+        }
+        .padding()
     }
 }

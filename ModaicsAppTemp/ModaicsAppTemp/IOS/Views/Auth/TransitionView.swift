@@ -1,6 +1,6 @@
 //
 //  TransitionView.swift
-//  Modaics – Auth module (ultimate blended version)
+//  Modaics – Auth module (dark green Porsche aesthetic)
 //
 
 import SwiftUI
@@ -27,7 +27,7 @@ struct TransitionView: View {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [Color.modaicsChrome1.opacity(0.35), .clear],
+                            colors: [Color.luxeGold.opacity(0.35), .clear],
                             center: .center, startRadius: 0, endRadius: 110))
                     .blur(radius: 20)
                     .scaleEffect(glowPulse)
@@ -35,13 +35,13 @@ struct TransitionView: View {
 
                 // doors + middle shelf
                 ZStack {
-                    ChromeDoor(isLeft: true)
+                    GoldDoor(isLeft: true)
                         .rotationEffect(.degrees(leftDoorRot), anchor: .leading)
                         .offset(x: -50)
 
                     middleShelf
 
-                    ChromeDoor(isLeft: false)
+                    GoldDoor(isLeft: false)
                         .rotationEffect(.degrees(rightDoorRot), anchor: .trailing)
                         .offset(x:  50)
                 }
@@ -54,17 +54,13 @@ struct TransitionView: View {
                 Text(userType == .user
                      ? "Assembling your wardrobe..."
                      : "Setting up your brand dashboard...")
-                    .font(.title3.weight(.light))
-                    .foregroundStyle(
-                        LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                       startPoint: .leading, endPoint: .trailing))
+                    .font(.forestTitle(20))
+                    .foregroundStyle(.luxeGoldGradient)
 
                 HStack(spacing: 12) {
                     ForEach(dotActive.indices, id: \.self) { i in
                         Circle()
-                            .fill(
-                                LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                               startPoint: .topLeading, endPoint: .bottomTrailing))
+                            .fill(.luxeGoldGradient)
                             .frame(width: 10, height: 10)
                             .scaleEffect(dotActive[i] ? 1.5 : 1)
                             .opacity(dotActive[i] ? 1 : 0.4)
@@ -75,14 +71,14 @@ struct TransitionView: View {
         }
         .onAppear   { runSequence() }
         .onChange(of: contentReady) { _, ready in
-            if ready { withAnimation(.modaicsSpring) { wardrobeOpacity = 0 } }
+            if ready { withAnimation(.forestSpring) { wardrobeOpacity = 0 } }
         }
     }
 
     // ───────── middle shelf helper
     private var middleShelf: some View {
         RoundedRectangle(cornerRadius: 8)
-            .fill(LinearGradient(colors: [.modaicsDenim1, .modaicsDenim2],
+            .fill(LinearGradient(colors: [.forestSoft, .forestLight],
                                  startPoint: .top, endPoint: .bottom))
             .frame(width: 45, height: 130)
             .overlay(
@@ -91,9 +87,8 @@ struct TransitionView: View {
                         RoundedRectangle(cornerRadius: 3)
                             .fill(
                                 userType == .brand
-                                ? LinearGradient(colors: [.modaicsChrome1, .modaicsChrome2],
-                                                 startPoint: .leading, endPoint: .trailing)
-                                : LinearGradient(colors: [.modaicsCotton, .modaicsCottonLight],
+                                ? .luxeGoldGradient
+                                : LinearGradient(colors: [.sageWhite, .sageMuted],
                                                  startPoint: .leading, endPoint: .trailing))
                             .frame(width: 32, height: userType == .brand ? 6 : 5)
                             .scaleEffect(barScales[i])
@@ -105,7 +100,7 @@ struct TransitionView: View {
     private func runSequence() {
 
         // doors swing + slight zoom
-        withAnimation(.modaicsElastic) {
+        withAnimation(.forestSpring) {
             leftDoorRot  = -70
             rightDoorRot =  70
             wardrobeScale = 1.25
@@ -113,7 +108,7 @@ struct TransitionView: View {
 
         // bars grow
         for i in barScales.indices {
-            withAnimation(.modaicsSpring.delay(Double(i)*0.1)) {
+            withAnimation(.forestSpring.delay(Double(i)*0.1)) {
                 barScales[i] = 1.0
             }
         }
@@ -130,4 +125,78 @@ struct TransitionView: View {
             }
         }
     }
+}
+
+// ─────────────────────────────────────────────── MARK: GoldDoor
+struct GoldDoor: View {
+    let isLeft: Bool
+    @State private var handleGlow: Bool = false
+    
+    var body: some View {
+        ZStack {
+            // Main door body with premium gold gradient
+            RoundedRectangle(cornerRadius: 10)
+                .fill(
+                    LinearGradient(
+                        colors: isLeft ?
+                            [.luxeGold, .luxeGoldBright, .luxeGoldDeep] :
+                            [.luxeGoldDeep, .luxeGoldBright, .luxeGold],
+                        startPoint: isLeft ? .topLeading : .topTrailing,
+                        endPoint: isLeft ? .bottomTrailing : .bottomLeading
+                    )
+                )
+                .frame(width: 45, height: 130)
+                .overlay(
+                    // Metallic sheen effect
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.3),
+                            Color.clear,
+                            Color.white.opacity(0.1)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .blendMode(.overlay)
+                )
+            
+            // Texture overlay
+            VStack(spacing: 6) {
+                ForEach(0..<3, id: \.self) { _ in
+                    Capsule()
+                        .fill(Color.white.opacity(0.2))
+                        .frame(width: 28, height: 2)
+                        .blur(radius: 0.5)
+                }
+            }
+            
+            // Premium gold handle
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [.white, .luxeGold],
+                        center: .topLeading,
+                        startRadius: 1,
+                        endRadius: 8
+                    )
+                )
+                .frame(width: 10, height: 10)
+                .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
+                .overlay(
+                    Circle()
+                        .stroke(Color.white.opacity(0.8), lineWidth: 0.5)
+                )
+                .scaleEffect(handleGlow ? 1.2 : 1.0)
+                .offset(x: isLeft ? 15 : -15, y: 0)
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 2).repeatForever()) {
+                        handleGlow = true
+                    }
+                }
+        }
+    }
+}
+
+#Preview {
+    TransitionView(userType: .user, contentReady: false)
 }

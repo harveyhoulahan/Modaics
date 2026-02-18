@@ -3,6 +3,7 @@
 //  ModaicsAppTemp
 //
 //  Digital Wardrobe, Eco Points, and Sustainability Dashboard
+//  Dark Green Porsche Aesthetic - Luxury Sustainable Fashion
 //  Created by Harvey Houlahan on 6/6/2025.
 //
 
@@ -11,6 +12,7 @@ import SwiftUI
 struct ProfileView: View {
     let userType: ContentView.UserType
     @EnvironmentObject var viewModel: FashionViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     @State private var selectedTab: WardrobeTab = .active
     @State private var showSettings = false
@@ -37,12 +39,9 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(
-                    colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                // Premium dark green gradient background
+                LinearGradient.forestBackground
+                    .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 24) {
@@ -76,6 +75,7 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+                .environmentObject(authViewModel)
         }
         .sheet(isPresented: $showMembershipUpgrade) {
             MembershipUpgradeView()
@@ -87,7 +87,7 @@ struct ProfileView: View {
         .fullScreenCover(isPresented: $showSketchbook) {
             NavigationView {
                 // Use username-based ID for brands
-                let brandId = userType == .brand ? "brand-\(viewModel.currentUser?.username ?? "temp")" : "brand-temp"
+                let brandId = userType == .brand ? "brand-\(authViewModel.currentUser?.username ?? "temp")" : "brand-temp"
                 BrandSketchbookScreen(brandId: brandId)
             }
         }
@@ -99,56 +99,50 @@ struct ProfileView: View {
             // Profile Picture
             ZStack(alignment: .bottomTrailing) {
                 Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .fill(.luxeGoldGradient)
                     .frame(width: 80, height: 80)
                     .overlay(
                         Image(systemName: userType == .brand ? "building.2.fill" : "person.fill")
                             .font(.system(size: 32))
-                            .foregroundColor(.modaicsDarkBlue)
+                            .foregroundColor(.forestDeep)
                     )
                 
                 // Membership badge
                 Circle()
-                    .fill(viewModel.currentUser?.membershipTier == .premium ? Color.yellow : Color.gray)
+                    .fill(authViewModel.currentUser?.membershipTier == .premium ? Color.earthAmber : Color.sageSubtle)
                     .frame(width: 24, height: 24)
                     .overlay(
-                        Image(systemName: viewModel.currentUser?.membershipTier == .premium ? "star.fill" : "star")
+                        Image(systemName: authViewModel.currentUser?.membershipTier == .premium ? "star.fill" : "star")
                             .font(.system(size: 12))
-                            .foregroundColor(.white)
+                            .foregroundColor(.sageWhite)
                     )
             }
             
             VStack(alignment: .leading, spacing: 6) {
-                Text(viewModel.currentUser?.username ?? "User")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.modaicsCotton)
+                Text(authViewModel.currentUser?.displayName ?? authViewModel.currentUser?.username ?? "User")
+                    .font(.forestHeadline(24))
+                    .foregroundColor(.sageWhite)
                 
                 Text(viewType == .brand ? "Brand Account" : membershipText)
-                    .font(.system(size: 14))
-                    .foregroundColor(.modaicsChrome1)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.luxeGold)
                 
                 HStack(spacing: 16) {
                     HStack(spacing: 4) {
                         Image(systemName: "tshirt.fill")
                             .font(.caption)
                         Text("\(wardrobeItems.count)")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.forestCaption(13))
                     }
                     
                     HStack(spacing: 4) {
                         Image(systemName: "heart.fill")
                             .font(.caption)
                         Text("\(viewModel.likedIDs.count)")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.forestCaption(13))
                     }
                 }
-                .foregroundColor(.modaicsCottonLight)
+                .foregroundColor(.sageMuted)
             }
             
             Spacer()
@@ -159,7 +153,7 @@ struct ProfileView: View {
             } label: {
                 Image(systemName: "gearshape.fill")
                     .font(.title3)
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
             }
         }
     }
@@ -171,36 +165,24 @@ struct ProfileView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "leaf.circle.fill")
                         .font(.title3)
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.green, Color(red: 0.2, green: 0.8, blue: 0.4)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                        .foregroundStyle(.emeraldGradient)
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Eco Points")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.modaicsCotton)
+                            .font(.forestHeadline(18))
+                            .foregroundColor(.sageWhite)
                         
                         Text("Earned from sustainable actions")
-                            .font(.system(size: 12))
-                            .foregroundColor(.modaicsCottonLight)
+                            .font(.forestCaption(12))
+                            .foregroundColor(.sageMuted)
                     }
                 }
                 
                 Spacer()
                 
-                Text("\(viewModel.currentUser?.ecoPoints ?? 0)")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.green, Color(red: 0.2, green: 0.8, blue: 0.4)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                Text("\(authViewModel.currentUser?.ecoPoints ?? 0)")
+                    .font(.forestDisplay(32))
+                    .foregroundStyle(.emeraldGradient)
             }
             
             // Eco Points breakdown
@@ -209,33 +191,33 @@ struct ProfileView: View {
                     icon: "arrow.triangle.swap",
                     action: "Items Swapped",
                     points: "+50 pts each",
-                    color: .blue
+                    color: .natureTeal
                 )
                 
                 EcoPointRow(
                     icon: "dollarsign.circle.fill",
                     action: "Second-hand Purchases",
                     points: "+25 pts each",
-                    color: .green
+                    color: .emerald
                 )
                 
                 EcoPointRow(
                     icon: "calendar.badge.checkmark",
                     action: "Event Attendance",
                     points: "+75 pts each",
-                    color: .orange
+                    color: .earthAmber
                 )
                 
                 EcoPointRow(
                     icon: "star.fill",
                     action: "Sustainability Badge Items",
                     points: "+100 pts",
-                    color: .yellow
+                    color: .luxeGold
                 )
             }
             
             // Redeem button
-            if viewModel.currentUser?.membershipTier != .premium {
+            if authViewModel.currentUser?.membershipTier != .premium {
                 Button {
                     HapticManager.shared.buttonTap()
                     showMembershipUpgrade = true
@@ -245,30 +227,24 @@ struct ProfileView: View {
                         Text("Upgrade to Premium")
                         Image(systemName: "arrow.right")
                     }
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.modaicsDarkBlue)
+                    .font(.forestCaption(15))
+                    .foregroundColor(.forestDeep)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(.luxeGoldGradient)
+                    .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
                 }
             }
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
+            RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                .fill(.forestMid.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: ForestRadius.xlarge)
                         .stroke(
                             LinearGradient(
-                                colors: [Color.green.opacity(0.3), Color.blue.opacity(0.3)],
+                                colors: [.emerald.opacity(0.3), .natureTeal.opacity(0.3)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -284,20 +260,20 @@ struct ProfileView: View {
             HStack {
                 Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
                     .font(.title2)
-                    .foregroundColor(.green)
+                    .foregroundColor(.emerald)
                 
                 Text("Your Impact")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(20))
+                    .foregroundColor(.sageWhite)
                 
                 Spacer()
                 
                 Text("This Month")
-                    .font(.system(size: 12))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(12))
+                    .foregroundColor(.sageMuted)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(Color.modaicsSurface2)
+                    .background(.surfaceElevated)
                     .clipShape(Capsule())
             }
             
@@ -308,7 +284,7 @@ struct ProfileView: View {
                     label: "Water Saved",
                     value: "\(calculateWaterSaved()) L",
                     change: "+12%",
-                    color: .blue,
+                    color: .natureTeal,
                     description: "vs last month"
                 )
                 
@@ -317,7 +293,7 @@ struct ProfileView: View {
                     label: "CO₂ Offset",
                     value: "\(viewModel.calculateUserSustainabilityScore()) kg",
                     change: "+8%",
-                    color: .green,
+                    color: .emerald,
                     description: "vs last month"
                 )
                 
@@ -326,7 +302,7 @@ struct ProfileView: View {
                     label: "Items Circulated",
                     value: "\(circulatedItemsCount)",
                     change: "+5",
-                    color: .orange,
+                    color: .earthAmber,
                     description: "new this month"
                 )
                 
@@ -335,20 +311,20 @@ struct ProfileView: View {
                     label: "Sustainability Score",
                     value: "\(viewModel.calculateUserSustainabilityScore())%",
                     change: "+3%",
-                    color: .green,
+                    color: .organicGreen,
                     description: "keep it up!"
                 )
             }
         }
         .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
+            RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                .fill(.forestMid.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: ForestRadius.xlarge)
                         .stroke(
                             LinearGradient(
-                                colors: [Color.green.opacity(0.3), Color.blue.opacity(0.3)],
+                                colors: [.emerald.opacity(0.3), .natureTeal.opacity(0.3)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -366,28 +342,22 @@ struct ProfileView: View {
         } label: {
             HStack(spacing: 16) {
                 Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [.modaicsChrome1, .modaicsChrome2],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .fill(.luxeGoldGradient)
                     .frame(width: 60, height: 60)
                     .overlay(
                         Image(systemName: "pencil.and.scribble")
                             .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(.modaicsDarkBlue)
+                            .foregroundColor(.forestDeep)
                     )
                 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("My Sketchbook")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(20))
+                        .foregroundColor(.sageWhite)
                     
                     Text("Share WIPs, drops, and behind-the-scenes with your community")
-                        .font(.system(size: 13))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(13))
+                        .foregroundColor(.sageMuted)
                         .lineLimit(2)
                 }
                 
@@ -395,22 +365,15 @@ struct ProfileView: View {
                 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.modaicsChrome1)
+                    .foregroundColor(.luxeGold)
             }
             .padding(20)
             .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.modaicsDarkBlue.opacity(0.6))
+                RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                    .fill(.forestMid.opacity(0.6))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [.modaicsChrome1, .modaicsChrome2],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 2
-                            )
+                        RoundedRectangle(cornerRadius: ForestRadius.xlarge)
+                            .stroke(.luxeGoldGradient, lineWidth: 2)
                     )
             )
         }
@@ -421,14 +384,14 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Digital Wardrobe")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(22))
+                    .foregroundColor(.sageWhite)
                 
                 Spacer()
                 
                 Text("\(wardrobeItems.count) items")
-                    .font(.system(size: 14))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(14))
+                    .foregroundColor(.sageMuted)
             }
             .padding(.horizontal, 20)
             
@@ -441,7 +404,7 @@ struct ProfileView: View {
                             isSelected: selectedTab == tab,
                             count: itemCount(for: tab)
                         ) {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            withAnimation(.forestSpring) {
                                 selectedTab = tab
                             }
                         }
@@ -455,15 +418,15 @@ struct ProfileView: View {
                 VStack(spacing: 12) {
                     Image(systemName: selectedTab.icon)
                         .font(.system(size: 48))
-                        .foregroundColor(.modaicsCottonLight.opacity(0.5))
+                        .foregroundColor(.sageMuted.opacity(0.5))
                     
                     Text("No \(selectedTab.rawValue) Items")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(18))
+                        .foregroundColor(.sageWhite)
                     
                     Text("Items you \(selectedTab.rawValue.lowercased()) will appear here")
-                        .font(.system(size: 14))
-                        .foregroundColor(.modaicsCottonLight)
+                        .font(.forestCaption(14))
+                        .foregroundColor(.sageMuted)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 60)
@@ -493,7 +456,7 @@ struct ProfileView: View {
     }
     
     private var membershipText: String {
-        switch viewModel.currentUser?.membershipTier {
+        switch authViewModel.currentUser?.membershipTier {
         case .premium:
             return "Premium Member"
         case .basic, .none:
@@ -557,14 +520,14 @@ struct EcoPointRow: View {
                 .frame(width: 32)
             
             Text(action)
-                .font(.system(size: 13))
-                .foregroundColor(.modaicsCottonLight)
+                .font(.forestCaption(13))
+                .foregroundColor(.sageMuted)
             
             Spacer()
             
             Text(points)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(.green)
+                .font(.forestCaption(13))
+                .foregroundColor(.emerald)
         }
     }
 }
@@ -586,26 +549,26 @@ struct SustainabilityMetric: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
-                    .font(.system(size: 13))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(13))
+                    .foregroundColor(.sageMuted)
                 
                 HStack(spacing: 8) {
                     Text(value)
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestHeadline(22))
+                        .foregroundColor(.sageWhite)
                     
                     Text(change)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.green)
+                        .font(.forestCaption(12))
+                        .foregroundColor(.emerald)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(Color.green.opacity(0.2))
+                        .background(.emerald.opacity(0.15))
                         .clipShape(Capsule())
                 }
                 
                 Text(description)
-                    .font(.system(size: 11))
-                    .foregroundColor(.modaicsCottonLight.opacity(0.7))
+                    .font(.forestCaption(11))
+                    .foregroundColor(.sageSubtle)
             }
             
             Spacer()
@@ -626,28 +589,28 @@ struct WardrobeTabButton: View {
                     .font(.system(size: 14))
                 
                 Text(tab.rawValue)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.forestCaption(14))
                 
                 Text("\(count)")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(isSelected ? .modaicsDarkBlue : .modaicsCottonLight)
+                    .font(.forestCaption(12))
+                    .foregroundColor(isSelected ? .forestDeep : .sageMuted)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
                     .background(
-                        isSelected ? Color.modaicsChrome1 : Color.modaicsSurface2
+                        isSelected ? Color.luxeGold : Color.surfaceElevated
                     )
                     .clipShape(Capsule())
             }
-            .foregroundColor(isSelected ? .modaicsCotton : .modaicsCottonLight)
+            .foregroundColor(isSelected ? .sageWhite : .sageMuted)
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.modaicsChrome1.opacity(0.2) : Color.modaicsSurface2)
+                RoundedRectangle(cornerRadius: ForestRadius.medium)
+                    .fill(isSelected ? Color.luxeGold.opacity(0.2) : Color.surfaceElevated)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: ForestRadius.medium)
                             .stroke(
-                                isSelected ? Color.modaicsChrome1.opacity(0.5) : Color.clear,
+                                isSelected ? Color.luxeGold.opacity(0.5) : Color.clear,
                                 lineWidth: 1.5
                             )
                     )
@@ -665,8 +628,8 @@ struct WardrobeItemCard: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 8) {
                 // Image
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.modaicsSurface2)
+                RoundedRectangle(cornerRadius: ForestRadius.medium)
+                    .fill(.surfaceElevated)
                     .aspectRatio(3/4, contentMode: .fit)
                     .overlay(
                         Group {
@@ -675,7 +638,7 @@ struct WardrobeItemCard: View {
                             }
                         }
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: ForestRadius.medium))
                     .overlay(
                         // Status badge
                         VStack {
@@ -683,11 +646,11 @@ struct WardrobeItemCard: View {
                                 Spacer()
                                 
                                 if item.isSold {
-                                    statusBadge(text: "Sold", color: .green)
+                                    statusBadge(text: "Sold", color: .organicGreen)
                                 } else if item.isSwapped {
-                                    statusBadge(text: "Swapped", color: .blue)
+                                    statusBadge(text: "Swapped", color: .natureTeal)
                                 } else if item.isRented {
-                                    statusBadge(text: "Rented", color: .orange)
+                                    statusBadge(text: "Rented", color: .earthAmber)
                                 }
                             }
                             Spacer()
@@ -697,18 +660,18 @@ struct WardrobeItemCard: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(item.brand)
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.modaicsChrome1)
+                        .font(.forestCaption(11))
+                        .foregroundColor(.luxeGold)
                     
                     Text(item.name)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.modaicsCotton)
+                        .font(.forestBody(14))
+                        .foregroundColor(.sageWhite)
                         .lineLimit(2)
                     
                     if item.listingPrice > 0 {
                         Text("$\(Int(item.listingPrice))")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.modaicsChrome2)
+                            .font(.forestCaption(13))
+                            .foregroundColor(.luxeGoldBright)
                     }
                 }
             }
@@ -718,8 +681,8 @@ struct WardrobeItemCard: View {
     
     private func statusBadge(text: String, color: Color) -> some View {
         Text(text)
-            .font(.system(size: 10, weight: .bold))
-            .foregroundColor(.white)
+            .font(.forestCaption(10))
+            .foregroundColor(.sageWhite)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color)
@@ -734,12 +697,8 @@ struct MembershipUpgradeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(
-                    colors: [.modaicsDarkBlue, .modaicsMidBlue],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                LinearGradient.forestBackground
+                    .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 32) {
@@ -749,37 +708,31 @@ struct MembershipUpgradeView: View {
                                 .font(.system(size: 64))
                                 .foregroundStyle(
                                     LinearGradient(
-                                        colors: [.yellow, .orange],
+                                        colors: [.earthAmber, .luxeGold],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
                                 )
                             
                             Text("Upgrade to Premium")
-                                .font(.system(size: 32, weight: .bold))
-                                .foregroundColor(.modaicsCotton)
+                                .font(.forestDisplay(32))
+                                .foregroundColor(.sageWhite)
                             
                             Text("Unlock unlimited potential")
-                                .font(.system(size: 16))
-                                .foregroundColor(.modaicsCottonLight)
+                                .font(.forestCaption(16))
+                                .foregroundColor(.sageMuted)
                         }
                         .padding(.top, 40)
                         
                         // Pricing
                         VStack(spacing: 8) {
                             Text("$10")
-                                .font(.system(size: 56, weight: .bold))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.modaicsChrome1, .modaicsChrome2],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
+                                .font(.forestDisplay(56))
+                                .foregroundStyle(.luxeGoldGradient)
                             
                             Text("per month")
-                                .font(.system(size: 16))
-                                .foregroundColor(.modaicsCottonLight)
+                                .font(.forestCaption(16))
+                                .foregroundColor(.sageMuted)
                         }
                         
                         // Features
@@ -818,28 +771,21 @@ struct MembershipUpgradeView: View {
                         
                         // CTA Button
                         Button {
-                            // Handle upgrade
                             HapticManager.shared.success()
                         } label: {
                             Text("Start Free Trial")
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundColor(.modaicsDarkBlue)
+                                .font(.forestHeadline(18))
+                                .foregroundColor(.forestDeep)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(
-                                    LinearGradient(
-                                        colors: [.modaicsChrome1, .modaicsChrome2],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .background(.luxeGoldGradient)
+                                .clipShape(RoundedRectangle(cornerRadius: ForestRadius.large))
                         }
                         .padding(.horizontal, 20)
                         
                         Text("7 days free, then $10/month. Cancel anytime.")
-                            .font(.system(size: 12))
-                            .foregroundColor(.modaicsCottonLight)
+                            .font(.forestCaption(12))
+                            .foregroundColor(.sageMuted)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 20)
                     }
@@ -852,7 +798,7 @@ struct MembershipUpgradeView: View {
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title3)
-                            .foregroundColor(.modaicsCottonLight)
+                            .foregroundColor(.sageMuted)
                     }
                 }
             }
@@ -869,34 +815,38 @@ struct PremiumFeature: View {
         HStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(.modaicsChrome1)
+                .foregroundColor(.luxeGold)
                 .frame(width: 40)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.modaicsCotton)
+                    .font(.forestHeadline(16))
+                    .foregroundColor(.sageWhite)
                 
                 Text(description)
-                    .font(.system(size: 13))
-                    .foregroundColor(.modaicsCottonLight)
+                    .font(.forestCaption(13))
+                    .foregroundColor(.sageMuted)
             }
             
             Spacer()
             
             Image(systemName: "checkmark.circle.fill")
                 .font(.title3)
-                .foregroundColor(.green)
+                .foregroundColor(.emerald)
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.modaicsDarkBlue.opacity(0.6))
+            RoundedRectangle(cornerRadius: ForestRadius.medium)
+                .fill(.forestMid.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.modaicsChrome1.opacity(0.3), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: ForestRadius.medium)
+                        .stroke(.luxeGold.opacity(0.3), lineWidth: 1)
                 )
         )
     }
 }
 
+#Preview {
+    ProfileView(userType: .user)
+        .environmentObject(FashionViewModel())
+}
