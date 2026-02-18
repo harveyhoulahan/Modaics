@@ -139,7 +139,13 @@ class WebSocketManager: ObservableObject {
             let session = URLSession(configuration: .default)
             webSocketTask = session.webSocketTask(with: request)
             
-            webSocketTask?.receive(completionHandler: handleReceive)
+            // Use a nonisolated handler for receive completion
+            webSocketTask?.receive(completionHandler: { [weak self] result in
+                // Handle on a detached task to avoid MainActor isolation issues
+                Task { @MainActor [weak self] in
+                    self?.handleReceiveResult(result)
+                }
+            })
             webSocketTask?.resume()
             
             startPingTimer()
@@ -172,17 +178,19 @@ class WebSocketManager: ObservableObject {
     
     // MARK: - Message Handling
     
-    private func handleReceive(result: Result<URLSessionWebSocketTask.Message, Error>) {
-        Task { @MainActor in
-            switch result {
-            case .success(let message):
-                handleMessage(message)
-                // Continue receiving
-                webSocketTask?.receive(completionHandler: handleReceive)
-                
-            case .failure(let error):
-                handleError(error)
-            }
+    private func handleReceiveResult(_ result: Result<URLSessionWebSocketTask.Message, Error>) {
+        switch result {
+        case .success(let message):
+            handleMessage(message)
+            // Continue receiving
+            webSocketTask?.receive(completionHandler: { [weak self] result in
+                Task { @MainActor [weak self] in
+                    self?.handleReceiveResult(result)
+                }
+            })
+            
+        case .failure(let error):
+            handleError(error)
         }
     }
     
@@ -242,7 +250,9 @@ class WebSocketManager: ObservableObject {
             let message = URLSessionWebSocketTask.Message.data(data)
             webSocketTask?.send(message) { [weak self] error in
                 if let error = error {
-                    self?.handleError(error)
+                    Task { @MainActor [weak self] in
+                        self?.handleError(error)
+                    }
                 }
             }
         } catch {
@@ -257,7 +267,9 @@ class WebSocketManager: ObservableObject {
         let message = URLSessionWebSocketTask.Message.string(text)
         webSocketTask?.send(message) { [weak self] error in
             if let error = error {
-                self?.handleError(error)
+                Task { @MainActor [weak self] in
+                    self?.handleError(error)
+                }
             }
         }
     }
@@ -317,8 +329,9 @@ class WebSocketManager: ObservableObject {
         
         print("🔄 Reconnecting in \(delay)s... (attempt \(reconnectAttempts)/\(maxReconnectAttempts))")
         
+        // Use a detached timer that can call back to MainActor
         reconnectTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-            Task {
+            Task { @MainActor [weak self] in
                 await self?.connect()
             }
         }
@@ -334,7 +347,9 @@ class WebSocketManager: ObservableObject {
     
     private func startPingTimer() {
         pingTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
-            self?.sendPing()
+            Task { @MainActor [weak self] in
+                self?.sendPing()
+            }
         }
     }
     

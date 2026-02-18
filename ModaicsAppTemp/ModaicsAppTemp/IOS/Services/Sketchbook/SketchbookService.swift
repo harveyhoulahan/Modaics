@@ -172,7 +172,7 @@ class SketchbookService {
         if !media.isEmpty {
             let mediaArray = media.map { media -> [String: Any] in
                 var dict: [String: Any] = [
-                    "id": media.id.uuidString,
+                    "id": media.id,
                     "type": media.type.rawValue,
                     "url": media.url
                 ]

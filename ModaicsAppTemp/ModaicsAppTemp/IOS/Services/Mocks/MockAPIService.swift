@@ -59,6 +59,7 @@ extension MockAPIService {
                 imageUrl: "https://example.com/image1.jpg",
                 source: "depop",
                 distance: 0.15,
+                similarity: nil,
                 redirectUrl: nil
             ),
             SearchResult(
@@ -71,6 +72,7 @@ extension MockAPIService {
                 imageUrl: "https://example.com/image2.jpg",
                 source: "grailed",
                 distance: 0.22,
+                similarity: nil,
                 redirectUrl: nil
             ),
             SearchResult(
@@ -83,6 +85,7 @@ extension MockAPIService {
                 imageUrl: "https://example.com/image3.jpg",
                 source: "vestiaire",
                 distance: 0.28,
+                similarity: nil,
                 redirectUrl: nil
             )
         ]
@@ -103,6 +106,7 @@ extension MockAPIService {
                 imageUrl: "https://example.com/image4.jpg",
                 source: "depop",
                 distance: 0.05,
+                similarity: nil,
                 redirectUrl: nil
             ),
             SearchResult(
@@ -115,6 +119,7 @@ extension MockAPIService {
                 imageUrl: "https://example.com/image5.jpg",
                 source: "grailed",
                 distance: 0.12,
+                similarity: nil,
                 redirectUrl: nil
             )
         ]
@@ -240,20 +245,6 @@ extension MockAPIService {
     }
 }
 
-// MARK: - Mock Mode Toggle
-
-extension APIConfiguration {
-    
-    var useMockData: Bool {
-        get {
-            UserDefaults.standard.bool(forKey: "use_mock_data")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "use_mock_data")
-        }
-    }
-}
-
 // MARK: - Mock Service Integration
 
 extension SearchAPIService {
@@ -296,6 +287,7 @@ extension MockAPIService {
                 imageUrl: "https://example.com/image\(index).jpg",
                 source: sources.randomElement(),
                 distance: Double.random(in: 0...0.5),
+                similarity: nil,
                 redirectUrl: nil
             )
         }

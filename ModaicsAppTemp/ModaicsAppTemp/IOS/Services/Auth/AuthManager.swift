@@ -12,6 +12,7 @@ import Combine
 
 // MARK: - Auth Manager
 // Note: AuthState enum is defined in AuthViewModel.swift
+// Note: AuthError enum is defined in AuthViewModel.swift
 
 @MainActor
 class AuthManager: ObservableObject {
@@ -117,7 +118,7 @@ class AuthManager: ObservableObject {
     
     // MARK: - Current User Info
     
-    var currentUser: User? {
+    var currentUser: FirebaseAuth.User? {
         if case .authenticated(let user) = state {
             return user
         }
@@ -169,24 +170,8 @@ class AuthManager: ObservableObject {
     }
 }
 
-// MARK: - Auth Errors
+// MARK: - Notification Names
 
-enum AuthError: Error, LocalizedError {
-    case notAuthenticated
-    case tokenRefreshFailed(Error)
-    case signOutFailed(Error)
-    case anonymousSignInFailed(Error)
-    
-    var errorDescription: String? {
-        switch self {
-        case .notAuthenticated:
-            return "Not authenticated. Please sign in."
-        case .tokenRefreshFailed(let error):
-            return "Failed to refresh authentication: \(error.localizedDescription)"
-        case .signOutFailed(let error):
-            return "Failed to sign out: \(error.localizedDescription)"
-        case .anonymousSignInFailed(let error):
-            return "Anonymous sign in failed: \(error.localizedDescription)"
-        }
-    }
+extension Notification.Name {
+    static let apiAuthTokenRefreshed = Notification.Name("apiAuthTokenRefreshed")
 }

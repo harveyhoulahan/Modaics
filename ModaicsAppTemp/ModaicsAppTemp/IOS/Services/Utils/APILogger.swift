@@ -222,7 +222,7 @@ final class APILogger {
             message += "\n   API Error: \(apiError)"
         }
         
-        error(message)
+        self.error(message)
     }
     
     // MARK: - File Operations

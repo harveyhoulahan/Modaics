@@ -127,6 +127,17 @@ struct APIConfiguration {
     var enableWebSocket: Bool = false // Enable when WebSocket endpoints are ready
     var enablePushNotifications: Bool = true
     
+    // MARK: - Mock Mode
+    
+    var useMockData: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: "use_mock_data")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "use_mock_data")
+        }
+    }
+    
     // MARK: - Private Keys
     
     private struct Keys {
