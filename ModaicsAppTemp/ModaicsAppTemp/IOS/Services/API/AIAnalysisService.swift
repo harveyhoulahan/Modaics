@@ -97,7 +97,7 @@ extension Condition {
 
 // MARK: - Analysis Progress
 
-enum AnalysisPhase: Equatable {
+enum AnalysisPhase {
     case preparing
     case uploading(progress: Double)
     case analyzing

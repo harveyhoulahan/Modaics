@@ -552,7 +552,6 @@ extension Date {
 
 // MARK: - Sketchbook Cache
 
-@MainActor
 private actor SketchbookCache {
     private var sketchbooks: [String: (sketchbook: Sketchbook, timestamp: Date)] = [:]
     private var posts: [String: (posts: [SketchbookPost], timestamp: Date)] = [:]

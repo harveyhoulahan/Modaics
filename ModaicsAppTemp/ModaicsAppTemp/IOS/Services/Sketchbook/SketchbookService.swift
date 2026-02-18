@@ -432,22 +432,6 @@ class SketchbookService {
     }
 }
 
-// MARK: - Supporting Types
-
-struct PollResults: Codable {
-    let question: String
-    let options: [PollOption]
-    let closesAt: Date?
-    let isClosed: Bool
-    
-    enum CodingKeys: String, CodingKey {
-        case question
-        case options
-        case closesAt = "closes_at"
-        case isClosed = "is_closed"
-    }
-}
-
 // MARK: - Errors
 
 enum SketchbookError: LocalizedError {
