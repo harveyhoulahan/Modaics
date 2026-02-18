@@ -6,6 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E44B29A12F45E73800417FAB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29A02F45E73800417FAB /* GoogleSignIn */; };
+		E44B29A32F45E73800417FAB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29A22F45E73800417FAB /* GoogleSignInSwift */; };
+		E44B29A82F45E76C00417FAB /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29A72F45E76C00417FAB /* Stripe */; };
+		E44B29AA2F45E76C00417FAB /* StripePayments in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29A92F45E76C00417FAB /* StripePayments */; };
+		E44B29AC2F45E76C00417FAB /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29AB2F45E76C00417FAB /* StripePaymentSheet */; };
+		E44B29AE2F45E76C00417FAB /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29AD2F45E76C00417FAB /* FirebaseAuth */; };
+		E44B29B02F45E76C00417FAB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29AF2F45E76C00417FAB /* FirebaseFirestore */; };
+		E44B29B22F45E76C00417FAB /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E44B29B12F45E76C00417FAB /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		E40267512DF16BC0002D4CE4 /* ModaicsAppTemp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModaicsAppTemp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -20,9 +31,6 @@
 			target = E40267502DF16BC0002D4CE4 /* ModaicsAppTemp */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E40267532DF16BC0002D4CE4 /* ModaicsAppTemp */ = {
@@ -40,6 +48,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E44B29A12F45E73800417FAB /* GoogleSignIn in Frameworks */,
+				E44B29AE2F45E76C00417FAB /* FirebaseAuth in Frameworks */,
+				E44B29A32F45E73800417FAB /* GoogleSignInSwift in Frameworks */,
+				E44B29AA2F45E76C00417FAB /* StripePayments in Frameworks */,
+				E44B29A82F45E76C00417FAB /* Stripe in Frameworks */,
+				E44B29B22F45E76C00417FAB /* FirebaseStorage in Frameworks */,
+				E44B29AC2F45E76C00417FAB /* StripePaymentSheet in Frameworks */,
+				E44B29B02F45E76C00417FAB /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				E40267532DF16BC0002D4CE4 /* ModaicsAppTemp */,
+				E44B29A62F45E76C00417FAB /* Frameworks */,
 				E40267522DF16BC0002D4CE4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,6 +77,13 @@
 				E40267512DF16BC0002D4CE4 /* ModaicsAppTemp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E44B29A62F45E76C00417FAB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +106,14 @@
 			);
 			name = ModaicsAppTemp;
 			packageProductDependencies = (
+				E44B29A02F45E73800417FAB /* GoogleSignIn */,
+				E44B29A22F45E73800417FAB /* GoogleSignInSwift */,
+				E44B29A72F45E76C00417FAB /* Stripe */,
+				E44B29A92F45E76C00417FAB /* StripePayments */,
+				E44B29AB2F45E76C00417FAB /* StripePaymentSheet */,
+				E44B29AD2F45E76C00417FAB /* FirebaseAuth */,
+				E44B29AF2F45E76C00417FAB /* FirebaseFirestore */,
+				E44B29B12F45E76C00417FAB /* FirebaseStorage */,
 			);
 			productName = ModaicsAppTemp;
 			productReference = E40267512DF16BC0002D4CE4 /* ModaicsAppTemp.app */;
@@ -111,6 +143,11 @@
 			);
 			mainGroup = E40267482DF16BC0002D4CE4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E44B299F2F45E73800417FAB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				E44B29A42F45E74000417FAB /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
+				E44B29A52F45E75400417FAB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E40267522DF16BC0002D4CE4 /* Products */;
 			projectDirPath = "";
@@ -343,6 +380,76 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E44B299F2F45E73800417FAB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
+		E44B29A42F45E74000417FAB /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 25.6.3;
+			};
+		};
+		E44B29A52F45E75400417FAB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E44B29A02F45E73800417FAB /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B299F2F45E73800417FAB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		E44B29A22F45E73800417FAB /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B299F2F45E73800417FAB /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		E44B29A72F45E76C00417FAB /* Stripe */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B29A42F45E74000417FAB /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = Stripe;
+		};
+		E44B29A92F45E76C00417FAB /* StripePayments */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B29A42F45E74000417FAB /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePayments;
+		};
+		E44B29AB2F45E76C00417FAB /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B29A42F45E74000417FAB /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentSheet;
+		};
+		E44B29AD2F45E76C00417FAB /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B29A52F45E75400417FAB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		E44B29AF2F45E76C00417FAB /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B29A52F45E75400417FAB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		E44B29B12F45E76C00417FAB /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44B29A52F45E75400417FAB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E40267492DF16BC0002D4CE4 /* Project object */;
 }
