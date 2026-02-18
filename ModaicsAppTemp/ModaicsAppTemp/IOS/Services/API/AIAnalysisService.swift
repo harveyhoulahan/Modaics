@@ -164,7 +164,7 @@ class AIAnalysisService: ObservableObject {
     func analyzeImage(
         _ image: UIImage,
         useCache: Bool = true,
-        generateDescription: Bool = true
+        shouldGenerateDescription: Bool = true
     ) async throws -> ItemAnalysisResult {
         // Cancel any existing analysis
         cancelAnalysis()
@@ -196,7 +196,7 @@ class AIAnalysisService: ObservableObject {
         var result = ItemAnalysisResult.from(response: analysisResponse)
         
         // Step 3: Generate enhanced description if requested
-        if generateDescription {
+        if shouldGenerateDescription {
             currentPhase = .generatingDescription
             let descriptionResponse = try await generateDescription(
                 imageBase64: uploadResult.base64String,
@@ -247,7 +247,7 @@ class AIAnalysisService: ObservableObject {
             currentPhase = .analyzing
             
             do {
-                let result = try await analyzeImage(image, useCache: useCache, generateDescription: false)
+                let result = try await analyzeImage(image, useCache: useCache, shouldGenerateDescription: false)
                 allColors.formUnion(result.detectedColors)
                 allMaterials.formUnion(result.detectedMaterials)
                 totalConfidence += result.confidence

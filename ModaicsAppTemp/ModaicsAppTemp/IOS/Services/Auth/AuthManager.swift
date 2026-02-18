@@ -10,27 +10,8 @@ import Foundation
 import FirebaseAuth
 import Combine
 
-// MARK: - Auth State
-
-enum AuthState: Equatable {
-    case unknown
-    case authenticated(User)
-    case unauthenticated
-    
-    var isAuthenticated: Bool {
-        if case .authenticated = self { return true }
-        return false
-    }
-    
-    var userId: String? {
-        if case .authenticated(let user) = self {
-            return user.uid
-        }
-        return nil
-    }
-}
-
 // MARK: - Auth Manager
+// Note: AuthState enum is defined in AuthViewModel.swift
 
 @MainActor
 class AuthManager: ObservableObject {
