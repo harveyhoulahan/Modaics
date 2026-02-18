@@ -696,10 +696,9 @@ class PaymentService: ObservableObject {
     
     // MARK: - Private Helpers
     
-    private func getShippingDetails() -> PaymentSheet.Configuration.AddressDetails {
+    private func getShippingDetails() -> PaymentSheet.ShippingDetails {
         // Return user's saved shipping address or collect new one
-        return PaymentSheet.Configuration.AddressDetails(
-            name: "",
+        return PaymentSheet.ShippingDetails(
             address: .init(
                 city: "",
                 country: "US",
@@ -707,7 +706,8 @@ class PaymentService: ObservableObject {
                 line2: nil,
                 postalCode: "",
                 state: ""
-            )
+            ),
+            name: ""
         )
     }
     
