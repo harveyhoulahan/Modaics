@@ -834,10 +834,10 @@ struct EventDetailSheet: View {
                         
                         // Details Grid
                         VStack(alignment: .leading, spacing: 16) {
-                            DetailRow(icon: "calendar", title: "Date", value: event.date.formatted(date: .long, time: .shortened))
-                            DetailRow(icon: "mappin.circle.fill", title: "Location", value: event.location)
-                            DetailRow(icon: "person.2.fill", title: "Attendees", value: "\(event.attendees)/\(event.maxAttendees)")
-                            DetailRow(icon: "dollarsign.circle.fill", title: "Price", value: event.isFree ? "FREE" : "$\(Int(event.price))")
+                            EventDetailRow(icon: "calendar", title: "Date", value: event.date.formatted(date: .long, time: .shortened))
+                            EventDetailRow(icon: "mappin.circle.fill", title: "Location", value: event.location)
+                            EventDetailRow(icon: "person.2.fill", title: "Attendees", value: "\(event.attendees)/\(event.maxAttendees)")
+                            EventDetailRow(icon: "dollarsign.circle.fill", title: "Price", value: event.isFree ? "FREE" : "$\(Int(event.price))")
                         }
                         
                         Divider()
@@ -919,7 +919,7 @@ struct EventDetailSheet: View {
     }
 }
 
-fileprivate struct DetailRow: View {
+fileprivate struct EventDetailRow: View {
     let icon: String
     let title: String
     let value: String

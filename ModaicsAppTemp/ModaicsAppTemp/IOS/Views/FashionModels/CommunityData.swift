@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: - Event Types
 
-enum EventType: String, Codable, CaseIterable {
+enum CommunityEventType: String, Codable, CaseIterable {
     case workshop = "Workshop"
     case popUp = "Pop-Up"
     case swapMeet = "Swap Meet"
@@ -51,7 +51,7 @@ enum EventType: String, Codable, CaseIterable {
 struct CommunityEvent: Identifiable, Codable {
     let id: UUID
     let title: String
-    let type: EventType
+    let type: CommunityEventType
     let host: String
     let location: String
     let date: Date
@@ -64,7 +64,7 @@ struct CommunityEvent: Identifiable, Codable {
     
     init(id: UUID = UUID(),
          title: String,
-         type: EventType,
+         type: CommunityEventType,
          host: String,
          location: String,
          date: Date,

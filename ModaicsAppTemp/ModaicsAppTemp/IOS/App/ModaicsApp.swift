@@ -114,7 +114,7 @@ struct RootView: View {
 struct AuthFlowView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var authRoute: AuthRoute = .welcome
-    @State private var selectedUserType: ContentView.UserType?
+    @State private var selectedUserType: UserType?
     
     enum AuthRoute {
         case welcome
@@ -334,7 +334,7 @@ struct MainAppView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var fashionViewModel: FashionViewModel
     @State private var selectedTab = 0
-    @State private var userType: ContentView.UserType = .user
+    @State private var userType: UserType = .consumer
     
     var body: some View {
         ZStack(alignment: .bottom) {

@@ -21,17 +21,19 @@ class VisionAnalysisService: ObservableObject {
     private let backendURL: String = "http://10.20.99.164:8000"
     private lazy var searchClient = SearchAPIClient(baseURL: backendURL)
     
-    // Core ML Models
-    private var categoryModel: FashionCategoryClassifier?
-    private var colorModel: FashionColourClassifier?
-    private var brandModel: FashionBrandClassifier?
+    // Core ML Models - Commented out as these models don't exist yet
+    // To use: Create ML models FashionCategoryClassifier, FashionColourClassifier, FashionBrandClassifier
+    // private var categoryModel: FashionCategoryClassifier?
+    // private var colorModel: FashionColourClassifier?
+    // private var brandModel: FashionBrandClassifier?
     
     private init() {
-        loadModels()
+        // loadModels() - Disabled until CoreML models are available
     }
     
-    /// Load all Create ML models
+    /// Load all Create ML models - Disabled until models are available
     private func loadModels() {
+        /*
         do {
             categoryModel = try FashionCategoryClassifier(configuration: MLModelConfiguration())
             print("✅ Loaded FashionCategoryClassifier")
@@ -52,6 +54,7 @@ class VisionAnalysisService: ObservableObject {
         } catch {
             print("❌ Failed to load brand model: \(error)")
         }
+        */
     }
     
     /// Full AI analysis pipeline using Vision + CLIP + Create ML
@@ -175,63 +178,66 @@ class VisionAnalysisService: ObservableObject {
     
     // MARK: - Create ML Classification
     
-    /// Classify category using trained Create ML model
+    /// Classify category using trained Create ML model - Disabled until models available
     private func classifyWithML(image: UIImage) async -> (category: String, confidence: Double)? {
-        guard let categoryModel = categoryModel,
-              let pixelBuffer = image.pixelBuffer() else { return nil }
-        
-        do {
-            let prediction = try categoryModel.prediction(image: pixelBuffer)
-            let targetLabel = prediction.target
-            let confidence = prediction.targetProbability[targetLabel] ?? 0.0
-            print("🏷️ ML Category: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
-            return (targetLabel, confidence)
-        } catch {
-            print("❌ Category classification error: \(error)")
-            return nil
-        }
+        // guard let categoryModel = categoryModel,
+        //       let pixelBuffer = image.pixelBuffer() else { return nil }
+        // 
+        // do {
+        //     let prediction = try categoryModel.prediction(image: pixelBuffer)
+        //     let targetLabel = prediction.target
+        //     let confidence = prediction.targetProbability[targetLabel] ?? 0.0
+        //     print("🏷️ ML Category: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
+        //     return (targetLabel, confidence)
+        // } catch {
+        //     print("❌ Category classification error: \(error)")
+        //     return nil
+        // }
+        return nil
     }
     
-    /// Classify color using trained Create ML model
+    /// Classify color using trained Create ML model - Disabled until models available
     private func classifyColorWithML(image: UIImage) async -> (color: String, confidence: Double)? {
-        guard let colorModel = colorModel,
-              let pixelBuffer = image.pixelBuffer() else { return nil }
-        
-        do {
-            let prediction = try colorModel.prediction(image: pixelBuffer)
-            let targetLabel = prediction.target
-            let confidence = prediction.targetProbability[targetLabel] ?? 0.0
-            print("🎨 ML Color: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
-            return (targetLabel, confidence)
-        } catch {
-            print("❌ Color classification error: \(error)")
-            return nil
-        }
+        // guard let colorModel = colorModel,
+        //       let pixelBuffer = image.pixelBuffer() else { return nil }
+        // 
+        // do {
+        //     let prediction = try colorModel.prediction(image: pixelBuffer)
+        //     let targetLabel = prediction.target
+        //     let confidence = prediction.targetProbability[targetLabel] ?? 0.0
+        //     print("🎨 ML Color: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
+        //     return (targetLabel, confidence)
+        // } catch {
+        //     print("❌ Color classification error: \(error)")
+        //     return nil
+        // }
+        return nil
     }
     
-    /// Classify brand using trained Create ML model
+    /// Classify brand using trained Create ML model - Disabled until models available
     private func classifyBrandWithML(image: UIImage) async -> (brand: String, confidence: Double)? {
-        guard let brandModel = brandModel,
-              let pixelBuffer = image.pixelBuffer() else { return nil }
-        
-        do {
-            let prediction = try brandModel.prediction(image: pixelBuffer)
-            let targetLabel = prediction.target
-            let confidence = prediction.targetProbability[targetLabel] ?? 0.0
-            
-            // Only return brand if confidence is high enough (>30%)
-            // Many items won't have visible brand markers
-            if confidence > 0.3 {
-                print("👔 ML Brand: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
-                return (targetLabel, confidence)
-            } else {
-                print("👔 ML Brand: Low confidence (\(String(format: "%.1f%%", confidence * 100))), skipping")
-                return nil
-            }
-        } catch {
-            print("❌ Brand classification error: \(error)")
-            return nil
-        }
+        // guard let brandModel = brandModel,
+        //       let pixelBuffer = image.pixelBuffer() else { return nil }
+        // 
+        // do {
+        //     let prediction = try brandModel.prediction(image: pixelBuffer)
+        //     let targetLabel = prediction.target
+        //     let confidence = prediction.targetProbability[targetLabel] ?? 0.0
+        //     
+        //     // Only return brand if confidence is high enough (>30%)
+        //     // Many items won't have visible brand markers
+        //     if confidence > 0.3 {
+        //         print("👔 ML Brand: \(targetLabel) (\(String(format: "%.1f%%", confidence * 100)))")
+        //         return (targetLabel, confidence)
+        //     } else {
+        //         print("👔 ML Brand: Low confidence (\(String(format: "%.1f%%", confidence * 100))), skipping")
+        //         return nil
+        //     }
+        // } catch {
+        //     print("❌ Brand classification error: \(error)")
+        //     return nil
+        // }
+        return nil
     }
     
     // MARK: - Legacy Vision Framework Analysis (Fallback)

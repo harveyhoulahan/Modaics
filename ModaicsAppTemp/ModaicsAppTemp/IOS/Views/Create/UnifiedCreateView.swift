@@ -9,7 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct UnifiedCreateView: View {
-    let userType: ContentView.UserType
+    let userType: UserType
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var selectedCreationType: CreationType = .item
     
@@ -178,7 +178,7 @@ struct TypeSelectorCard: View {
 // MARK: - Create Item View (AI-Powered)
 
 struct CreateItemView: View {
-    let userType: ContentView.UserType
+    let userType: UserType
     @EnvironmentObject var viewModel: FashionViewModel
     @State private var selectedImages: [UIImage] = []
     @State private var showImagePicker = false
