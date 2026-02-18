@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct TransitionView: View {
-    let userType: ContentView.UserType?   // .user  / .brand
+    let userType: UserType?   // .consumer  / .brand
     let contentReady: Bool                // set to true from ContentView when dashboards loaded
 
     // ───────── animation state
@@ -51,7 +51,7 @@ struct TransitionView: View {
 
             // ───────── loading text + dots
             VStack(spacing: 24) {
-                Text(userType == .user
+                Text(userType == .consumer
                      ? "Assembling your wardrobe..."
                      : "Setting up your brand dashboard...")
                     .font(.forestTitle(20))
@@ -197,6 +197,6 @@ struct GoldDoor: View {
     }
 }
 
-#Preview {
-    TransitionView(userType: .user, contentReady: false)
+#Preview("Transition View") {
+    TransitionView(userType: .consumer, contentReady: false)
 }

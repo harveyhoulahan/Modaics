@@ -194,7 +194,7 @@ extension View {
 }
 
 // MARK: - Preview
-#Preview {
+#Preview("Animation Modifiers") {
     ZStack {
         LinearGradient(
             colors: [.modaicsDarkBlue, .modaicsMidBlue],

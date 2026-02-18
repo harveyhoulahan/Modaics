@@ -7,7 +7,7 @@ import SwiftUI
 
 // ───────────────────────────────────────────────────────── MARK: LoginView
 struct LoginView: View {
-    let onUserSelect: (ContentView.UserType) -> Void
+    let onUserSelect: (UserType) -> Void
 
     // animation states
     @State private var introOpacity  = 0.0
@@ -113,7 +113,7 @@ struct LoginView: View {
     private var actionButtons: some View {
         VStack(spacing: 16) {
             primaryButton(label: "Continue as User", sfSymbol: "person.fill", idx: 0) {
-                onUserSelect(.user)
+                onUserSelect(.consumer)
             }
             primaryButton(label: "Continue as Brand", sfSymbol: "building.2.fill", idx: 1) {
                 onUserSelect(.brand)
@@ -220,6 +220,6 @@ fileprivate struct PremiumFeatureCard: View {
     }
 }
 
-#Preview {
+#Preview("Login View") {
     LoginView(onUserSelect: { _ in })
 }

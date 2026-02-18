@@ -419,15 +419,8 @@ struct LoadingView: View {
     }
 }
 
-// MARK: - Supporting Types (for compatibility)
-extension ContentView {
-    enum UserType {
-        case user, brand
-    }
-}
-
 // MARK: - Preview
-#Preview {
+#Preview("Root View") {
     RootView()
         .environmentObject(AuthViewModel())
         .environmentObject(FashionViewModel())

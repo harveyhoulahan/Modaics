@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SmartCreateView: View {
-    let userType: ContentView.UserType
+    let userType: UserType
     @EnvironmentObject var viewModel: FashionViewModel
     @Environment(\.dismiss) var dismiss
     
@@ -604,7 +604,7 @@ struct SmartCreateView: View {
     }
 }
 
-#Preview {
-    SmartCreateView(userType: .user)
+#Preview("Smart Create View") {
+    SmartCreateView(userType: .consumer)
         .environmentObject(FashionViewModel())
 }

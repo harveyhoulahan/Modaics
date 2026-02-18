@@ -11,7 +11,7 @@ struct TransactionHistoryView: View {
     @StateObject private var paymentService = PaymentService.shared
     @State private var selectedFilter: TransactionFilter = .all
     @State private var searchText = ""
-    @State private var showTransactionDetail: Transaction?
+    @State private var showTransactionDetail: PaymentTransaction?
     @State private var isRefreshing = false
     
     enum TransactionFilter: String, CaseIterable, Identifiable {
@@ -24,7 +24,7 @@ struct TransactionHistoryView: View {
         var id: String { rawValue }
     }
     
-    var filteredTransactions: [Transaction] {
+    var filteredTransactions: [PaymentTransaction] {
         var transactions = paymentService.transactionHistory
         
         // Apply type filter
@@ -328,7 +328,7 @@ struct SearchBar: View {
 
 // MARK: - Transaction Row
 struct TransactionRow: View {
-    let transaction: Transaction
+    let transaction: PaymentTransaction
     
     var body: some View {
         HStack(spacing: 16) {
@@ -446,7 +446,7 @@ struct TransactionRow: View {
 
 // MARK: - Status Badge
 struct StatusBadge: View {
-    let status: Transaction.TransactionStatus
+    let status: PaymentTransaction.TransactionStatus
     
     var body: some View {
         HStack(spacing: 4) {
@@ -524,7 +524,7 @@ struct EmptyTransactionsView: View {
 
 // MARK: - Transaction Detail Sheet
 struct TransactionDetailSheet: View {
-    let transaction: Transaction
+    let transaction: PaymentTransaction
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {

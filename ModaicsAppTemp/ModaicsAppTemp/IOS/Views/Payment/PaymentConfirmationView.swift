@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PaymentConfirmationView: View {
-    let transaction: Transaction
+    let transaction: PaymentTransaction
     let onDone: () -> Void
     let onViewOrder: (() -> Void)?
     
@@ -82,7 +82,7 @@ struct PaymentConfirmationView: View {
 
 // MARK: - Success Header
 struct SuccessHeader: View {
-    let status: Transaction.TransactionStatus
+    let status: PaymentTransaction.TransactionStatus
     
     var body: some View {
         ZStack {
@@ -189,7 +189,7 @@ struct SuccessHeader: View {
 struct AmountDisplay: View {
     let amount: Double
     let currency: String
-    let status: Transaction.TransactionStatus
+    let status: PaymentTransaction.TransactionStatus
     
     var body: some View {
         VStack(spacing: 8) {
@@ -253,7 +253,7 @@ struct AmountDisplay: View {
 
 // MARK: - Transaction Details Card
 struct TransactionDetailsCard: View {
-    let transaction: Transaction
+    let transaction: PaymentTransaction
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

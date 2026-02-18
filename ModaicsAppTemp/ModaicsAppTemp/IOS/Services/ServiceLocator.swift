@@ -85,7 +85,6 @@ final class ServiceLocator: ObservableObject {
     
     /// Switch API environment
     func switchEnvironment(_ environment: APIEnvironment) {
-        configuration.environment = environment
         logger.info("🔄 Switched to \(environment.displayName) environment")
         
         // Clear caches when switching environments

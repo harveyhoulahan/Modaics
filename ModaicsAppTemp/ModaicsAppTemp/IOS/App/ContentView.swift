@@ -23,10 +23,6 @@ struct ContentView: View {
         case splash, login, transition, main
     }
     
-    enum UserType {
-        case user, brand
-    }
-    
     var body: some View {
         ZStack {
             // Base gradient that persists through transitions
@@ -81,7 +77,7 @@ struct ContentView: View {
                         .transition(.opacity)
                     
                 case .main:
-                    MosaicMainAppView(userType: userType ?? .user)
+                    MosaicMainAppView(userType: userType ?? .consumer)
                         .environmentObject(viewModel)
                         .transition(.opacity)
                 }
@@ -113,7 +109,7 @@ struct ContentView: View {
 
 // MARK: - Legacy Login View (for ContentView compatibility)
 struct LegacyLoginView: View {
-    let onUserSelect: (ContentView.UserType) -> Void
+    let onUserSelect: (UserType) -> Void
     
     @State private var introOpacity = 0.0
     @State private var introOffset: CGFloat = 30
@@ -223,7 +219,7 @@ struct LegacyLoginView: View {
     private var actionButtons: some View {
         VStack(spacing: 16) {
             primaryButton(label: "Continue as User", sfSymbol: "person.fill", idx: 0) {
-                onUserSelect(.user)
+                onUserSelect(.consumer)
             }
             primaryButton(label: "Continue as Brand", sfSymbol: "building.2.fill", idx: 1) {
                 onUserSelect(.brand)
@@ -283,13 +279,13 @@ struct LegacyLoginView: View {
 
 // MARK: - Simple Transition View
 struct TransitionLoadingView: View {
-    let userType: ContentView.UserType?
+    let userType: UserType?
     
     var body: some View {
         VStack(spacing: 24) {
             ModaicsMosaicLogo(size: 80)
             
-            Text(userType == .user ? "Setting up your wardrobe..." : "Preparing your dashboard...")
+            Text(userType == .consumer ? "Setting up your wardrobe..." : "Preparing your dashboard...")
                 .font(.system(size: 18, weight: .light))
                 .foregroundColor(.modaicsCotton)
             

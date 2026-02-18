@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    let userType: ContentView.UserType
+    let userType: UserType
     @EnvironmentObject var viewModel: FashionViewModel
 
     // UI state
@@ -58,7 +58,7 @@ struct HomeView: View {
                             .opacity(sectionsVisible ? 1 : 0)
 
                         // Sustainability Impact
-                        if userType == .user {
+                        if userType == .consumer {
                             sustainabilitySection
                                 .padding(.horizontal, 20)
                                 .opacity(sectionsVisible ? 1 : 0)
@@ -142,7 +142,7 @@ struct HomeView: View {
     // MARK: - Hero Section
     private var heroSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(userType == .user ? "Your Wardrobe" : "Dashboard")
+            Text(userType == .consumer ? "Your Wardrobe" : "Dashboard")
                 .font(.forestDisplay(32))
                 .foregroundColor(.sageWhite)
             
@@ -683,7 +683,7 @@ struct QuickActionCard: View {
     }
 }
 
-#Preview {
-    HomeView(userType: .user)
+#Preview("Home View") {
+    HomeView(userType: .consumer)
         .environmentObject(FashionViewModel())
 }

@@ -257,7 +257,6 @@ class ImageUploader: ObservableObject {
 
 // MARK: - Image Upload Cache
 
-@MainActor
 private actor ImageUploadCache {
     private var cache: [String: ImageUploadResult] = [:]
     private let maxCacheSize = 50

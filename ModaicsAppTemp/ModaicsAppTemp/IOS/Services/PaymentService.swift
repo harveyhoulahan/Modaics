@@ -76,7 +76,7 @@ struct PaymentIntentResponse: Codable {
     let status: String
 }
 
-struct Transaction: Codable, Identifiable {
+struct PaymentTransaction: Codable, Identifiable {
     let id: String
     let buyerId: String
     let sellerId: String?
@@ -176,9 +176,9 @@ class PaymentService: ObservableObject {
     
     // MARK: - Published Properties
     @Published var isLoading = false
-    @Published var currentTransaction: Transaction?
+    @Published var currentTransaction: PaymentTransaction?
     @Published var userSubscription: UserSubscription?
-    @Published var transactionHistory: [Transaction] = []
+    @Published var transactionHistory: [PaymentTransaction] = []
     @Published var availablePaymentMethods: [STPPaymentMethod] = []
     @Published var applePayAvailability: ApplePayAvailability = .checking
     
@@ -334,7 +334,7 @@ class PaymentService: ObservableObject {
         case 200...299:
             return try JSONDecoder().decode(PaymentIntentResponse.self, from: data)
         case 400:
-            let error = try JSONDecoder().decode(APIError.self, from: data)
+            let error = try JSONDecoder().decode(PaymentAPIError.self, from: data)
             throw PaymentError.paymentFailed(error.message)
         case 401:
             throw PaymentError.authenticationRequired
@@ -355,7 +355,7 @@ class PaymentService: ObservableObject {
         amount: Double,
         itemTitle: String,
         isInternational: Bool = false
-    ) async throws -> Transaction {
+    ) async throws -> PaymentTransaction {
         isLoading = true
         defer { isLoading = false }
         
@@ -392,15 +392,17 @@ class PaymentService: ObservableObject {
                 Task { @MainActor in
                     switch result {
                     case .completed:
-                        do {
-                            let transaction = try await self?.confirmPayment(paymentIntentId: intent.paymentIntentId)
-                            if let transaction = transaction {
+                        Task { @MainActor in
+                            do {
+                                guard let self = self else {
+                                    continuation.resume(throwing: PaymentError.paymentFailed("Payment service unavailable"))
+                                    return
+                                }
+                                let transaction: PaymentTransaction = try await self.confirmPayment(paymentIntentId: intent.paymentIntentId)
                                 continuation.resume(returning: transaction)
-                            } else {
-                                continuation.resume(throwing: PaymentError.paymentFailed("Transaction not found"))
+                            } catch {
+                                continuation.resume(throwing: error)
                             }
-                        } catch {
-                            continuation.resume(throwing: error)
                         }
                     case .canceled:
                         continuation.resume(throwing: PaymentError.cancelled)
@@ -419,7 +421,7 @@ class PaymentService: ObservableObject {
         label: String,
         itemId: String? = nil,
         sellerId: String? = nil
-    ) async throws -> Transaction {
+    ) async throws -> PaymentTransaction {
         guard applePayAvailability == .available else {
             throw PaymentError.invalidPaymentMethod
         }
@@ -525,7 +527,7 @@ class PaymentService: ObservableObject {
     // MARK: - Transaction Management
     
     /// Confirm payment and get transaction details
-    private func confirmPayment(paymentIntentId: String) async throws -> Transaction {
+    private func confirmPayment(paymentIntentId: String) async throws -> PaymentTransaction {
         guard let url = URL(string: "\(baseURL)/payments/confirm") else {
             throw PaymentError.invalidConfiguration
         }
@@ -547,9 +549,9 @@ class PaymentService: ObservableObject {
             throw PaymentError.serverError("Failed to confirm payment")
         }
         
-        return try JSONDecoder().decode(Transaction.self, from: data)
+        return try JSONDecoder().decode(PaymentTransaction.self, from: data)
     }
-    
+
     /// Fetch transaction history
     func fetchTransactionHistory(limit: Int = 50, offset: Int = 0) async throws {
         guard let url = URL(string: "\(baseURL)/transactions?limit=\(limit)&offset=\(offset)") else {
@@ -568,14 +570,14 @@ class PaymentService: ObservableObject {
             throw PaymentError.serverError("Failed to fetch transactions")
         }
         
-        let transactions = try JSONDecoder().decode([Transaction].self, from: data)
+        let transactions = try JSONDecoder().decode([PaymentTransaction].self, from: data)
         await MainActor.run {
             self.transactionHistory = transactions
         }
     }
     
     /// Fetch single transaction details
-    func fetchTransaction(transactionId: String) async throws -> Transaction {
+    func fetchTransaction(transactionId: String) async throws -> PaymentTransaction {
         guard let url = URL(string: "\(baseURL)/transactions/\(transactionId)") else {
             throw PaymentError.invalidConfiguration
         }
@@ -592,9 +594,9 @@ class PaymentService: ObservableObject {
             throw PaymentError.serverError("Failed to fetch transaction")
         }
         
-        return try JSONDecoder().decode(Transaction.self, from: data)
+        return try JSONDecoder().decode(PaymentTransaction.self, from: data)
     }
-    
+
     /// Request refund for a transaction
     func requestRefund(transactionId: String, reason: String) async throws {
         guard let url = URL(string: "\(baseURL)/transactions/\(transactionId)/refund") else {
@@ -627,7 +629,7 @@ class PaymentService: ObservableObject {
         amount: Double,
         note: String? = nil,
         from viewController: UIViewController
-    ) async throws -> Transaction {
+    ) async throws -> PaymentTransaction {
         isLoading = true
         defer { isLoading = false }
         
@@ -651,12 +653,12 @@ class PaymentService: ObservableObject {
                     switch result {
                     case .completed:
                         do {
-                            let transaction = try await self?.confirmPayment(paymentIntentId: intent.paymentIntentId)
-                            if let transaction = transaction {
-                                continuation.resume(returning: transaction)
-                            } else {
-                                continuation.resume(throwing: PaymentError.paymentFailed("Transfer failed"))
+                            guard let self = self else {
+                                continuation.resume(throwing: PaymentError.paymentFailed("Payment service unavailable"))
+                                return
                             }
+                            let transaction: PaymentTransaction = try await self.confirmPayment(paymentIntentId: intent.paymentIntentId)
+                            continuation.resume(returning: transaction)
                         } catch {
                             continuation.resume(throwing: error)
                         }
@@ -694,9 +696,9 @@ class PaymentService: ObservableObject {
     
     // MARK: - Private Helpers
     
-    private func getShippingDetails() -> PaymentSheet.ShippingDetails {
+    private func getShippingDetails() -> PaymentSheet.Configuration.AddressDetails {
         // Return user's saved shipping address or collect new one
-        return PaymentSheet.ShippingDetails(
+        return PaymentSheet.Configuration.AddressDetails(
             name: "",
             address: .init(
                 city: "",
@@ -787,7 +789,7 @@ private struct EventTicketRequest: Codable {
     let currency: String
 }
 
-private struct APIError: Codable {
+private struct PaymentAPIError: Codable {
     let message: String
     let code: String?
 }

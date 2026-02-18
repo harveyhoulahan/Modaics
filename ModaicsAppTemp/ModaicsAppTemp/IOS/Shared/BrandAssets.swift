@@ -158,7 +158,13 @@ struct ModaicsWordmark: View {
             // Main text
             Text("modaics")
                 .font(.forestDisplay(size))
-                .foregroundStyle(.luxeGoldGradient)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.luxeGoldBright, .luxeGold, .luxeGoldDeep],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
             
             // Shimmer effect
             LinearGradient(
@@ -271,58 +277,21 @@ struct CommunityIcon: View {
 // MARK: - Brand Colors Extension
 extension Color {
     // Enhanced color palette - Porsche Dark Green Aesthetic
+    // Note: modaicsAccent, modaicsSurface2, modaicsDarkBlue, modaicsMidBlue, modaicsLightBlue,
+    // modaicsChrome1/2/3, modaicsDenim1/2, modaicsCotton, modaicsCottonLight are defined in NewTheme.swift
+    
     static let modaicsPrimary = Color.luxeGold
     static let modaicsSecondary = Color.emerald
-    static let modaicsAccent = Color.emerald
     static let modaicsWarning = Color.earthAmber
     static let modaicsError = Color.coralError
     
     // Surface colors for better hierarchy
     static let modaicsSurface1 = Color.forestDeep.opacity(0.8)
-    static let modaicsSurface2 = Color.surfaceElevated
     static let modaicsSurface3 = Color.forestSoft.opacity(0.4)
 }
 
 // MARK: - Brand Typography
-extension Font {
-    static func modaicsDisplay(_ size: CGFloat) -> Font {
-        .forestDisplay(size)
-    }
-    
-    static func modaicsHeadline(_ size: CGFloat) -> Font {
-        .forestHeadline(size)
-    }
-    
-    static func modaicsBody(_ size: CGFloat) -> Font {
-        .forestBody(size)
-    }
-    
-    static func modaicsCaption(_ size: CGFloat) -> Font {
-        .forestCaption(size)
-    }
-}
-
-// MARK: - Color Theme Compatibility
-// These ensure backward compatibility while using new theme
-extension Color {
-    // Dark sophisticated background colors
-    static let modaicsDarkBlue = Color.forestDeep
-    static let modaicsMidBlue = Color.forestRich
-    static let modaicsLightBlue = Color.forestMid
-    
-    // Gold/metallic colors replace chrome
-    static let modaicsChrome1 = Color.luxeGold
-    static let modaicsChrome2 = Color.luxeGoldBright
-    static let modaicsChrome3 = Color.luxeGoldDeep
-    
-    // Forest tones replace denim
-    static let modaicsDenim1 = Color.forestSoft
-    static let modaicsDenim2 = Color.forestLight
-    
-    // Sage whites replace cotton
-    static let modaicsCotton = Color.sageWhite
-    static let modaicsCottonLight = Color.sageMuted
-}
+// Note: modaicsDisplay, modaicsHeadline, modaicsBody, modaicsCaption are defined in NewTheme.swift
 
 // MARK: - Custom Modifiers
 struct ShimmerEffect: ViewModifier {
@@ -372,11 +341,7 @@ extension View {
 }
 
 // MARK: - Custom Animations
-extension Animation {
-    static let modaicsSpring = Animation.forestSpring
-    static let modaicsSmoothSpring = Animation.forestElegant
-    static let modaicsElastic = Animation.forestSpring
-}
+// Note: modaicsSpring, modaicsSmoothSpring, modaicsElastic are defined in NewTheme.swift
 
 // MARK: - Preview
 #Preview {

@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    let userType: ContentView.UserType
+    let userType: UserType
     @EnvironmentObject var viewModel: FashionViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     
@@ -451,7 +451,7 @@ struct ProfileView: View {
     
     // MARK: - Computed Properties
     
-    private var viewType: ContentView.UserType {
+    private var viewType: UserType {
         userType
     }
     
@@ -846,7 +846,7 @@ struct PremiumFeature: View {
     }
 }
 
-#Preview {
-    ProfileView(userType: .user)
+#Preview("Profile View") {
+    ProfileView(userType: .consumer)
         .environmentObject(FashionViewModel())
 }

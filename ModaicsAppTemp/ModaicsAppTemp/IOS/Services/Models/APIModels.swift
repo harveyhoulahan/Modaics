@@ -664,3 +664,68 @@ enum APIError: Error, LocalizedError {
         }
     }
 }
+
+// MARK: - Sample Data Extensions
+
+extension Sketchbook {
+    static let sample = Sketchbook(
+        id: 1,
+        brandId: "brand-sample",
+        title: "Sample Sketchbook",
+        description: "A sample sketchbook for preview purposes",
+        accessPolicy: .public_access,
+        membershipRule: .autoApprove,
+        minSpendAmount: nil,
+        minSpendWindowMonths: nil,
+        createdAt: Date(),
+        updatedAt: Date()
+    )
+}
+
+extension SketchbookPost {
+    static let sampleUpdate = SketchbookPost(
+        id: 1,
+        sketchbookId: 1,
+        authorUserId: "user-1",
+        postType: .standard,
+        title: "New Collection Drop!",
+        body: "Check out our latest sustainable fashion collection. Made with 100% organic materials.",
+        media: nil,
+        tags: ["sustainable", "organic", "new"],
+        visibility: .public,
+        pollQuestion: nil,
+        pollOptions: nil,
+        pollClosesAt: nil,
+        eventId: nil,
+        eventHighlight: nil,
+        reactionCount: 42,
+        commentCount: 8,
+        createdAt: Date(),
+        updatedAt: Date()
+    )
+    
+    static let samplePoll = SketchbookPost(
+        id: 2,
+        sketchbookId: 1,
+        authorUserId: "user-1",
+        postType: .poll,
+        title: "Which color should we release next?",
+        body: "Help us decide the next color for our popular eco-denim line.",
+        media: nil,
+        tags: ["poll", "denim", "community"],
+        visibility: .public,
+        pollQuestion: "Which color should we release next?",
+        pollOptions: [
+            PollOption(id: "opt-1", label: "Ocean Blue", votes: 145),
+            PollOption(id: "opt-2", label: "Forest Green", votes: 89),
+            PollOption(id: "opt-3", label: "Earth Brown", votes: 67)
+        ],
+        pollClosesAt: Date().addingTimeInterval(86400 * 7),
+        eventId: nil,
+        eventHighlight: nil,
+        reactionCount: 23,
+        commentCount: 12,
+        createdAt: Date(),
+        updatedAt: Date()
+    )
+}
