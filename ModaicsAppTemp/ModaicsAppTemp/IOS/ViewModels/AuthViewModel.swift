@@ -15,7 +15,7 @@ import CryptoKit
 // MARK: - Auth State
 enum AuthState: Equatable {
     case unknown
-    case authenticated(User)
+    case authenticated(FirebaseAuth.User)
     case unauthenticated
     case loading
     case error(AuthError)
@@ -27,7 +27,7 @@ enum AuthState: Equatable {
              (.loading, .loading):
             return true
         case (.authenticated(let lhsUser), .authenticated(let rhsUser)):
-            return lhsUser.id == rhsUser.id
+            return lhsUser.uid == rhsUser.uid
         case (.error(let lhsError), .error(let rhsError)):
             return lhsError.localizedDescription == rhsError.localizedDescription
         default:
@@ -216,15 +216,18 @@ class AuthViewModel: ObservableObject {
             return
         }
         
-        // Fetch or create user document
+        // Set auth state with Firebase user
+        self.authState = .authenticated(firebaseUser)
+        self.retryCount = 0 // Reset retry count on success
+        
+        // Fetch or create user document for profile data
         do {
             let user = try await fetchOrCreateUserDocument(for: firebaseUser)
             self.currentUser = user
-            self.authState = .authenticated(user)
-            self.retryCount = 0 // Reset retry count on success
         } catch {
-            self.authState = .error(.fromFirebaseError(error))
-            self.errorMessage = AuthError.fromFirebaseError(error).errorDescription
+            // Don't change auth state on Firestore error - user is still authenticated
+            // Just log the error
+            print("⚠️ Failed to fetch user document: \(error.localizedDescription)")
         }
     }
     

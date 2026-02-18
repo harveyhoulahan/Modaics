@@ -106,7 +106,10 @@ class WebSocketManager: ObservableObject {
     }
     
     deinit {
-        disconnect()
+        // Cancel timers and WebSocket task without async
+        pingTimer?.invalidate()
+        reconnectTimer?.invalidate()
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
     }
     
     // MARK: - Connection Management
