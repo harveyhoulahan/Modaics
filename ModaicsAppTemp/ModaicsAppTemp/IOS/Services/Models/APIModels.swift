@@ -50,6 +50,7 @@ struct SearchResult: Codable, Identifiable, Hashable {
     let imageUrl: String?
     let source: String?
     let distance: Double?
+    let similarity: Double?  // Stored property for backend compatibility
     let redirectUrl: String?
     
     enum CodingKeys: String, CodingKey {
@@ -62,6 +63,7 @@ struct SearchResult: Codable, Identifiable, Hashable {
         case imageUrl = "image_url"
         case source
         case distance
+        case similarity
         case redirectUrl = "redirect_url"
     }
     
@@ -75,7 +77,8 @@ struct SearchResult: Codable, Identifiable, Hashable {
         source?.capitalized ?? "Unknown"
     }
     
-    var similarity: Double? {
+    var computedSimilarity: Double? {
+        if let similarity = similarity { return similarity }
         guard let distance = distance else { return nil }
         return max(0, min(1, 1.0 - distance))
     }
@@ -121,6 +124,52 @@ struct SearchResult: Codable, Identifiable, Hashable {
             }
         }
         return nil
+    }
+}
+
+// MARK: - Legacy AI Analysis Result (for SearchAPIClient compatibility)
+
+struct AIAnalysisResult: Codable {
+    let detectedItem: String
+    let likelyBrand: String
+    let category: String
+    let estimatedSize: String
+    let estimatedCondition: String
+    let description: String
+    let colors: [String]
+    let materials: [String]
+    let estimatedPrice: Double?
+    let confidence: Double
+}
+
+struct AIDescriptionResult: Codable {
+    let description: String
+    let method: String
+    let confidence: Double
+}
+
+// MARK: - Legacy Search API Error (for SearchAPIClient compatibility)
+
+enum SearchAPIError: Error, LocalizedError {
+    case invalidURL
+    case networkError(Error)
+    case invalidResponse
+    case decodingError(Error)
+    case serverError(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "Invalid API URL"
+        case .networkError(let error):
+            return "Network error: \(error.localizedDescription)"
+        case .invalidResponse:
+            return "Invalid server response"
+        case .decodingError(let error):
+            return "Failed to decode response: \(error.localizedDescription)"
+        case .serverError(let message):
+            return "Server error: \(message)"
+        }
     }
 }
 
